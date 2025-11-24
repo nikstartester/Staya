@@ -7,4 +7,5 @@ group = "com.xando.gradleSettings.convention"
 dependencies {
     implementation(libs.android.gradlePlugin)
     implementation(libs.kotlin.gradlePlugin)
+    implementation(libs.compose.gradlePlugin)
 }
