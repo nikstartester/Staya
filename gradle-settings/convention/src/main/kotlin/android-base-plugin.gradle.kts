@@ -1,4 +1,4 @@
-import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -9,14 +9,14 @@ plugins {
 
 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
-extensions.configure<ApplicationExtension> {
+extensions.configure<LibraryExtension> {
     compileSdk = libs.findVersion("projectCompileSdk").get().requiredVersion.toInt()
 
     defaultConfig {
         minSdk = libs.findVersion("projectMinSdk").get().requiredVersion.toInt()
-        targetSdk = libs.findVersion("projectTargetSdk").get().requiredVersion.toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
