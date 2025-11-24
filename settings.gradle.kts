@@ -1,4 +1,6 @@
 pluginManagement {
+    includeBuild("gradle-settings")
+
     repositories {
         google {
             content {
