@@ -22,6 +22,9 @@ android {
 dependencies {
     implementation(project(":design"))
 
+    // Features:
+    implementation(project(":feature:auth"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
