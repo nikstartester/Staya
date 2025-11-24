@@ -10,4 +10,6 @@ android {
 
 dependencies {
     implementation(project(":design"))
+
+    implementation(libs.androidx.navigation.compose)
 }
