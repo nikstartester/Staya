@@ -1,6 +1,7 @@
 plugins {
     id("android-app-plugin")
-    alias(libs.plugins.kotlin.compose)
+    id("compose-plugin")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -10,12 +11,6 @@ android {
         applicationId = "com.xando.staya"
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildFeatures {
-        compose = true
     }
 }
 
