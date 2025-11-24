@@ -22,5 +22,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Staya"
+
 include(":app")
- 
+include(":feature:auth")
