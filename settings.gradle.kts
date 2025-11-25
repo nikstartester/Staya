@@ -24,7 +24,10 @@ dependencyResolutionManagement {
 rootProject.name = "Staya"
 
 include(":app")
-include(":design")
+
+//Core:
+include(":core:design")
+include(":core:navigation-api")
 
 //Features:
 include(":feature:auth")

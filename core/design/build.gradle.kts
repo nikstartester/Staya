@@ -1,9 +1,10 @@
 plugins {
-    id("android-base-plugin")
+    alias(libs.plugins.staya.android.baseCfg)
+    alias(libs.plugins.staya.compose)
 }
 
 android {
-    namespace = "com.xando.design"
+    namespace = "com.xando.core.design"
 }
 
 dependencies {

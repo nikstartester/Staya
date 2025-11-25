@@ -1,6 +1,6 @@
 plugins {
-    id("android-app-plugin")
-    id("compose-plugin")
+    alias(libs.plugins.staya.android.appCfg)
+    alias(libs.plugins.staya.compose)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -15,7 +15,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":design"))
+    // Core:
+    implementation(project(":core:design"))
+    implementation(project(":core:navigation-api"))
 
     // Features:
     implementation(project(":feature:auth"))
