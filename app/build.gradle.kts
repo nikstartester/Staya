@@ -15,7 +15,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":design"))
+    // Core:
+    implementation(project(":core:design"))
+    implementation(project(":core:navigation-api"))
 
     // Features:
     implementation(project(":feature:auth"))

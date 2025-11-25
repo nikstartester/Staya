@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.xando.design"
+    namespace = "com.xando.core.design"
 }
 
 dependencies {

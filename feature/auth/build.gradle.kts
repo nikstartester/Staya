@@ -5,11 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.xando.auth"
+    namespace = "com.xando.feature.auth"
 }
 
 dependencies {
-    implementation(project(":design"))
+    // Core:
+    implementation(project(":core:design"))
+    implementation(project(":core:navigation-api"))
 
     implementation(libs.androidx.navigation.compose)
 }
