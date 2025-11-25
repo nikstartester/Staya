@@ -1,6 +1,6 @@
 plugins {
-    id("android-base-plugin")
-    id("compose-plugin")
+    alias(libs.plugins.staya.android.baseCfg)
+    alias(libs.plugins.staya.compose)
     alias(libs.plugins.kotlin.serialization)
 }
 
