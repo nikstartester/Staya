@@ -5,13 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
 import com.xando.auth.navigation.internal.LoginRoute
 import com.xando.auth.navigation.internal.loginScreen
-import kotlinx.serialization.Serializable
-
-/**
- * Маркер-объект, определяющий вложенный граф навигации для процесса авторизации
- */
-@Serializable
-object LoginGraphRoute
+import com.xando.navigation_api.auth.LoginGraphRoute
 
 /**
  * Переход к флоу авторизации

@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.xando.auth.navigation.LoginGraphRoute
 import com.xando.auth.navigation.loginGraph
+import com.xando.navigation_api.auth.LoginGraphRoute
 import com.xando.staya.ui.navigation_bar_host.NavigationBarHosRoute
 import com.xando.staya.ui.navigation_bar_host.navigationBarHost
 
