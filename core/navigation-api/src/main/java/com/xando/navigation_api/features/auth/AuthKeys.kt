@@ -1,9 +1,10 @@
-package com.xando.navigation_api.auth
+package com.xando.navigation_api.features.auth
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 /**
  * Маркер-объект, определяющий вложенный граф навигации для процесса авторизации
  */
 @Serializable
-object LoginGraphRoute
+data object LoginKey : NavKey

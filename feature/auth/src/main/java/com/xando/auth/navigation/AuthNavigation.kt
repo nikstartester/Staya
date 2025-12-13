@@ -1,24 +1,67 @@
 package com.xando.auth.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navigation
-import com.xando.auth.navigation.internal.LoginRoute
-import com.xando.auth.navigation.internal.loginScreen
-import com.xando.navigation_api.auth.LoginGraphRoute
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import com.xando.auth.navigation.internal.ForgotPasswordKey
+import com.xando.auth.navigation.internal.SignUpKey
+import com.xando.auth.ui.forgot_password.ForgotPasswordScreen
+import com.xando.auth.ui.login.LoginScreen
+import com.xando.auth.ui.sign_up.SignUpScreen
+import com.xando.navigation_api.NavigationController
+import com.xando.navigation_api.features.auth.LoginKey
+import com.xando.navigation_api.features.home.HomeKey
 
 /**
- * Переход к флоу авторизации
+ * Регистрирует navigation entries для модуля auth
  */
-fun NavController.navigateToLoginScreen() {
-    navigate(LoginGraphRoute)
-}
+internal fun EntryProviderScope<NavKey>.authEntryBuilder(navigationController: NavigationController) {
+    // TODO: Простенькие примеры
+    entry<LoginKey> {
+        LoginScreen(
+            onLoginSuccess = {
+                navigationController.navigateAndClearStack(HomeKey)
+            },
+            onSignUpClick = { prefilledEmail ->
+                navigationController.navigateTo(
+                    SignUpKey
+                )
+            },
+            onForgotPasswordClick = {
+                navigationController.navigateTo(ForgotPasswordKey)
+            }
+        )
+    }
 
-/**
- * Регистрация графа авторизации в общем NavHost
- */
-fun NavGraphBuilder.loginGraph(onLogin: () -> Unit) {
-    navigation(route = LoginGraphRoute::class, startDestination = LoginRoute) {
-        loginScreen(onLogin = onLogin)
+    entry<SignUpKey> { key ->
+        SignUpScreen(
+            onSignUpSuccess = {
+                navigationController.navigateAndClearStack(HomeKey)
+            },
+            onBackClick = {
+                navigationController.navigateBack()
+            },
+            onLoginClick = {
+                navigationController.navigateAndPopUpTo(
+                    destination = LoginKey,
+                    popUpTo = LoginKey,
+                    inclusive = false
+                )
+            }
+        )
+    }
+
+    entry<ForgotPasswordKey> {
+        ForgotPasswordScreen(
+            onBackClick = {
+                navigationController.navigateBack()
+            },
+            onPasswordResetSuccess = {
+                navigationController.navigateAndPopUpTo(
+                    destination = LoginKey,
+                    popUpTo = LoginKey,
+                    inclusive = false
+                )
+            }
+        )
     }
 }
