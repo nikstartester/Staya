@@ -1,60 +1,65 @@
 package com.xando.staya.ui
 
 import android.preference.PreferenceManager
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import com.xando.auth.navigation.loginGraph
-import com.xando.navigation_api.auth.LoginGraphRoute
-import com.xando.staya.ui.navigation_bar_host.NavigationBarHosRoute
-import com.xando.staya.ui.navigation_bar_host.navigationBarHost
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.xando.navigation_api.EntryBuilder
+import com.xando.navigation_api.features.auth.LoginKey
+import com.xando.navigation_api.features.home.HomeKey
+import com.xando.staya.navigation_impl.NavigationControllerImpl
+import com.xando.staya.ui.bottom_navigation_container.BottomNavContainer
 
 @Composable
-fun RootHost() {
-    val navController = rememberNavController()
-    NavHost(
-        navController = navController,
-        startDestination = getStartDestination(),
-        enterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { fullWidth -> fullWidth },
-                animationSpec = tween(300)
-            )
-        },
-        exitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { fullWidth -> -fullWidth },
-                animationSpec = tween(300)
-            )
-        },
-        popEnterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { fullWidth -> -fullWidth },
-                animationSpec = tween(300)
-            )
-        },
-        popExitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { fullWidth -> fullWidth },
-                animationSpec = tween(300)
-            )
-        }
-    ) {
-        loginGraph(onLogin = {
-            navController.navigate(NavigationBarHosRoute) {
-                popUpTo(0)
-            }
-        })
-        navigationBarHost()
+fun RootHost(
+    entryBuilders: Set<EntryBuilder>,
+    modifier: Modifier = Modifier,
+) {
+    val initialKey = getStartDestination()
+
+    val backStack = rememberNavBackStack(initialKey)
+
+    val navigationController = remember(backStack) {
+        NavigationControllerImpl(backStack)
     }
+
+    AppCloseBackHandler()
+
+    NavDisplay(
+        backStack = backStack,
+        modifier = modifier,
+        onBack = {
+            navigationController.navigateBack()
+        },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        entryProvider =
+            entryProvider {
+                entry<HomeKey> {
+                    BottomNavContainer(
+                        parentNavigationController = navigationController
+                    )
+                }
+
+                entryBuilders.forEach { builder ->
+                    with(builder) {
+                        build(navigationController)
+                    }
+                }
+            })
 }
 
 @Composable
-private fun getStartDestination(): Any = if (isLogin()) NavigationBarHosRoute else LoginGraphRoute
+private fun getStartDestination(): NavKey = if (isLogin()) HomeKey else LoginKey
 
 @Composable
 private fun isLogin() =
