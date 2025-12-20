@@ -47,7 +47,7 @@ internal fun ForgotPasswordScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            painter = painterResource(RDesign.drawable.arrow_back_24dp),
+                            painter = painterResource(RDesign.drawable.design_ic_arrow_back_24dp),
                             contentDescription = "Назад"
                         )
                     }
