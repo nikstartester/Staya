@@ -93,7 +93,7 @@ private fun BottomNavigationBar(
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = painterResource(RDesign.drawable.arrow_back_24dp),
+                        painter = painterResource(RDesign.drawable.design_ic_arrow_back_24dp),
                         contentDescription = tab.label
                     )
                 },
