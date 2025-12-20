@@ -1,13 +1,10 @@
 package com.xando.staya.ui.bottom_navigation_container
 
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -21,7 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -32,6 +29,7 @@ import com.xando.navigation_api.NavigationController
 import com.xando.staya.navigation_impl.NavigationControllerImpl
 import com.xando.staya.ui.AppCloseBackHandler
 import kotlinx.serialization.Serializable
+import com.xando.core.design.R as RDesign
 
 /**
  * Контейнер с bottom navigation bar.
@@ -95,7 +93,7 @@ private fun BottomNavigationBar(
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector = tab.icon,
+                        painter = painterResource(RDesign.drawable.arrow_back_24dp),
                         contentDescription = tab.label
                     )
                 },
@@ -109,11 +107,12 @@ private fun BottomNavigationBar(
 
 private enum class BottomTab(
     val label: String,
-    val icon: ImageVector
+    @DrawableRes
+    val iconRes: Int
 ) {
-    MAP("Карта", Icons.Default.Home),
-    PETS("Питомцы", Icons.Default.Star),
-    PROFILE("Профиль", Icons.Default.Person)
+    MAP("Карта", -1),
+    PETS("Питомцы", -1),
+    PROFILE("Профиль", -1)
 }
 
 //region Удалить после реализации
