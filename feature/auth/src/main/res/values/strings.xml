@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_app_name">Staya</string>
+    <string name="auth_forgot_password_title">Forgot password?</string>
+    <string name="auth_login_title">Log In</string>
+    <string name="auth_or_title">or</string>
+    <string name="auth_sign_up_title">Sign Up</string>
+    <string name="auth_email_or_login_title">Email or login</string>
+    <string name="auth_password_title">Password</string>
+</resources>

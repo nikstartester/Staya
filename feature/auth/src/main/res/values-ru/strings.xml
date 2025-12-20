@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="auth_app_name">Staya</string>
+    <string name="auth_forgot_password_title">Забыли пароль?</string>
+    <string name="auth_login_title">Войти</string>
+    <string name="auth_or_title">или</string>
+    <string name="auth_sign_up_title">Зарегистрироваться</string>
+    <string name="auth_email_or_login_title">Email или логин</string>
+    <string name="auth_password_title">Пароль</string>
+</resources>
