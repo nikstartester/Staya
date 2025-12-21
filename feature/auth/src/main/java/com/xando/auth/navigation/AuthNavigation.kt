@@ -6,6 +6,7 @@ import com.xando.auth.navigation.internal.ForgotPasswordKey
 import com.xando.auth.navigation.internal.SignUpKey
 import com.xando.auth.ui.forgot_password.ForgotPasswordScreen
 import com.xando.auth.ui.login.LoginScreen
+import com.xando.auth.ui.login.LoginViewModel
 import com.xando.auth.ui.sign_up.SignUpScreen
 import com.xando.navigation_api.NavigationController
 import com.xando.navigation_api.features.auth.LoginKey
@@ -18,6 +19,7 @@ internal fun EntryProviderScope<NavKey>.authEntryBuilder(navigationController: N
     // TODO: Простенькие примеры
     entry<LoginKey> {
         LoginScreen(
+            viewModel = LoginViewModel(), //TODO: потом заменить на hiltViewModel
             onLoginSuccess = {
                 navigationController.navigateAndClearStack(HomeKey)
             },

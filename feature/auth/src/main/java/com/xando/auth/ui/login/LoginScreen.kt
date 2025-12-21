@@ -1,6 +1,5 @@
 package com.xando.auth.ui.login
 
-import android.preference.PreferenceManager
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -25,17 +24,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xando.auth.ui.components.PasswordTextField
 import com.xando.design.ui.components.text_field.StayaOutlinedTextField
 import com.xando.design.ui.theme.extendedColors
@@ -45,16 +40,55 @@ import com.xando.core.design.R as RDesign
 /**@SelfDocumented*/
 @Composable
 internal fun LoginScreen(
+    viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit,
     onSignUpClick: (prefilledEmail: String?) -> Unit,
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // TODO: все это уйдет в viewModel
-    val context = LocalContext.current
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    when (state) {
+        is LoginUiState.Success -> {
+            onLoginSuccess()
+        }
+
+        is LoginUiState.Idle,
+        is LoginUiState.Loading,
+        is LoginUiState.Error -> {
+            LoginContent(
+                state = state,
+                onEmailChange = viewModel::onEmailChanged,
+                onPasswordChange = viewModel::onPasswordChanged,
+                onLoginClick = viewModel::onLoginClick,
+                onSignUpClick = onSignUpClick,
+                onForgotPasswordClick = onForgotPasswordClick,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoginContent(
+    state: LoginUiState,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignUpClick: (String?) -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val credentials = when (state) {
+        is LoginUiState.Idle -> state.loginCredentials
+        is LoginUiState.Loading -> state.loginCredentials
+        is LoginUiState.Error -> state.loginCredentials
+        else -> LoginCredentials()
+    }
+
+    val isLoading = state is LoginUiState.Loading
+    val isLoginEnabled =
+        (state as? LoginUiState.Idle)?.isLoginEnabled == true
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -76,11 +110,11 @@ internal fun LoginScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             LoginForm(
-                email = email,
-                password = password,
+                email = credentials.email,
+                password = credentials.password,
                 isLoading = isLoading,
-                onEmailChange = { email = it },
-                onPasswordChange = { password = it },
+                onEmailChange = onEmailChange,
+                onPasswordChange = onPasswordChange,
                 onForgotPasswordClick = onForgotPasswordClick
             )
 
@@ -89,12 +123,9 @@ internal fun LoginScreen(
 
             LoginActions(
                 isLoading = isLoading,
-                email = email,
-                onLoginClick = {
-                    isLoading = true
-                    PreferenceManager.getDefaultSharedPreferences(context).edit { putBoolean("IS_LOGIN", true) }
-                    onLoginSuccess()
-                },
+                isLoginEnabled = isLoginEnabled,
+                email = credentials.email,
+                onLoginClick = onLoginClick,
                 onSignUpClick = onSignUpClick
             )
 
@@ -178,6 +209,7 @@ private fun LoginForm(
 @Composable
 private fun LoginActions(
     isLoading: Boolean,
+    isLoginEnabled: Boolean,
     email: String,
     onLoginClick: () -> Unit,
     onSignUpClick: (String?) -> Unit,
@@ -192,7 +224,7 @@ private fun LoginActions(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            enabled = !isLoading
+            enabled = isLoginEnabled && !isLoading
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
