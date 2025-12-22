@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,6 +35,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.xando.auth.ui.components.PasswordTextField
@@ -209,7 +212,7 @@ private fun LoginActions(
         }
 
         Text(
-            modifier = Modifier.padding(vertical = 12.dp),
+            modifier = Modifier.padding(vertical = 8.dp),
             text = stringResource(R.string.auth_or_title),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.extendedColors.unaccentedTextColor
@@ -250,6 +253,7 @@ private fun EmailTextField(
                 painter = painterResource(RDesign.drawable.design_ic_mail_24dp),
                 contentDescription = null
             )
-        }
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, hintLocales = LocaleList("en"))
     )
 }
