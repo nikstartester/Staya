@@ -78,7 +78,7 @@ fun StayaOutlinedTextField(
     val errorColor = MaterialTheme.colorScheme.error
     // Определяем цвет иконок в зависимости от состояния
     val iconColor = when {
-        hasError -> MaterialTheme.colorScheme.error
+        hasError -> errorColor
         else -> MaterialTheme.extendedColors.primaryIconColor
     }
     OutlinedTextField(
