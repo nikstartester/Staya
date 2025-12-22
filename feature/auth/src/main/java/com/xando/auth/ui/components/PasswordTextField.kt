@@ -24,14 +24,14 @@ import com.xando.feature.auth.R
 import com.xando.core.design.R as RDesign
 
 @Composable
-internal fun PasswordTextField(value: String, onValueChange: (String) -> Unit, enabled: Boolean) {
+internal fun PasswordTextField(value: String, onValueChange: (String) -> Unit, readOnly: Boolean) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     StayaOutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = stringResource(R.string.auth_password_title),
         modifier = Modifier.fillMaxWidth(),
-        enabled = enabled,
+        readOnly = readOnly,
         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         singleLine = true,
         leadingIcon = {

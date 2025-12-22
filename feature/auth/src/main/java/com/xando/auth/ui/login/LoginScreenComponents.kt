@@ -76,7 +76,7 @@ internal fun LoginForm(
         EmailTextField(
             value = email,
             onValueChanged = onEmailChange,
-            enabled = !isLoading
+            readOnly = isLoading
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -84,13 +84,14 @@ internal fun LoginForm(
         PasswordTextField(
             value = password,
             onValueChange = onPasswordChange,
-            enabled = !isLoading
+            readOnly = isLoading
         )
 
         TextButton(
             onClick = onForgotPasswordClick,
             modifier = Modifier.align(Alignment.End),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp)
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
+            enabled = !isLoading
         ) {
             Text(
                 text = stringResource(R.string.auth_forgot_password_title),
@@ -126,7 +127,7 @@ internal fun LoginActions(
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
             } else {
                 Text(
@@ -165,14 +166,14 @@ internal fun LoginActions(
 private fun EmailTextField(
     value: String,
     onValueChanged: (String) -> Unit,
-    enabled: Boolean
+    readOnly: Boolean
 ) {
     StayaOutlinedTextField(
         value = value,
         onValueChange = onValueChanged,
         label = stringResource(R.string.auth_email_or_login_title),
         modifier = Modifier.fillMaxWidth(),
-        enabled = enabled,
+        readOnly = readOnly,
         singleLine = true,
         leadingIcon = {
             Icon(
