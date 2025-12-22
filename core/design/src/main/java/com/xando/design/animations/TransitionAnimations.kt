@@ -39,3 +39,31 @@ fun AnimatedContentTransitionScope<*>.rightOutTransition(): ContentTransform =
         animationSpec = tween(ANIM_DURATION)
     ) + fadeOut(tween(ANIM_DURATION))
 
+
+/**
+ * Анимация одновременного движения экранов: новый въезжает справа, старый уезжает влево.
+ * Используется как "forward" переход.
+ */
+fun AnimatedContentTransitionScope<*>.rightInLeftOutTransition(): ContentTransform =
+    slideInHorizontally(
+        initialOffsetX = { fullWidth -> fullWidth },
+        animationSpec = tween(ANIM_DURATION)
+    ) togetherWith slideOutHorizontally(
+        targetOffsetX = { fullWidth -> -fullWidth },
+        animationSpec = tween(ANIM_DURATION)
+    )
+
+
+/**
+ * Анимация одновременного движения экранов: новый въезжает слева, старый уезжает вправо.
+ * Используется как "backward" переход.
+ */
+fun AnimatedContentTransitionScope<*>.rightOutLeftInTransition(): ContentTransform =
+    slideInHorizontally(
+        initialOffsetX = { fullWidth -> -fullWidth },
+        animationSpec = tween(ANIM_DURATION)
+    ) togetherWith slideOutHorizontally(
+        targetOffsetX = { fullWidth -> fullWidth },
+        animationSpec = tween(ANIM_DURATION)
+    )
+
