@@ -1,6 +1,5 @@
 package com.xando.auth.ui.login
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,11 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,6 +24,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.unit.dp
 import com.xando.auth.ui.components.PasswordTextField
+import com.xando.design.ui.components.button.StayaButton
+import com.xando.design.ui.components.button.StayaOutlinedButton
 import com.xando.design.ui.components.text_field.StayaOutlinedTextField
 import com.xando.design.ui.theme.extendedColors
 import com.xando.feature.auth.R
@@ -117,26 +115,12 @@ internal fun LoginActions(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
+        StayaButton(
+            text = stringResource(R.string.auth_login_title),
             onClick = onLoginClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            enabled = !isLoading
-        ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            } else {
-                Text(
-                    text = stringResource(R.string.auth_login_title),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.extendedColors.contrastTextColor
-                )
-            }
-        }
+            modifier = Modifier.fillMaxWidth(),
+            isLoading = isLoading
+        )
 
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
@@ -145,20 +129,12 @@ internal fun LoginActions(
             color = MaterialTheme.extendedColors.unaccentedTextColor
         )
 
-        OutlinedButton(
+        StayaOutlinedButton(
+            text = stringResource(R.string.auth_sign_up_title),
             onClick = { onSignUpClick(email.takeIf { it.isNotBlank() }) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
+            modifier = Modifier.fillMaxWidth(),
             enabled = !isLoading
-        ) {
-            Text(
-                text = stringResource(R.string.auth_sign_up_title),
-                color = MaterialTheme.extendedColors.primaryTextColor,
-                style = MaterialTheme.typography.titleSmall
-            )
-        }
+        )
     }
 }
 
