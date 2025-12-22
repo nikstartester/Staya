@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -20,16 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.unit.dp
+import com.xando.auth.ui.components.EmailTextField
 import com.xando.auth.ui.components.PasswordTextField
 import com.xando.design.ui.components.button.StayaButton
 import com.xando.design.ui.components.button.StayaOutlinedButton
-import com.xando.design.ui.components.text_field.StayaOutlinedTextField
 import com.xando.design.ui.theme.extendedColors
 import com.xando.feature.auth.R
-import com.xando.core.design.R as RDesign
 
 /**
  * Компонент заголовка с лого и названием
@@ -73,6 +68,7 @@ internal fun LoginForm(
     Column(modifier = modifier) {
         EmailTextField(
             value = email,
+            label = stringResource(R.string.auth_email_or_login_title),
             onValueChanged = onEmailChange,
             readOnly = isLoading
         )
@@ -136,27 +132,4 @@ internal fun LoginActions(
             enabled = !isLoading
         )
     }
-}
-
-@Composable
-private fun EmailTextField(
-    value: String,
-    onValueChanged: (String) -> Unit,
-    readOnly: Boolean
-) {
-    StayaOutlinedTextField(
-        value = value,
-        onValueChange = onValueChanged,
-        label = stringResource(R.string.auth_email_or_login_title),
-        modifier = Modifier.fillMaxWidth(),
-        readOnly = readOnly,
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                painter = painterResource(RDesign.drawable.design_ic_mail_24dp),
-                contentDescription = null
-            )
-        },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, hintLocales = LocaleList("en"))
-    )
 }
