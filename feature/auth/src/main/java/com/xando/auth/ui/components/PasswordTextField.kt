@@ -24,15 +24,35 @@ import com.xando.feature.auth.R
 import com.xando.core.design.R as RDesign
 
 @Composable
-internal fun PasswordTextField(value: String, onValueChange: (String) -> Unit, readOnly: Boolean) {
-    var isPasswordVisible by remember { mutableStateOf(false) }
+internal fun PasswordTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    readOnly: Boolean,
+    label: String = stringResource(R.string.auth_password_title),
+    showPasswordButtonVisible: Boolean? = null,
+    isPasswordVisible: Boolean? = null,
+    onPasswordButtonClicked: ((Boolean) -> Unit)? = null,
+    errorText: String? = null,
+) {
+    var internalPasswordVisible by remember { mutableStateOf(false) }
+
+    // Определяем актуальное значение и способ изменения
+    val passwordVisible = isPasswordVisible ?: internalPasswordVisible
+    val toggleVisibility: () -> Unit = {
+        val newValue = !passwordVisible
+        if (isPasswordVisible != null) {
+            onPasswordButtonClicked?.invoke(newValue)
+        } else {
+            internalPasswordVisible = newValue
+        }
+    }
     StayaOutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = stringResource(R.string.auth_password_title),
+        label = label,
         modifier = Modifier.fillMaxWidth(),
         readOnly = readOnly,
-        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         singleLine = true,
         leadingIcon = {
             Icon(
@@ -43,20 +63,21 @@ internal fun PasswordTextField(value: String, onValueChange: (String) -> Unit, r
         trailingIcon =
             @Composable {
                 val visibilityIconRes =
-                    if (isPasswordVisible) RDesign.drawable.design_ic_visibility_off_24dp
+                    if (passwordVisible) RDesign.drawable.design_ic_visibility_off_24dp
                     else RDesign.drawable.design_ic_visibility_24dp
                 AnimatedVisibility(
-                    value.isNotEmpty(),
+                    showPasswordButtonVisible ?: value.isNotEmpty(),
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
                     Icon(
-                        modifier = Modifier.clickable { isPasswordVisible = !isPasswordVisible },
+                        modifier = Modifier.clickable (onClick = toggleVisibility),
                         painter = painterResource(visibilityIconRes),
                         contentDescription = null
                     )
                 }
             },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, hintLocales = LocaleList("en"))
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, hintLocales = LocaleList("en")),
+        errorText = errorText
     )
 }

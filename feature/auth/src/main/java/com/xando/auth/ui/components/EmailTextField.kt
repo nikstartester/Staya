@@ -17,6 +17,7 @@ internal fun EmailTextField(
     label: String,
     onValueChanged: (String) -> Unit,
     readOnly: Boolean,
+    errorText: String? = null,
 ) {
     StayaOutlinedTextField(
         value = value,
@@ -31,6 +32,7 @@ internal fun EmailTextField(
                 contentDescription = null
             )
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, hintLocales = LocaleList("en"))
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, hintLocales = LocaleList("en")),
+        errorText = errorText
     )
 }

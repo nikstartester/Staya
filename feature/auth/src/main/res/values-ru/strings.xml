@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="auth_app_name">Staya</string>
+    <string name="auth_app_name">Стая</string>
     <string name="auth_forgot_password_title">Забыли пароль?</string>
     <string name="auth_login_title">Войти</string>
     <string name="auth_or_title">или</string>
     <string name="auth_sign_up_title">Зарегистрироваться</string>
     <string name="auth_email_or_login_title">Email или логин</string>
     <string name="auth_password_title">Пароль</string>
+
+    <!-- Sign Up -->
+    <string name="auth_sign_up_back_content_description">Назад</string>
+    <string name="auth_sign_up_step_title">Шаг %1$d из %2$d</string>
+    <string name="auth_sign_up_continue_title">Продолжить</string>
+    <string name="auth_sign_up_skip_title">Пропустить</string>
+    <string name="auth_sign_up_introduction_title">Давайте с вами познакомимся. Укажите имя и фамилию. И при желании добавьте фото.</string>
+    <string name="auth_sign_up_introduction_first_name_label">Ваше имя</string>
+    <string name="auth_sign_up_introduction_last_name_label">Ваша фамилия</string>
+    <string name="auth_sign_up_introduction_photo_content_description">Фото профиля</string>
+    <string name="auth_sign_up_introduction_photo_title">Выбрать фото</string>
+    <string name="auth_sign_up_about_title">Расскажите немного о себе или пропустите этот шаг. Вы можете сделать это в любое время в настройках профиля.</string>
+    <string name="auth_sign_up_about_placeholder">Например, люблю вомбатов и играть с собакой в мяч. \uD83D\uDC15</string>
+    <string name="auth_sign_up_login_title">Введите логин или пропустите этот шаг. Он может быть использован для входа в приложение, а также другие люди смогут вас по нему найти.</string>
+    <string name="auth_sign_up_login_label">Введите логин</string>
+    <string name="auth_sign_up_login_placeholder">Например, ivan_ivanov</string>
+    <string name="auth_sign_up_login_hint">Минимальная длина 4 символа. Можно использовать только символы a-z, A-Z, 0-9 и нижнее подчеркивание.</string>
+    <string name="auth_sign_up_email_password_title">Осталось совсем чуть-чуть. Укажите ваш e-mail адрес и придумайте пароль.</string>
+    <string name="auth_sign_up_email_password_email_label">E-mail</string>
+    <string name="auth_sign_up_email_password_password_label">Введите пароль</string>
+    <string name="auth_sign_up_email_password_repeat_password_label">Повторите пароль</string>
+    <string name="auth_sign_up_email_password_hint">Минимальная длина 6 символов.</string>
 </resources>

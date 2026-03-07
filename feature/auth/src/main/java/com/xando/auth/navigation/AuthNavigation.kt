@@ -39,13 +39,6 @@ internal fun EntryProviderScope<NavKey>.authEntryBuilder(navigationController: N
             },
             onBackClick = {
                 navigationController.navigateBack()
-            },
-            onLoginClick = {
-                navigationController.navigateAndPopUpTo(
-                    destination = LoginKey,
-                    popUpTo = LoginKey,
-                    inclusive = false
-                )
             }
         )
     }
