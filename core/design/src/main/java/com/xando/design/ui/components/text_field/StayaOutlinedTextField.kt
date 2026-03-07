@@ -63,10 +63,12 @@ fun StayaOutlinedTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: String? = null,
+    placeholder: String? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    singleLine: Boolean = true,
+    singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
+    minLines: Int = 1,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -86,10 +88,19 @@ fun StayaOutlinedTextField(
         onValueChange = onValueChange,
         modifier = modifier,
         label = label?.let { { Text(it) } },
+        placeholder = placeholder?.let {
+            {
+                Text(
+                    text = it,
+                    color = MaterialTheme.extendedColors.unaccentedTextColor
+                )
+            }
+        },
         enabled = enabled,
         readOnly = readOnly,
         singleLine = singleLine,
         maxLines = maxLines,
+        minLines = minLines,
         textStyle = StayaTextFieldDefaults.textStyle,
         shape = StayaTextFieldDefaults.shape,
         leadingIcon = leadingIcon?.let {
