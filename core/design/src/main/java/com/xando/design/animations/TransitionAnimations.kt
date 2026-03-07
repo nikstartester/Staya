@@ -4,9 +4,11 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -66,4 +68,32 @@ fun AnimatedContentTransitionScope<*>.rightOutLeftInTransition(): ContentTransfo
         targetOffsetX = { fullWidth -> fullWidth },
         animationSpec = tween(ANIM_DURATION)
     )
+
+fun AnimatedContentTransitionScope<*>.predictiveBackTransition(): ContentTransform {
+    val slideOffset = 0.05f
+    val easingSpec = CubicBezierEasing(0.1f, 0.1f, 0f, 1f)
+    return scaleIn(
+        initialScale = 0.95f,
+        animationSpec = tween(
+            durationMillis = ANIM_DURATION,
+            easing = easingSpec
+        )
+    ) + fadeIn(
+        animationSpec = tween(
+            durationMillis = ANIM_DURATION,
+            easing = easingSpec
+        )
+    ) togetherWith slideOutHorizontally(
+        targetOffsetX = { fullWidth -> (fullWidth * slideOffset).toInt() },
+        animationSpec = tween(
+            durationMillis = ANIM_DURATION,
+            easing = easingSpec
+        )
+    ) + fadeOut(
+        animationSpec = tween(
+            durationMillis = ANIM_DURATION,
+            easing = easingSpec
+        )
+    )
+}
 
