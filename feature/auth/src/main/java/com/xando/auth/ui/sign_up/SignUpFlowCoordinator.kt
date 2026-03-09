@@ -1,7 +1,9 @@
 package com.xando.auth.ui.sign_up
 
 import android.net.Uri
+import android.os.Parcelable
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 /**
@@ -40,6 +42,12 @@ internal interface SignUpFlowCoordinator {
         password: String,
         repeatPassword: String,
     )
+
+    /**
+     * Восстанавливает данные из [data].
+     */
+    fun restoreFrom(data: SignUpFlowData)
+
 }
 
 @ActivityRetainedScoped
@@ -85,11 +93,16 @@ internal class SignUpFlowCoordinatorImpl @Inject constructor() : SignUpFlowCoord
             repeatPassword = repeatPassword
         )
     }
+
+    override fun restoreFrom(data: SignUpFlowData) {
+        state = data
+    }
 }
 
 /**
  * Полный набор данных, собранных в рамках флоу регистрации.
  */
+@Parcelize
 internal data class SignUpFlowData(
     val firstName: String = "",
     val lastName: String = "",
@@ -99,4 +112,4 @@ internal data class SignUpFlowData(
     val email: String = "",
     val password: String = "",
     val repeatPassword: String = "",
-)
+) : Parcelable

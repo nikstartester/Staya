@@ -1,16 +1,18 @@
 package com.xando.auth.ui.sign_up.pages.introduction
 
 import android.net.Uri
+import android.os.Parcelable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.xando.auth.ui.sign_up.SignUpFlowCoordinator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 /**
@@ -19,9 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SignUpIntroductionViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SignUpIntroductionUiState())
+    companion object {
+        private const val KEY_STATE = "SignUpIntroductionUiState"
+    }
+
+    private val _uiState = savedStateHandle.getMutableStateFlow(KEY_STATE, SignUpIntroductionUiState())
 
     /**@SelfDocumented*/
     val uiState: StateFlow<SignUpIntroductionUiState> = _uiState.asStateFlow()
@@ -68,13 +75,17 @@ internal class SignUpIntroductionViewModel @Inject constructor(
     fun onContinueClick() {
         if (!validate()) return
 
+        updateCoordinator()
+        _events.trySend(SignUpIntroductionEvent.NavigateNext)
+    }
+
+    private fun updateCoordinator() {
         val state = _uiState.value
         coordinator.updateIntroduction(
             firstName = state.firstName,
             lastName = state.lastName,
             photoUri = state.photoUri,
         )
-        _events.trySend(SignUpIntroductionEvent.NavigateNext)
     }
 
     /**
@@ -97,13 +108,14 @@ internal class SignUpIntroductionViewModel @Inject constructor(
 }
 
 /**@SelfDocumented*/
+@Parcelize
 internal data class SignUpIntroductionUiState(
     val firstName: String = "",
     val lastName: String = "",
     val photoUri: Uri? = null,
     val firstNameError: String? = null,
     val lastNameError: String? = null,
-)
+) : Parcelable
 
 /**
  * Одноразовые события первого шага регистрации.

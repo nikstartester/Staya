@@ -1,16 +1,18 @@
 package com.xando.auth.ui.sign_up.pages.email_password
 
+import android.os.Parcelable
 import android.util.Patterns
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.xando.auth.ui.sign_up.SignUpFlowCoordinator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 /**
@@ -19,13 +21,16 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SignUpEmailPasswordViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     companion object {
         private const val MIN_PASSWORD_LENGTH = 6
+        private const val KEY_STATE = "SignUpEmailPasswordUiState"
     }
 
-    private val _uiState = MutableStateFlow(
+    private val _uiState = savedStateHandle.getMutableStateFlow(
+        KEY_STATE,
         SignUpEmailPasswordUiState(minPasswordLength = MIN_PASSWORD_LENGTH)
     )
 
@@ -91,13 +96,17 @@ internal class SignUpEmailPasswordViewModel @Inject constructor(
     fun onContinueClick() {
         if (!validate()) return
 
+        updateCoordinator()
+        _events.trySend(SignUpEmailPasswordEvent.NavigateNext)
+    }
+
+    private fun updateCoordinator() {
         val state = _uiState.value
         coordinator.updateEmailPassword(
             email = state.email,
             password = state.password,
             repeatPassword = state.repeatPassword,
         )
-        _events.trySend(SignUpEmailPasswordEvent.NavigateNext)
     }
 
     /**
@@ -137,6 +146,7 @@ internal class SignUpEmailPasswordViewModel @Inject constructor(
 }
 
 /**@SelfDocumented*/
+@Parcelize
 internal data class SignUpEmailPasswordUiState(
     val email: String = "",
     val password: String = "",
@@ -147,7 +157,7 @@ internal data class SignUpEmailPasswordUiState(
     val repeatPasswordError: String? = null,
     val showPasswordButtonVisible: Boolean = false,
     val minPasswordLength: Int = 6,
-)
+) : Parcelable
 
 /**
  * Одноразовые события шага ввода e-mail и пароля.
