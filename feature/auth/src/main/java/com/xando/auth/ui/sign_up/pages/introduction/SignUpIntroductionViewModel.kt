@@ -1,24 +1,17 @@
 package com.xando.auth.ui.sign_up.pages.introduction
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.xando.auth.ui.sign_up.SignUpFlowCoordinator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-
-/**@SelfDocumented*/
-internal data class SignUpIntroductionUiState(
-    val firstName: String = "",
-    val lastName: String = "",
-    val photoUri: String? = null,
-    val firstNameError: String? = null,
-    val lastNameError: String? = null,
-)
 
 /**
  * ViewModel первого шага регистрации.
@@ -28,17 +21,15 @@ internal class SignUpIntroductionViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
 ) : ViewModel() {
 
-    /**
-     * Одноразовые события первого шага регистрации.
-     */
-    sealed interface Event {
-        data object NavigateNext : Event
-    }
-
     private val _uiState = MutableStateFlow(SignUpIntroductionUiState())
+
+    /**@SelfDocumented*/
     val uiState: StateFlow<SignUpIntroductionUiState> = _uiState.asStateFlow()
-    private val _events = Channel<Event>(capacity = Channel.BUFFERED)
-    val events = _events.receiveAsFlow()
+
+    private val _events = Channel<SignUpIntroductionEvent>(capacity = Channel.UNLIMITED)
+
+    /**@SelfDocumented*/
+    val events: Flow<SignUpIntroductionEvent> = _events.receiveAsFlow()
 
     /**
      * Обновляет имя и очищает ошибку поля.
@@ -67,7 +58,7 @@ internal class SignUpIntroductionViewModel @Inject constructor(
     /**
      * Обновляет URI выбранной фотографии профиля.
      */
-    fun updatePhotoUri(photoUri: String?) {
+    fun updatePhotoUri(photoUri: Uri) {
         _uiState.update { it.copy(photoUri = photoUri) }
     }
 
@@ -83,7 +74,7 @@ internal class SignUpIntroductionViewModel @Inject constructor(
             lastName = state.lastName,
             photoUri = state.photoUri,
         )
-        _events.trySend(Event.NavigateNext)
+        _events.trySend(SignUpIntroductionEvent.NavigateNext)
     }
 
     /**
@@ -103,4 +94,20 @@ internal class SignUpIntroductionViewModel @Inject constructor(
 
         return firstNameError == null && lastNameError == null
     }
+}
+
+/**@SelfDocumented*/
+internal data class SignUpIntroductionUiState(
+    val firstName: String = "",
+    val lastName: String = "",
+    val photoUri: Uri? = null,
+    val firstNameError: String? = null,
+    val lastNameError: String? = null,
+)
+
+/**
+ * Одноразовые события первого шага регистрации.
+ */
+sealed interface SignUpIntroductionEvent {
+    data object NavigateNext : SignUpIntroductionEvent
 }

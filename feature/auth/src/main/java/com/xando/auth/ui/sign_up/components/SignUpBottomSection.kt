@@ -15,7 +15,6 @@ import com.xando.design.ui.components.button.StayaButton
 import com.xando.design.ui.components.button.StayaOutlinedButton
 import com.xando.design.ui.theme.extendedColors
 import com.xando.feature.auth.R
-import org.jetbrains.annotations.Range
 
 private const val TOTAL_STEPS = 4
 
@@ -59,6 +58,9 @@ internal fun SignUpBottomSection(
     }
 }
 
+/**
+ * Действия нижней панели.
+ */
 internal enum class BottomSectionAction {
     CONTINUE,
     SKIP

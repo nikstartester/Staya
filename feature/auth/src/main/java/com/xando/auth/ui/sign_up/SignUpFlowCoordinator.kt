@@ -1,5 +1,6 @@
 package com.xando.auth.ui.sign_up
 
+import android.net.Uri
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ internal interface SignUpFlowCoordinator {
     fun updateIntroduction(
         firstName: String,
         lastName: String,
-        photoUri: String?,
+        photoUri: Uri?,
     )
 
     /**
@@ -44,7 +45,7 @@ internal interface SignUpFlowCoordinator {
 @ActivityRetainedScoped
 internal class SignUpFlowCoordinatorImpl @Inject constructor() : SignUpFlowCoordinator {
 
-    private val state = SignUpFlowData()
+    private var state = SignUpFlowData()
 
     /**@SelfDocumented*/
     override fun getSnapshot(): SignUpFlowData = state.copy()
@@ -53,21 +54,23 @@ internal class SignUpFlowCoordinatorImpl @Inject constructor() : SignUpFlowCoord
     override fun updateIntroduction(
         firstName: String,
         lastName: String,
-        photoUri: String?,
+        photoUri: Uri?,
     ) {
-        state.firstName = firstName
-        state.lastName = lastName
-        state.photoUri = photoUri
+        state = state.copy(
+            firstName = firstName,
+            lastName = lastName,
+            photoUri = photoUri
+        )
     }
 
     /**@SelfDocumented*/
     override fun updateAbout(description: String) {
-        state.description = description
+        state = state.copy(description = description)
     }
 
     /**@SelfDocumented*/
     override fun updateLogin(login: String) {
-        state.login = login
+        state = state.copy(login = login)
     }
 
     /**@SelfDocumented*/
@@ -76,9 +79,11 @@ internal class SignUpFlowCoordinatorImpl @Inject constructor() : SignUpFlowCoord
         password: String,
         repeatPassword: String,
     ) {
-        state.email = email
-        state.password = password
-        state.repeatPassword = repeatPassword
+        state = state.copy(
+            email = email,
+            password = password,
+            repeatPassword = repeatPassword
+        )
     }
 }
 
@@ -86,12 +91,12 @@ internal class SignUpFlowCoordinatorImpl @Inject constructor() : SignUpFlowCoord
  * Полный набор данных, собранных в рамках флоу регистрации.
  */
 internal data class SignUpFlowData(
-    var firstName: String = "",
-    var lastName: String = "",
-    var photoUri: String? = null,
-    var description: String = "",
-    var login: String = "",
-    var email: String = "",
-    var password: String = "",
-    var repeatPassword: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val photoUri: Uri? = null,
+    val description: String = "",
+    val login: String = "",
+    val email: String = "",
+    val password: String = "",
+    val repeatPassword: String = "",
 )

@@ -23,10 +23,10 @@
     <string name="auth_sign_up_login_title">Enter a login or skip this step. It can be used to sign in, and other people will also be able to find you by it.</string>
     <string name="auth_sign_up_login_label">Enter login</string>
     <string name="auth_sign_up_login_placeholder">For example, ivan_ivanov</string>
-    <string name="auth_sign_up_login_hint">Minimum length is 4 characters. Only a-z, A-Z, 0-9 and underscore are allowed.</string>
+    <string name="auth_sign_up_login_hint">Minimum length is %d characters. Only a-z, A-Z, 0-9 and underscore are allowed.</string>
     <string name="auth_sign_up_email_password_title">Just one more step. Enter your email address and create a password.</string>
     <string name="auth_sign_up_email_password_email_label">Email</string>
     <string name="auth_sign_up_email_password_password_label">Enter password</string>
     <string name="auth_sign_up_email_password_repeat_password_label">Repeat password</string>
-    <string name="auth_sign_up_email_password_hint">Minimum length is 6 characters.</string>
+    <string name="auth_sign_up_email_password_hint">Minimum length is %d characters.</string>
 </resources>

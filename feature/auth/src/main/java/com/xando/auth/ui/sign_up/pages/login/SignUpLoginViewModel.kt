@@ -5,23 +5,13 @@ import com.xando.auth.ui.sign_up.SignUpFlowCoordinator
 import com.xando.auth.ui.sign_up.components.BottomSectionAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-
-private val LOGIN_REGEX = Regex("^[A-Za-z0-9_]{4,}$")
-
-/**@SelfDocumented*/
-internal data class SignUpLoginUiState(
-    val login: String = "",
-    val loginError: String? = null,
-) {
-    val action = if (login.isBlank()) BottomSectionAction.SKIP
-    else BottomSectionAction.CONTINUE
-}
 
 /**
  * ViewModel шага выбора логина.
@@ -31,26 +21,33 @@ internal class SignUpLoginViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
 ) : ViewModel() {
 
-    /**
-     * Одноразовые события шага выбора логина.
-     */
-    sealed interface Event {
-        data object NavigateNext : Event
+    companion object {
+        private val LOGIN_REGEX = Regex("^[A-Za-z0-9_]{$MIN_LOGIN_LENGTH,}$")
+        private const val MIN_LOGIN_LENGTH = 4
     }
 
-    private val _uiState = MutableStateFlow(SignUpLoginUiState())
+    private val _uiState = MutableStateFlow(
+        SignUpLoginUiState(minLoginLength = MIN_LOGIN_LENGTH)
+    )
+
+    /**@SelfDocumented*/
     val uiState: StateFlow<SignUpLoginUiState> = _uiState.asStateFlow()
-    private val _events = Channel<Event>(capacity = Channel.BUFFERED)
-    val events = _events.receiveAsFlow()
+
+    private val _events = Channel<SignUpLoginEvent>(capacity = Channel.UNLIMITED)
+
+    /**@SelfDocumented*/
+    val events: Flow<SignUpLoginEvent> = _events.receiveAsFlow()
 
     /**
      * Обновляет логин и очищает ошибку поля.
      */
     fun updateLogin(login: String) {
+        val action = if (login.isBlank()) BottomSectionAction.SKIP else BottomSectionAction.CONTINUE
         _uiState.update {
             it.copy(
                 login = login,
                 loginError = null,
+                action = action
             )
         }
     }
@@ -62,7 +59,7 @@ internal class SignUpLoginViewModel @Inject constructor(
         if (!validate()) return
 
         coordinator.updateLogin(_uiState.value.login)
-        _events.trySend(Event.NavigateNext)
+        _events.trySend(SignUpLoginEvent.NavigateNext)
     }
 
     /**
@@ -80,4 +77,19 @@ internal class SignUpLoginViewModel @Inject constructor(
 
         return loginError == null
     }
+}
+
+/**@SelfDocumented*/
+internal data class SignUpLoginUiState(
+    val login: String = "",
+    val loginError: String? = null,
+    val action: BottomSectionAction = BottomSectionAction.SKIP,
+    val minLoginLength: Int = 4
+)
+
+/**
+ * Одноразовые события шага ввода логина.
+ */
+sealed interface SignUpLoginEvent {
+    data object NavigateNext : SignUpLoginEvent
 }

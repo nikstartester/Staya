@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Icon
@@ -24,16 +25,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import coil3.compose.AsyncImage
 import com.xando.auth.ui.sign_up.components.BottomSectionAction
 import com.xando.auth.ui.sign_up.components.SignUpPage
@@ -54,12 +62,16 @@ internal fun SignUpIntroductionScreen(
     val viewModel = hiltViewModel<SignUpIntroductionViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                SignUpIntroductionViewModel.Event.NavigateNext -> onContinue()
+        viewModel.events
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            // TODO: Добавить throttleFirst для всех кнопок!
+            .collect { event ->
+                when (event) {
+                    SignUpIntroductionEvent.NavigateNext -> onContinue()
+                }
             }
-        }
     }
 
     SignUpPage(
@@ -76,6 +88,8 @@ internal fun SignUpIntroductionScreen(
 
         Spacer(modifier = Modifier.height(36.dp))
 
+        val lastNameFocusRequester = remember { FocusRequester() }
+
         StayaOutlinedTextField(
             value = uiState.firstName,
             onValueChange = { viewModel.updateFirstName(it) },
@@ -83,8 +97,10 @@ internal fun SignUpIntroductionScreen(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next
             ),
+            keyboardActions = KeyboardActions(onNext = { lastNameFocusRequester.requestFocus() }),
             errorText = uiState.firstNameError,
         )
 
@@ -94,10 +110,13 @@ internal fun SignUpIntroductionScreen(
             value = uiState.lastName,
             onValueChange = { viewModel.updateLastName(it) },
             label = stringResource(R.string.auth_sign_up_introduction_last_name_label),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(lastNameFocusRequester),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Done
             ),
             errorText = uiState.lastNameError,
         )
@@ -109,12 +128,12 @@ internal fun SignUpIntroductionScreen(
  */
 @Composable
 private fun PhotoPicker(
-    photoUri: String?,
-    onPhotoSelected: (String?) -> Unit,
+    photoUri: Uri?,
+    onPhotoSelected: (Uri) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val photoPickerLauncher = rememberLauncherForActivityResult(contract = PickVisualMedia()) { uri: Uri? ->
-        if (uri != null) onPhotoSelected(uri.toString())
+        if (uri != null) onPhotoSelected(uri)
     }
 
     Box(

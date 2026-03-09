@@ -19,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -56,6 +59,8 @@ internal fun SignUpScreen(
         NavigationControllerImpl(backStack)
     }
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
     Scaffold(
         modifier = Modifier.imePadding(),
         topBar = {
@@ -76,11 +81,13 @@ internal fun SignUpScreen(
         }
     ) { paddingValues ->
         LaunchedEffect(Unit) {
-            viewModel.events.collect { event ->
-                when (event) {
-                    is SignUpScreenViewModel.Event.SignUpCompleted -> onSignUpSuccess()
+            viewModel.events
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { event ->
+                    when (event) {
+                        is SignUpFlowEvent.SignUpCompleted -> onSignUpSuccess()
+                    }
                 }
-            }
         }
 
         NavDisplay(

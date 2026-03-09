@@ -10,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.xando.auth.ui.sign_up.components.BottomSectionAction
 import com.xando.auth.ui.sign_up.components.SignUpPage
 import com.xando.design.ui.components.text_field.StayaOutlinedTextField
@@ -25,12 +28,15 @@ internal fun SignUpAboutScreen(onContinue: () -> Unit) {
 
     val action = if (uiState.description.isNotBlank()) BottomSectionAction.CONTINUE else BottomSectionAction.SKIP
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                SignUpAboutViewModel.Event.NavigateNext -> onContinue()
+        viewModel.events
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .collect { event ->
+                when (event) {
+                    SignUpAboutEvent.NavigateNext -> onContinue()
+                }
             }
-        }
     }
 
     SignUpPage(

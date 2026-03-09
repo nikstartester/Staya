@@ -23,10 +23,10 @@
     <string name="auth_sign_up_login_title">Введите логин или пропустите этот шаг. Он может быть использован для входа в приложение, а также другие люди смогут вас по нему найти.</string>
     <string name="auth_sign_up_login_label">Введите логин</string>
     <string name="auth_sign_up_login_placeholder">Например, ivan_ivanov</string>
-    <string name="auth_sign_up_login_hint">Минимальная длина 4 символа. Можно использовать только символы a-z, A-Z, 0-9 и нижнее подчеркивание.</string>
+    <string name="auth_sign_up_login_hint">Минимальная длина %d символа. Можно использовать только символы a-z, A-Z, 0-9 и нижнее подчеркивание.</string>
     <string name="auth_sign_up_email_password_title">Осталось совсем чуть-чуть. Укажите ваш e-mail адрес и придумайте пароль.</string>
     <string name="auth_sign_up_email_password_email_label">E-mail</string>
     <string name="auth_sign_up_email_password_password_label">Введите пароль</string>
     <string name="auth_sign_up_email_password_repeat_password_label">Повторите пароль</string>
-    <string name="auth_sign_up_email_password_hint">Минимальная длина 6 символов.</string>
+    <string name="auth_sign_up_email_password_hint">Минимальная длина %d символов.</string>
 </resources>

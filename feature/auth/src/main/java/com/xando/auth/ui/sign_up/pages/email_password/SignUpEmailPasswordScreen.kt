@@ -14,6 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.xando.auth.ui.components.EmailTextField
 import com.xando.auth.ui.components.PasswordTextField
 import com.xando.auth.ui.sign_up.components.BottomSectionAction
@@ -21,17 +24,23 @@ import com.xando.auth.ui.sign_up.components.SignUpPage
 import com.xando.design.ui.theme.extendedColors
 import com.xando.feature.auth.R
 
+/**
+ * Экран ввода e-mail и пароля.
+ */
 @Composable
 internal fun SignUpEmailPasswordScreen(onContinue: () -> Unit) {
     val viewModel = hiltViewModel<SignUpEmailPasswordViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                SignUpEmailPasswordViewModel.Event.NavigateNext -> onContinue()
+        viewModel.events
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .collect { event ->
+                when (event) {
+                    SignUpEmailPasswordEvent.NavigateNext -> onContinue()
+                }
             }
-        }
     }
 
     SignUpPage(
@@ -77,7 +86,7 @@ internal fun SignUpEmailPasswordScreen(onContinue: () -> Unit) {
         Spacer(Modifier.height(12.dp))
 
         Text(
-            text = stringResource(R.string.auth_sign_up_email_password_hint),
+            text = stringResource(R.string.auth_sign_up_email_password_hint, uiState.minPasswordLength),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.extendedColors.textColor,
             textAlign = TextAlign.Start,
