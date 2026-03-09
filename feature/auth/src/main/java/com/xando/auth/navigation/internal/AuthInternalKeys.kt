@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
  * Экран регистрации нового пользователя
  */
 @Serializable
-data object SignUpKey : NavKey
+internal data object SignUpKey : NavKey
 
 /**
  * Экран восстановления пароля
  */
 @Serializable
-data object ForgotPasswordKey : NavKey
+internal data object ForgotPasswordKey : NavKey

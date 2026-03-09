@@ -11,6 +11,10 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.xando.design.animations.predictiveBackTransition
+import com.xando.design.animations.noTransition
+import com.xando.design.animations.rightInTransition
+import com.xando.design.animations.rightOutTransition
 import com.xando.navigation_api.EntryBuilder
 import com.xando.navigation_api.features.auth.LoginKey
 import com.xando.navigation_api.features.home.HomeKey
@@ -42,9 +46,18 @@ fun RootHost(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
+        transitionSpec = { rightInTransition() },
+        popTransitionSpec = { rightOutTransition() },
+        predictivePopTransitionSpec = {
+            predictiveBackTransition()
+        },
         entryProvider =
             entryProvider {
-                entry<HomeKey> {
+                entry<HomeKey>(
+                    metadata = NavDisplay.transitionSpec { noTransition }
+                            + NavDisplay.popTransitionSpec { noTransition }
+                            + NavDisplay.predictivePopTransitionSpec { noTransition }
+                ) {
                     BottomNavContainer(
                         parentNavigationController = navigationController
                     )
