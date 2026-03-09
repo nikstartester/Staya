@@ -1,9 +1,20 @@
-package com.xando.staya.navigation_impl
+package com.xando.navigation_impl
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.xando.navigation_api.NavigationController
+
+/**
+ * Создаёт и запоминает [NavigationController], привязанный к [backStack].
+ * Экземпляр пересоздаётся при изменении ссылки на [backStack].
+ */
+@Composable
+fun rememberNavigationController(backStack: NavBackStack<NavKey>): NavigationController {
+    return remember(backStack) { NavigationControllerImpl(backStack) }
+}
 
 /**
  * Реализация NavigationController.

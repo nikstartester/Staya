@@ -15,10 +15,7 @@ dependencies {
     // Core:
     implementation(project(":core:design"))
     implementation(project(":core:navigation-api"))
-
-    // Navigation
-    implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(project(":core:navigation-impl"))
 
     // Hilt
     implementation(libs.hilt.android)

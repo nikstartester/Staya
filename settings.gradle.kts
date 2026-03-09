@@ -28,6 +28,7 @@ include(":app")
 //Core:
 include(":core:design")
 include(":core:navigation-api")
+include(":core:navigation-impl")
 
 //Features:
 include(":feature:auth")

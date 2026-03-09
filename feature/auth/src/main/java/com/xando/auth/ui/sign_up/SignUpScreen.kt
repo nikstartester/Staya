@@ -13,8 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,7 +21,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -40,7 +37,7 @@ import com.xando.auth.ui.sign_up.pages.login.SignUpLoginScreen
 import com.xando.design.animations.rightInLeftOutTransition
 import com.xando.design.animations.rightOutLeftInTransition
 import com.xando.feature.auth.R
-import com.xando.navigation_api.NavigationController
+import com.xando.navigation_impl.rememberNavigationController
 import com.xando.core.design.R as RDesign
 
 /**
@@ -53,11 +50,9 @@ internal fun SignUpScreen(
     onBackClick: () -> Unit
 ) {
     val viewModel = hiltViewModel<SignUpScreenViewModel>()
-    val backStack = rememberNavBackStack(SignUpIntroductionKey)
 
-    val navigationController = remember(backStack) {
-        NavigationControllerImpl(backStack)
-    }
+    val backStack = rememberNavBackStack(SignUpIntroductionKey)
+    val navigationController = rememberNavigationController(backStack)
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
@@ -139,64 +134,5 @@ internal fun SignUpScreen(
                 }
             }
         )
-    }
-}
-
-//TODO: Нужно вынести в общий модуль навигации (navigation_impl?)
-/**
- * Реализация NavigationController.
- * Инкапсулирует всю логику работы с back stack.
- */
-@Stable
-private class NavigationControllerImpl(private val backStack: NavBackStack<NavKey>) : NavigationController {
-
-    /**@SelfDocumented*/
-    override fun navigateTo(key: NavKey) {
-        backStack.add(key)
-    }
-
-    /**@SelfDocumented*/
-    override fun navigateBack(): Boolean =
-        backStack.removeLastOrNull() != null
-
-    /**@SelfDocumented*/
-    override fun replaceWith(key: NavKey) {
-        if (backStack.isNotEmpty()) {
-            backStack[backStack.lastIndex] = key
-        } else backStack.add(key)
-    }
-
-    /**@SelfDocumented*/
-    override fun navigateAndClearStack(key: NavKey) {
-        backStack.clear()
-        backStack.add(key)
-    }
-
-    /**@SelfDocumented*/
-    override fun navigateAndPopUpTo(
-        destination: NavKey,
-        popUpTo: NavKey,
-        inclusive: Boolean
-    ) {
-        val index = backStack.indexOfLast { it == popUpTo }
-
-        if (index != -1) {
-            val removeFrom = if (inclusive) index else index + 1
-            if (removeFrom < backStack.size) {
-                backStack.subList(removeFrom, backStack.size).clear()
-            }
-        }
-
-        backStack.add(destination)
-    }
-
-    /**@SelfDocumented*/
-    override fun currentDestination(): NavKey? {
-        return backStack.lastOrNull()
-    }
-
-    /**@SelfDocumented*/
-    override fun canNavigateBack(): Boolean {
-        return backStack.size > 1
     }
 }
