@@ -1,16 +1,18 @@
 package com.xando.auth.ui.sign_up.pages.login
 
+import android.os.Parcelable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.xando.auth.ui.sign_up.SignUpFlowCoordinator
 import com.xando.auth.ui.sign_up.components.BottomSectionAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 /**
@@ -19,14 +21,18 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SignUpLoginViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     companion object {
         private val LOGIN_REGEX = Regex("^[A-Za-z0-9_]{$MIN_LOGIN_LENGTH,}$")
         private const val MIN_LOGIN_LENGTH = 4
+
+        private const val KEY_STATE = "SignUpLoginUiState"
     }
 
-    private val _uiState = MutableStateFlow(
+    private val _uiState = savedStateHandle.getMutableStateFlow(
+        KEY_STATE,
         SignUpLoginUiState(minLoginLength = MIN_LOGIN_LENGTH)
     )
 
@@ -58,8 +64,13 @@ internal class SignUpLoginViewModel @Inject constructor(
     fun onContinueClick() {
         if (!validate()) return
 
-        coordinator.updateLogin(_uiState.value.login)
+        updateCoordinator()
         _events.trySend(SignUpLoginEvent.NavigateNext)
+    }
+
+    private fun updateCoordinator() {
+        val state = _uiState.value
+        coordinator.updateLogin(login = state.login)
     }
 
     /**
@@ -80,12 +91,13 @@ internal class SignUpLoginViewModel @Inject constructor(
 }
 
 /**@SelfDocumented*/
+@Parcelize
 internal data class SignUpLoginUiState(
     val login: String = "",
     val loginError: String? = null,
     val action: BottomSectionAction = BottomSectionAction.SKIP,
     val minLoginLength: Int = 4
-)
+) : Parcelable
 
 /**
  * Одноразовые события шага ввода логина.

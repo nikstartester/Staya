@@ -105,28 +105,28 @@ internal fun SignUpScreen(
             predictivePopTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
 
             entryProvider = entryProvider {
+                val navigateNext: (navKey: NavKey) -> Unit = { navKey ->
+                    viewModel.onContinueClick()
+                    navigationController.navigateTo(navKey)
+                }
                 entry<SignUpIntroductionKey> {
                     SignUpIntroductionScreen(
                         onContinue = {
-                            navigationController.navigateTo(SignUpAboutKey)
+                            navigateNext(SignUpAboutKey)
                         }
                     )
                 }
                 entry<SignUpAboutKey> {
                     SignUpAboutScreen(
                         onContinue = {
-                            navigationController.navigateTo(
-                                SignUpLoginKey
-                            )
+                            navigateNext(SignUpLoginKey)
                         }
                     )
                 }
                 entry<SignUpLoginKey> {
                     SignUpLoginScreen(
                         onContinue = {
-                            navigationController.navigateTo(
-                                SignUpEmailPasswordKey
-                            )
+                            navigateNext(SignUpEmailPasswordKey)
                         }
                     )
                 }
