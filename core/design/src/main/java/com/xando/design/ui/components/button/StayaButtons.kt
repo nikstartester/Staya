@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.xando.design.ui.theme.extendedColors
+import com.xando.design.utils.throttledClick
 
 /**
  * Объект, содержащий дефолтные значения для кнопок
@@ -90,7 +91,7 @@ object StayaButtonDefaults {
  * Стандартизированная кнопка
  *
  * @param text Текст кнопки
- * @param onClick Обработчик нажатия на кнопку
+ * @param onClick Обработчик нажатия на кнопку. Защищён от двойного нажатия.
  * @param modifier Модификатор для кастомизации компонента
  * @param isLoading Флаг состояния загрузки. При `true` отображается индикатор загрузки вместо текста и кнопка становится неактивной
  * @param enabled Определяет, активна ли кнопка
@@ -104,7 +105,7 @@ fun StayaButton(
     enabled: Boolean = true
 ) {
     Button(
-        onClick = onClick,
+        onClick = throttledClick(onClick = onClick),
         modifier = modifier.height(StayaButtonDefaults.Height),
         enabled = enabled && !isLoading
     ) {
@@ -138,7 +139,7 @@ fun StayaOutlinedButton(
     enabled: Boolean = true
 ) {
     OutlinedButton(
-        onClick = onClick,
+        onClick = throttledClick(onClick = onClick),
         modifier = modifier.height(StayaButtonDefaults.Height),
         border = StayaButtonDefaults.outlinedBorder(),
         enabled = enabled && !isLoading

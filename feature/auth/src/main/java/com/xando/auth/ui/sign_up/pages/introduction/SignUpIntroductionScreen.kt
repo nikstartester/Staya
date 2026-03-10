@@ -66,7 +66,6 @@ internal fun SignUpIntroductionScreen(
     LaunchedEffect(Unit) {
         viewModel.events
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            // TODO: Добавить throttleFirst для всех кнопок!
             .collect { event ->
                 when (event) {
                     SignUpIntroductionEvent.NavigateNext -> onContinue()
