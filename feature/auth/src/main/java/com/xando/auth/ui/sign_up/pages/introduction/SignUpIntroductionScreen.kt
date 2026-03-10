@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import coil3.compose.AsyncImage
 import com.xando.auth.ui.sign_up.components.BottomSectionAction
@@ -60,13 +60,12 @@ internal fun SignUpIntroductionScreen(
     onContinue: () -> Unit,
 ) {
     val viewModel = hiltViewModel<SignUpIntroductionViewModel>()
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     LaunchedEffect(Unit) {
         viewModel.events
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-            // TODO: Добавить throttleFirst для всех кнопок!
             .collect { event ->
                 when (event) {
                     SignUpIntroductionEvent.NavigateNext -> onContinue()
