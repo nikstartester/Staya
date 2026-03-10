@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -12,6 +11,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.xando.auth.ui.sign_up.components.BottomSectionAction
 import com.xando.auth.ui.sign_up.components.SignUpPage
@@ -24,7 +24,7 @@ import com.xando.feature.auth.R
 @Composable
 internal fun SignUpAboutScreen(onContinue: () -> Unit) {
     val viewModel = hiltViewModel<SignUpAboutViewModel>()
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val action = if (uiState.description.isNotBlank()) BottomSectionAction.CONTINUE else BottomSectionAction.SKIP
 
