@@ -26,6 +26,7 @@ rootProject.name = "Staya"
 include(":app")
 
 //Core:
+include(":core:common")
 include(":core:design")
 include(":core:navigation-api")
 include(":core:navigation-impl")
