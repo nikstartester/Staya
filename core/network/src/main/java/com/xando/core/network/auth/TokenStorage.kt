@@ -9,7 +9,7 @@ import com.google.crypto.tink.Aead
 import com.google.crypto.tink.subtle.Base64
 import com.xando.core.network.crypto.createAead
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import java.security.GeneralSecurityException
 
 /**
@@ -41,15 +41,16 @@ class TokenStorage(private val prefs: DataStore<Preferences>, private val contex
      * При ошибке дешифрования [GeneralSecurityException] автоматически
      * очищает хранилище и возвращает пустую пару.
      */
-    val tokens: Flow<TokenPair> = prefs.data.map { data ->
+    val tokens: Flow<TokenPair> = prefs.data.transform { data ->
         try {
-            TokenPair(
-                access = data[accessTokenKey]?.let { decrypt(it) },
-                refresh = data[refreshTokenKey]?.let { decrypt(it) }
+            emit(
+                TokenPair(
+                    access = data[accessTokenKey]?.let { decrypt(it) },
+                    refresh = data[refreshTokenKey]?.let { decrypt(it) }
+                )
             )
         } catch (_: GeneralSecurityException) {
             clear()
-            TokenPair(null, null)
         }
     }
 
