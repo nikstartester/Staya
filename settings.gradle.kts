@@ -13,6 +13,8 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -27,9 +29,11 @@ include(":app")
 
 //Core:
 include(":core:common")
+include(":core:database")
 include(":core:design")
 include(":core:navigation-api")
 include(":core:navigation-impl")
+include(":core:network")
 
 //Features:
 include(":feature:auth")

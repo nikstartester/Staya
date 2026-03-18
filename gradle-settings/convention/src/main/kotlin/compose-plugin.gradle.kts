@@ -1,11 +1,22 @@
-import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.LibraryExtension
 
 plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-val android = extensions.getByName("android") as CommonExtension<*, *, *, *, *, *>
+pluginManager.withPlugin("com.android.application") {
+    extensions.configure<ApplicationExtension> {
+        buildFeatures {
+            compose = true
+        }
+    }
+}
 
-android.buildFeatures {
-    compose = true
+pluginManager.withPlugin("com.android.library") {
+    extensions.configure<LibraryExtension> {
+        buildFeatures {
+            compose = true
+        }
+    }
 }
