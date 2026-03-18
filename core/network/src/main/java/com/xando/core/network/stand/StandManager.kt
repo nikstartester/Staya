@@ -16,7 +16,12 @@ import kotlinx.coroutines.flow.map
  * @param prefs DataStore для хранения выбранного стенда.
  */
 class StandManager(private val prefs: DataStore<Preferences>) {
-    private val standKey = stringPreferencesKey("current_stand")
+
+    companion object {
+        private const val STAND_KEY_NAME = "current_stand"
+    }
+
+    private val standKey = stringPreferencesKey(STAND_KEY_NAME)
 
     /** Поток текущего стенда. */
     val current: Flow<Stand> = prefs.data.map { data ->

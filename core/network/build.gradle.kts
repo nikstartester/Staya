@@ -18,6 +18,8 @@ dependencies {
 
     // Crypto
     implementation(libs.tink.android)
+
+    // Datastore pref
     implementation(libs.androidx.datastore.preferences)
 
     // Hilt

@@ -23,10 +23,16 @@ import java.security.GeneralSecurityException
  * @param context Контекст приложения для доступа к Android Keystore.
  */
 class TokenStorage(private val prefs: DataStore<Preferences>, private val context: Context) {
+
+    companion object {
+        private const val ACCESS_TOKEN_KEY_NAME = "access_token"
+        private const val REFRESH_TOKEN_KEY_NAME = "refresh_token"
+    }
+
     private val aead: Aead by lazy { createAead(context) }
 
-    private val accessTokenKey = stringPreferencesKey("access_token")
-    private val refreshTokenKey = stringPreferencesKey("refresh_token")
+    private val accessTokenKey = stringPreferencesKey(ACCESS_TOKEN_KEY_NAME)
+    private val refreshTokenKey = stringPreferencesKey(REFRESH_TOKEN_KEY_NAME)
 
     /**
      * Поток текущих токенов.
