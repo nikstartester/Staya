@@ -1,40 +1,45 @@
 package com.xando.auth.ui.sign_up
 
-import android.preference.PreferenceManager
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.xando.auth.ui.sign_up.navigation.internal.SignUpAboutKey
+import com.xando.auth.ui.sign_up.navigation.internal.SignUpEmailPasswordKey
+import com.xando.auth.ui.sign_up.navigation.internal.SignUpIntroductionKey
+import com.xando.auth.ui.sign_up.navigation.internal.SignUpLoginKey
+import com.xando.auth.ui.sign_up.pages.about.SignUpAboutScreen
+import com.xando.auth.ui.sign_up.pages.email_password.SignUpEmailPasswordScreen
+import com.xando.auth.ui.sign_up.pages.introduction.SignUpIntroductionScreen
+import com.xando.auth.ui.sign_up.pages.login.SignUpLoginScreen
+import com.xando.design.animations.rightInLeftOutTransition
+import com.xando.design.animations.rightOutLeftInTransition
+import com.xando.feature.auth.R
+import com.xando.navigation_impl.rememberNavigationController
 import com.xando.core.design.R as RDesign
 
-// TODO: Простенький пример
 /**
  * Экран регистрации нового пользователя.
  */
@@ -42,113 +47,92 @@ import com.xando.core.design.R as RDesign
 @Composable
 internal fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
-    onBackClick: () -> Unit,
-    onLoginClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onBackClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    val viewModel = hiltViewModel<SignUpScreenViewModel>()
+
+    val backStack = rememberNavBackStack(SignUpIntroductionKey)
+    val navigationController = rememberNavigationController(backStack)
+
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     Scaffold(
+        modifier = Modifier.imePadding(),
         topBar = {
             TopAppBar(
-                title = { Text("Регистрация") },
+                title = { Text(stringResource(R.string.auth_sign_up_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = {
+                        if (navigationController.canNavigateBack()) navigationController.navigateBack()
+                        else onBackClick()
+                    }) {
                         Icon(
                             painter = painterResource(RDesign.drawable.design_ic_arrow_back_24dp),
-                            contentDescription = "Назад"
+                            contentDescription = stringResource(R.string.auth_sign_up_back_content_description)
                         )
                     }
                 }
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !isLoading,
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Пароль") },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !isLoading,
-                visualTransformation = PasswordVisualTransformation(),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                label = { Text("Подтвердите пароль") },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !isLoading,
-                visualTransformation = PasswordVisualTransformation(),
-                singleLine = true,
-                isError = confirmPassword.isNotEmpty() && password != confirmPassword,
-                supportingText = {
-                    if (confirmPassword.isNotEmpty() && password != confirmPassword) {
-                        Text("Пароли не совпадают")
+        LaunchedEffect(Unit) {
+            viewModel.events
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { event ->
+                    when (event) {
+                        is SignUpFlowEvent.SignUpCompleted -> onSignUpSuccess()
                     }
                 }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    isLoading = true
-                    PreferenceManager.getDefaultSharedPreferences(context).edit { putBoolean("IS_LOGIN", true) }
-                    onSignUpSuccess()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !isLoading &&
-                        email.isNotBlank() &&
-                        password.isNotBlank() &&
-                        password == confirmPassword
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                } else {
-                    Text("Зарегистрироваться")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Уже есть аккаунт?")
-                TextButton(onClick = onLoginClick) {
-                    Text("Войти")
-                }
-            }
         }
+
+        NavDisplay(
+            backStack = backStack,
+            modifier = Modifier.padding(paddingValues),
+            onBack = {
+                navigationController.navigateBack()
+            },
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator(removeViewModelStoreOnPop = { false })
+            ),
+            transitionSpec = { rightInLeftOutTransition() },
+            popTransitionSpec = { rightOutLeftInTransition() },
+            predictivePopTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
+
+            entryProvider = entryProvider {
+                val navigateNext: (navKey: NavKey) -> Unit = { navKey ->
+                    viewModel.onContinueClick()
+                    navigationController.navigateTo(navKey)
+                }
+                entry<SignUpIntroductionKey> {
+                    SignUpIntroductionScreen(
+                        onContinue = {
+                            navigateNext(SignUpAboutKey)
+                        }
+                    )
+                }
+                entry<SignUpAboutKey> {
+                    SignUpAboutScreen(
+                        onContinue = {
+                            navigateNext(SignUpLoginKey)
+                        }
+                    )
+                }
+                entry<SignUpLoginKey> {
+                    SignUpLoginScreen(
+                        onContinue = {
+                            navigateNext(SignUpEmailPasswordKey)
+                        }
+                    )
+                }
+                entry<SignUpEmailPasswordKey> {
+                    SignUpEmailPasswordScreen(
+                        onContinue = {
+                            viewModel.onFinalStepCompleted()
+                        }
+                    )
+                }
+            }
+        )
     }
 }

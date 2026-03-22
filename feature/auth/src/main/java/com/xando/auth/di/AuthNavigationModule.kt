@@ -18,7 +18,9 @@ object AuthNavigationModule {
     @IntoSet
     fun provideAuthEntryBuilder(): EntryBuilder {
         return EntryBuilder { navigationController ->
-            authEntryBuilder(navigationController)
+            authEntryBuilder(
+                navigationController = navigationController,
+            )
         }
     }
 }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -14,8 +15,10 @@ dependencies {
     // Core:
     implementation(project(":core:design"))
     implementation(project(":core:navigation-api"))
+    implementation(project(":core:navigation-impl"))
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 }

@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,7 +25,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.xando.navigation_api.NavigationController
-import com.xando.staya.navigation_impl.NavigationControllerImpl
+import com.xando.navigation_impl.rememberNavigationController
 import com.xando.staya.ui.AppCloseBackHandler
 import kotlinx.serialization.Serializable
 import com.xando.core.design.R as RDesign
@@ -38,10 +37,7 @@ import com.xando.core.design.R as RDesign
 @Composable
 internal fun BottomNavContainer(parentNavigationController: NavigationController) {
     val bottomBackStack = rememberNavBackStack(MapKey)
-
-    val bottomNavigationController = remember(bottomBackStack) {
-        NavigationControllerImpl(bottomBackStack)
-    }
+    val bottomNavigationController = rememberNavigationController(bottomBackStack)
 
     var selectedTab by rememberSaveable { mutableStateOf(BottomTab.MAP) }
 
