@@ -1,5 +1,6 @@
 package com.xando.auth.ui.login
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +12,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 
 /**@SelfDocumented*/
 @Composable
@@ -27,6 +33,20 @@ internal fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    LaunchedEffect(Unit) {
+        viewModel.events
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .collect { event ->
+                when (event) {
+                    is LoginEvent.ShowError -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
 
     when (state) {
         is LoginUiState.Success -> {
@@ -34,8 +54,7 @@ internal fun LoginScreen(
         }
 
         is LoginUiState.Idle,
-        is LoginUiState.Loading,
-        is LoginUiState.Error -> {
+        is LoginUiState.Loading -> {
             LoginContent(
                 state = state,
                 onEmailChange = viewModel::onEmailChanged,
@@ -62,7 +81,6 @@ private fun LoginContent(
     val credentials = when (state) {
         is LoginUiState.Idle -> state.loginCredentials
         is LoginUiState.Loading -> state.loginCredentials
-        is LoginUiState.Error -> state.loginCredentials
         else -> LoginCredentials()
     }
 

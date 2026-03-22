@@ -35,18 +35,6 @@ internal sealed interface LoginUiState : Parcelable {
     ) : LoginUiState
 
     /**
-     * Состояние ошибки авторизации.
-     *
-     * @property loginCredentials Данные, введённые пользователем.
-     * @property message Текст ошибки для отображения пользователю.
-     */
-    @Parcelize
-    data class Error(
-        val loginCredentials: LoginCredentials,
-        val message: String
-    ) : LoginUiState
-
-    /**
      * Состояние успешной авторизации.
      */
     @Parcelize

@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +37,8 @@ internal class LoginViewModel @Inject constructor(
     )
 
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    private val _events = Channel<LoginEvent>(capacity = Channel.UNLIMITED)
+    val events: Flow<LoginEvent> = _events.receiveAsFlow()
 
     /**
      * Обновляет email в текущих данных для входа.
@@ -70,24 +75,12 @@ internal class LoginViewModel @Inject constructor(
             _uiState.value = if (success) {
                 LoginUiState.Success
             } else {
-                LoginUiState.Error(
+                _events.trySend(LoginEvent.ShowError("Invalid email or password"))
+                LoginUiState.Idle(
                     loginCredentials = current.loginCredentials,
-                    message = "Invalid email or password"
+                    isLoginEnabled = isLoginEnabled(current.loginCredentials)
                 )
             }
-        }
-    }
-
-    /**
-     * Возвращает экран в состояние ввода данных после отображения ошибки.
-     */
-    fun onErrorShown() {
-        val state = _uiState.value
-        if (state is LoginUiState.Error) {
-            _uiState.value = LoginUiState.Idle(
-                loginCredentials = state.loginCredentials,
-                isLoginEnabled = isLoginEnabled(state.loginCredentials)
-            )
         }
     }
 
@@ -107,14 +100,6 @@ internal class LoginViewModel @Inject constructor(
                     )
                 }
 
-                is LoginUiState.Error -> {
-                    val updated = transform(state.loginCredentials)
-                    LoginUiState.Idle(
-                        loginCredentials = updated,
-                        isLoginEnabled = isLoginEnabled(updated)
-                    )
-                }
-
                 else -> state
             }
         }
@@ -127,4 +112,8 @@ internal class LoginViewModel @Inject constructor(
         return credentials.login.isNotBlank()
             && credentials.password.length >= 6
     }
+}
+
+internal sealed interface LoginEvent {
+    data class ShowError(val message: String) : LoginEvent
 }
