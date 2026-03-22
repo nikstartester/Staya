@@ -102,6 +102,7 @@ internal fun LoginForm(
 @Composable
 internal fun LoginActions(
     isLoading: Boolean,
+    isLoginEnabled: Boolean,
     email: String,
     onLoginClick: () -> Unit,
     onSignUpClick: (String?) -> Unit,
@@ -115,7 +116,8 @@ internal fun LoginActions(
             text = stringResource(R.string.auth_login_title),
             onClick = onLoginClick,
             modifier = Modifier.fillMaxWidth(),
-            isLoading = isLoading
+            isLoading = isLoading,
+            enabled = isLoginEnabled
         )
 
         Text(

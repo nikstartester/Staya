@@ -1,5 +1,6 @@
 package com.xando.auth.navigation
 
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.xando.auth.navigation.internal.ForgotPasswordKey
@@ -18,6 +19,7 @@ internal fun EntryProviderScope<NavKey>.authEntryBuilder(navigationController: N
     // TODO: Простенькие примеры
     entry<LoginKey> {
         LoginScreen(
+            viewModel = hiltViewModel(),
             onLoginSuccess = {
                 navigationController.navigateAndClearStack(HomeKey)
             },

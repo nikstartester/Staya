@@ -1,6 +1,6 @@
 package com.xando.auth.ui.login
 
-import android.preference.PreferenceManager
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,29 +12,67 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 
 /**@SelfDocumented*/
 @Composable
 internal fun LoginScreen(
+    viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit,
     onSignUpClick: (prefilledEmail: String?) -> Unit,
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // TODO: все это уйдет в viewModel
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    LaunchedEffect(Unit) {
+        viewModel.events
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .collect { event ->
+                when (event) {
+                    LoginEvent.LoginSuccess -> onLoginSuccess()
+                    is LoginEvent.ShowError -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
+
+    LoginContent(
+        state = state,
+        onEmailChange = viewModel::onEmailChanged,
+        onPasswordChange = viewModel::onPasswordChanged,
+        onLoginClick = viewModel::onLoginClick,
+        onSignUpClick = onSignUpClick,
+        onForgotPasswordClick = onForgotPasswordClick,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun LoginContent(
+    state: LoginUiState,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignUpClick: (String?) -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val credentials = state.loginCredentials
+    val isLoading = state.isLoading
+    val isLoginEnabled = state.isLoginEnabled
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -56,11 +94,11 @@ internal fun LoginScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             LoginForm(
-                email = email,
-                password = password,
+                email = credentials.login,
+                password = credentials.password,
                 isLoading = isLoading,
-                onEmailChange = { email = it },
-                onPasswordChange = { password = it },
+                onEmailChange = onEmailChange,
+                onPasswordChange = onPasswordChange,
                 onForgotPasswordClick = onForgotPasswordClick
             )
 
@@ -69,12 +107,9 @@ internal fun LoginScreen(
 
             LoginActions(
                 isLoading = isLoading,
-                email = email,
-                onLoginClick = {
-                    isLoading = true
-                    PreferenceManager.getDefaultSharedPreferences(context).edit { putBoolean("IS_LOGIN", true) }
-                    onLoginSuccess()
-                },
+                isLoginEnabled = isLoginEnabled,
+                email = credentials.login,
+                onLoginClick = onLoginClick,
                 onSignUpClick = onSignUpClick
             )
 

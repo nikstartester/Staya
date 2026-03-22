@@ -4,6 +4,7 @@ import android.os.Parcelable
 import android.util.Patterns
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.xando.auth.domain.validation.AuthValidationRules
 import com.xando.auth.ui.sign_up.SignUpFlowCoordinator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -25,13 +26,12 @@ internal class SignUpEmailPasswordViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        private const val MIN_PASSWORD_LENGTH = 6
         private const val KEY_STATE = "SignUpEmailPasswordUiState"
     }
 
     private val _uiState = savedStateHandle.getMutableStateFlow(
         KEY_STATE,
-        SignUpEmailPasswordUiState(minPasswordLength = MIN_PASSWORD_LENGTH)
+        SignUpEmailPasswordUiState(minPasswordLength = AuthValidationRules.MIN_PASSWORD_LENGTH)
     )
 
     /**@SelfDocumented*/
@@ -123,7 +123,7 @@ internal class SignUpEmailPasswordViewModel @Inject constructor(
 
         val passwordError = when {
             state.password.isBlank() -> ""
-            state.password.length < MIN_PASSWORD_LENGTH -> ""
+            state.password.length < AuthValidationRules.MIN_PASSWORD_LENGTH -> ""
             else -> null
         }
 
