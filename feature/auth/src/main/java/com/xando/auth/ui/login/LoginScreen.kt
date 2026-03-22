@@ -41,6 +41,7 @@ internal fun LoginScreen(
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .collect { event ->
                 when (event) {
+                    LoginEvent.LoginSuccess -> onLoginSuccess()
                     is LoginEvent.ShowError -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                     }
@@ -48,24 +49,15 @@ internal fun LoginScreen(
             }
     }
 
-    when (state) {
-        is LoginUiState.Success -> {
-            onLoginSuccess()
-        }
-
-        is LoginUiState.Idle,
-        is LoginUiState.Loading -> {
-            LoginContent(
-                state = state,
-                onEmailChange = viewModel::onEmailChanged,
-                onPasswordChange = viewModel::onPasswordChanged,
-                onLoginClick = viewModel::onLoginClick,
-                onSignUpClick = onSignUpClick,
-                onForgotPasswordClick = onForgotPasswordClick,
-                modifier = modifier
-            )
-        }
-    }
+    LoginContent(
+        state = state,
+        onEmailChange = viewModel::onEmailChanged,
+        onPasswordChange = viewModel::onPasswordChanged,
+        onLoginClick = viewModel::onLoginClick,
+        onSignUpClick = onSignUpClick,
+        onForgotPasswordClick = onForgotPasswordClick,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -78,15 +70,9 @@ private fun LoginContent(
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val credentials = when (state) {
-        is LoginUiState.Idle -> state.loginCredentials
-        is LoginUiState.Loading -> state.loginCredentials
-        else -> LoginCredentials()
-    }
-
-    val isLoading = state is LoginUiState.Loading
-    val isLoginEnabled =
-        (state as? LoginUiState.Idle)?.isLoginEnabled == true
+    val credentials = state.loginCredentials
+    val isLoading = state.isLoading
+    val isLoginEnabled = state.isLoginEnabled
 
     Surface(
         modifier = modifier.fillMaxSize(),

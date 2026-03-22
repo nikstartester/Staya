@@ -30,15 +30,16 @@ internal class LoginViewModel @Inject constructor(
         private const val KEY_STATE = "LoginUiState"
     }
 
-    private val _uiState = savedStateHandle.getMutableStateFlow<LoginUiState>(
+    private val _uiState = savedStateHandle.getMutableStateFlow(
         KEY_STATE,
-        LoginUiState.Idle(
-            loginCredentials = LoginCredentials()
-        )
+        LoginUiState()
     )
 
+    /**@SelfDocumented*/
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
     private val _events = Channel<LoginEvent>(capacity = Channel.UNLIMITED)
+
+    /**@SelfDocumented*/
     val events: Flow<LoginEvent> = _events.receiveAsFlow()
 
     /**
@@ -60,11 +61,8 @@ internal class LoginViewModel @Inject constructor(
      */
     fun onLoginClick() {
         val current = _uiState.value
-        if (current !is LoginUiState.Idle) return
-
-        _uiState.value = LoginUiState.Loading(
-            loginCredentials = current.loginCredentials
-        )
+        if (current.isLoading) return
+        _uiState.value = current.copy(isLoading = true)
 
         viewModelScope.launch {
             // TODO: заменить на реальный use case
@@ -74,11 +72,15 @@ internal class LoginViewModel @Inject constructor(
                 && current.loginCredentials.password.isNotBlank()
 
             _uiState.value = if (success) {
-                LoginUiState.Success
+                _events.trySend(LoginEvent.LoginSuccess)
+                current.copy(
+                    isLoading = false,
+                    isLoginEnabled = isLoginEnabled(current.loginCredentials)
+                )
             } else {
                 _events.trySend(LoginEvent.ShowError("Invalid email or password"))
-                LoginUiState.Idle(
-                    loginCredentials = current.loginCredentials,
+                current.copy(
+                    isLoading = false,
                     isLoginEnabled = isLoginEnabled(current.loginCredentials)
                 )
             }
@@ -92,16 +94,14 @@ internal class LoginViewModel @Inject constructor(
         transform: (LoginCredentials) -> LoginCredentials
     ) {
         _uiState.update { state ->
-            when (state) {
-                is LoginUiState.Idle -> {
-                    val updated = transform(state.loginCredentials)
-                    state.copy(
-                        loginCredentials = updated,
-                        isLoginEnabled = isLoginEnabled(updated)
-                    )
-                }
-
-                else -> state
+            if (state.isLoading) {
+                state
+            } else {
+                val updated = transform(state.loginCredentials)
+                state.copy(
+                    loginCredentials = updated,
+                    isLoginEnabled = isLoginEnabled(updated)
+                )
             }
         }
     }
@@ -113,8 +113,4 @@ internal class LoginViewModel @Inject constructor(
         return credentials.login.isNotBlank()
             && credentials.password.length >= AuthValidationRules.MIN_PASSWORD_LENGTH
     }
-}
-
-internal sealed interface LoginEvent {
-    data class ShowError(val message: String) : LoginEvent
 }
