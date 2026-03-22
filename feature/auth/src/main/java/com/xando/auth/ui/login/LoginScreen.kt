@@ -110,7 +110,7 @@ private fun LoginContent(
             Spacer(modifier = Modifier.weight(1f))
 
             LoginForm(
-                email = credentials.email,
+                email = credentials.login,
                 password = credentials.password,
                 isLoading = isLoading,
                 onEmailChange = onEmailChange,
@@ -124,7 +124,7 @@ private fun LoginContent(
             LoginActions(
                 isLoading = isLoading,
                 isLoginEnabled = isLoginEnabled,
-                email = credentials.email,
+                email = credentials.login,
                 onLoginClick = onLoginClick,
                 onSignUpClick = onSignUpClick
             )

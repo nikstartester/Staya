@@ -27,7 +27,7 @@ internal class LoginViewModel : ViewModel() {
      * Обновляет email в текущих данных для входа.
      */
     fun onEmailChanged(email: String) {
-        updateCredentials { it.copy(email = email) }
+        updateCredentials { it.copy(login = email) }
     }
 
     /**
@@ -52,7 +52,7 @@ internal class LoginViewModel : ViewModel() {
             // TODO: заменить на реальный use case
             delay(1500)
 
-            val success = current.loginCredentials.email.isNotBlank()
+            val success = current.loginCredentials.login.isNotBlank()
                     && current.loginCredentials.password.isNotBlank()
 
             _uiState.value = if (success) {
@@ -112,7 +112,7 @@ internal class LoginViewModel : ViewModel() {
      * Проверяет, доступно ли действие входа.
      */
     private fun isLoginEnabled(credentials: LoginCredentials): Boolean {
-        return credentials.email.isNotBlank()
+        return credentials.login.isNotBlank()
                 && credentials.password.length >= 6
     }
 }
