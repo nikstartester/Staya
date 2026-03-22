@@ -1,12 +1,15 @@
 package com.xando.auth.ui.login
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * ViewModel экрана входа.
@@ -14,14 +17,23 @@ import kotlinx.coroutines.launch
  * Отвечает за обработку пользовательского ввода, валидацию данных
  * и управление состоянием [LoginUiState].
  */
-internal class LoginViewModel : ViewModel() {
+@HiltViewModel
+internal class LoginViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<LoginUiState>(
+    companion object {
+        private const val KEY_STATE = "LoginUiState"
+    }
+
+    private val _uiState = savedStateHandle.getMutableStateFlow<LoginUiState>(
+        KEY_STATE,
         LoginUiState.Idle(
             loginCredentials = LoginCredentials()
         )
     )
-    val uiState: StateFlow<LoginUiState> = _uiState
+
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     /**
      * Обновляет email в текущих данных для входа.
@@ -53,7 +65,7 @@ internal class LoginViewModel : ViewModel() {
             delay(1500)
 
             val success = current.loginCredentials.login.isNotBlank()
-                    && current.loginCredentials.password.isNotBlank()
+                && current.loginCredentials.password.isNotBlank()
 
             _uiState.value = if (success) {
                 LoginUiState.Success
@@ -113,6 +125,6 @@ internal class LoginViewModel : ViewModel() {
      */
     private fun isLoginEnabled(credentials: LoginCredentials): Boolean {
         return credentials.login.isNotBlank()
-                && credentials.password.length >= 6
+            && credentials.password.length >= 6
     }
 }
