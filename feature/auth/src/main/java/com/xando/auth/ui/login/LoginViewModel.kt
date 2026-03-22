@@ -3,6 +3,7 @@ package com.xando.auth.ui.login
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xando.auth.domain.validation.AuthValidationRules
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.channels.Channel
@@ -110,7 +111,7 @@ internal class LoginViewModel @Inject constructor(
      */
     private fun isLoginEnabled(credentials: LoginCredentials): Boolean {
         return credentials.login.isNotBlank()
-            && credentials.password.length >= 6
+            && credentials.password.length >= AuthValidationRules.MIN_PASSWORD_LENGTH
     }
 }
 
