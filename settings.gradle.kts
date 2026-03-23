@@ -37,5 +37,8 @@ include(":core:navigation-api")
 include(":core:navigation-impl")
 include(":core:network")
 
+//Data:
+include(":data:auth")
+
 //Features:
 include(":feature:auth")
