@@ -28,9 +28,11 @@ rootProject.name = "Staya"
 include(":app")
 
 //Core:
+include(":core:api-models")
 include(":core:common")
 include(":core:database")
 include(":core:design")
+include(":core:models")
 include(":core:navigation-api")
 include(":core:navigation-impl")
 include(":core:network")
