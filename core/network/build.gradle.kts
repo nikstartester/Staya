@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.staya.android.baseCfg)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
@@ -9,6 +10,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:api-models"))
+
     // Ktor client
     api(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)

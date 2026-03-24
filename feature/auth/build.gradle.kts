@@ -21,4 +21,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    // Data:
+    implementation(project(":data:auth"))
 }

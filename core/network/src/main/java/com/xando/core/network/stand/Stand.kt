@@ -6,6 +6,6 @@ package com.xando.core.network.stand
  * @property baseUrl Базовый URL стенда, к которому будут направляться запросы.
  */
 enum class Stand(val baseUrl: String) {
-    PROD("http://10.0.2.2:8080/"),
-    TEST("http://10.0.2.2:8080/")
+    PROD("http://10.0.2.2:8080/api/v1/"),
+    TEST("http://10.0.2.2:8080/api/v1/")
 }
