@@ -48,7 +48,7 @@ fun RootHost(
                 navigationController.navigateAndClearStack(HomeKey)
             }
 
-            false -> if (backStack.last() == LoginKey) {
+            false -> if (backStack.last() != LoginKey) {
                 navigationController.navigateAndClearStack(LoginKey)
             }
 
