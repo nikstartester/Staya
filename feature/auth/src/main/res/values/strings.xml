@@ -29,4 +29,8 @@
     <string name="auth_sign_up_email_password_password_label">Enter password</string>
     <string name="auth_sign_up_email_password_repeat_password_label">Repeat password</string>
     <string name="auth_sign_up_email_password_hint">Minimum length is %d characters.</string>
+
+    <!-- Login errors -->
+    <string name="auth_login_error_invalid_credentials">Invalid login or password</string>
+    <string name="auth_login_error_account_banned">Account is banned</string>
 </resources>

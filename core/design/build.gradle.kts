@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.staya.android.baseCfg)
     alias(libs.plugins.staya.compose)
+    id("kotlin-parcelize")
 }
 
 android {

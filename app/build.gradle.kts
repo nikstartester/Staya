@@ -22,6 +22,9 @@ dependencies {
     implementation(project(":core:navigation-api"))
     implementation(project(":core:navigation-impl"))
 
+    // Data:
+    implementation(project(":data:auth"))
+
     // Features:
     implementation(project(":feature:auth"))
 

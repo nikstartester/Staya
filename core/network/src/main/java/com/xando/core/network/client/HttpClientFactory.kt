@@ -23,6 +23,7 @@ internal class HttpClientFactory(
      */
     @AnyThread
     fun create(): HttpClient = HttpClient(CIO) {
+        expectSuccess = true
         installDynamicBaseUrl(standManager)
         installTokenAuth(tokenStorage, config)
         installJson(config)

@@ -29,4 +29,8 @@
     <string name="auth_sign_up_email_password_password_label">Введите пароль</string>
     <string name="auth_sign_up_email_password_repeat_password_label">Повторите пароль</string>
     <string name="auth_sign_up_email_password_hint">Минимальная длина %d символов.</string>
+
+    <!-- Login errors -->
+    <string name="auth_login_error_invalid_credentials">Неверный логин или пароль</string>
+    <string name="auth_login_error_account_banned">Аккаунт забанен</string>
 </resources>

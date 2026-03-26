@@ -9,7 +9,10 @@ package com.xando.core.api_models
 sealed class ApiException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
 /** Ошибка сети — отсутствует подключение к интернету. */
-class NetworkException(cause: Throwable) : ApiException("No connection", cause)
+class NetworkException(cause: Throwable) : ApiException("No internet connection", cause)
+
+/** Сервер недоступен. */
+class ServerUnavailableException(cause: Throwable) : ApiException("Server unavailable", cause)
 
 /** Превышено время ожидания запроса. */
 class TimeoutException(cause: Throwable) : ApiException("Request timeout", cause)
@@ -22,6 +25,9 @@ class ForbiddenException(message: String = "Forbidden") : ApiException(message)
 
 /** Ресурс не найден (404). */
 class NotFoundException(message: String = "Not found") : ApiException(message)
+
+/** Превышен лимит запросов (429). */
+class RateLimitException(message: String = "Too many requests") : ApiException(message)
 
 /**
  * Конфликт данных (409).
