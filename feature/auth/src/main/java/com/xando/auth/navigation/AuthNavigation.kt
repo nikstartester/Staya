@@ -5,9 +5,9 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import com.xando.auth.navigation.internal.ForgotPasswordKey
 import com.xando.auth.navigation.internal.SignUpKey
-import com.xando.auth.ui.forgot_password.ForgotPasswordScreen
-import com.xando.auth.ui.login.LoginScreen
-import com.xando.auth.ui.sign_up.SignUpScreen
+import com.xando.auth.presentation.forgot_password.ForgotPasswordScreen
+import com.xando.auth.presentation.login.LoginScreen
+import com.xando.auth.presentation.sign_up.SignUpScreen
 import com.xando.navigation_api.NavigationController
 import com.xando.navigation_api.features.auth.LoginKey
 import com.xando.navigation_api.features.home.HomeKey
@@ -16,17 +16,11 @@ import com.xando.navigation_api.features.home.HomeKey
  * Регистрирует navigation entries для модуля auth
  */
 internal fun EntryProviderScope<NavKey>.authEntryBuilder(navigationController: NavigationController) {
-    // TODO: Простенькие примеры
     entry<LoginKey> {
         LoginScreen(
             viewModel = hiltViewModel(),
-            onLoginSuccess = {
-                navigationController.navigateAndClearStack(HomeKey)
-            },
-            onSignUpClick = { prefilledEmail ->
-                navigationController.navigateTo(
-                    SignUpKey
-                )
+            onSignUpClick = { _ ->
+                navigationController.navigateTo(SignUpKey)
             },
             onForgotPasswordClick = {
                 navigationController.navigateTo(ForgotPasswordKey)
@@ -34,7 +28,7 @@ internal fun EntryProviderScope<NavKey>.authEntryBuilder(navigationController: N
         )
     }
 
-    entry<SignUpKey> { key ->
+    entry<SignUpKey> {
         SignUpScreen(
             onSignUpSuccess = {
                 navigationController.navigateAndClearStack(HomeKey)

@@ -13,7 +13,9 @@ android {
 
 dependencies {
     // Core:
+    implementation(project(":core:common"))
     implementation(project(":core:design"))
+    implementation(project(":core:models"))
     implementation(project(":core:navigation-api"))
     implementation(project(":core:navigation-impl"))
 

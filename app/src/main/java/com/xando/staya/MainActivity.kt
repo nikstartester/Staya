@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.xando.navigation_api.EntryBuilder
-import com.xando.staya.ui.RootHost
+import com.xando.staya.presentation.RootHost
 import com.xando.staya.ui.theme.StayaTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

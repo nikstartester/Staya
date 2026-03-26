@@ -1,11 +1,14 @@
 package com.xando.core.network
 
+import com.xando.core.api_models.ApiException
 import com.xando.core.api_models.ClientException
 import com.xando.core.api_models.ConflictException
 import com.xando.core.api_models.ForbiddenException
 import com.xando.core.api_models.NetworkException
 import com.xando.core.api_models.NotFoundException
+import com.xando.core.api_models.RateLimitException
 import com.xando.core.api_models.ServerException
+import com.xando.core.api_models.ServerUnavailableException
 import com.xando.core.api_models.TimeoutException
 import com.xando.core.api_models.UnauthorizedException
 import com.xando.core.api_models.UnknownApiException
@@ -21,12 +24,12 @@ import java.net.SocketTimeoutException
  *
  * Парсит тело ответа сервера как [ErrorResponse] для получения кода и сообщения ошибки.
  *
+ * @param networkChecker Проверка наличия подключения к интернету.
  * @param block Suspend-блок с сетевым вызовом.
- * @return Результат выполнения [block].
  * @throws ApiException При любой ошибке сети или сервера.
  */
-suspend fun <T> withApiException(block: suspend () -> T): T {
-    return try {
+suspend fun <T> withApiException(networkChecker: NetworkChecker, block: suspend () -> T) {
+    try {
         block()
     } catch (e: ResponseException) {
         val body = e.response.body<ErrorResponse>()
@@ -36,6 +39,7 @@ suspend fun <T> withApiException(block: suspend () -> T): T {
             HttpStatusCode.Forbidden -> ForbiddenException(message)
             HttpStatusCode.NotFound -> NotFoundException(message)
             HttpStatusCode.Conflict -> ConflictException(code = body.error.code, message = message)
+            HttpStatusCode.TooManyRequests -> RateLimitException(message)
             else -> when (e.response.status.value) {
                 in 400..499 -> ClientException(code = body.error.code, message = message)
                 in 500..599 -> ServerException(message)
@@ -45,7 +49,7 @@ suspend fun <T> withApiException(block: suspend () -> T): T {
     } catch (e: SocketTimeoutException) {
         throw TimeoutException(e)
     } catch (e: IOException) {
-        throw NetworkException(e)
+        throw if (networkChecker.isConnected()) ServerUnavailableException(e) else NetworkException(e)
     } catch (e: Exception) {
         throw UnknownApiException(e)
     }

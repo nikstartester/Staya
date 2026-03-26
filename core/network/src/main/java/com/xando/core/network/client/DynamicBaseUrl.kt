@@ -16,8 +16,9 @@ internal fun HttpClientConfig<*>.installDynamicBaseUrl(standManager: StandManage
         onRequest { request, _ ->
             val baseUrl = standManager.current.first().baseUrl
             val original = request.url.buildString()
-            if (!original.startsWith("http")) {
-                request.url(baseUrl + original)
+            // Ktor по умолчанию ставит host = "localhost", поэтому проверяем и этот случай
+            if (!original.startsWith("http") || request.url.host == "localhost") {
+                request.url(baseUrl + request.url.pathSegments.joinToString("/"))
             }
         }
     })
