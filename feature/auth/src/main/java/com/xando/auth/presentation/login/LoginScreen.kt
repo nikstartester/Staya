@@ -1,5 +1,6 @@
 package com.xando.auth.presentation.login
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,21 +65,25 @@ internal fun LoginScreen(
             }
     }
 
-    LoginContent(
-        state = state,
-        onEmailChange = viewModel::onEmailChanged,
-        onPasswordChange = viewModel::onPasswordChanged,
-        onLoginClick = {
-            focusManager.clearFocus()
-            viewModel.onLoginClick()
-        },
-        onSignUpClick = onSignUpClick,
-        onForgotPasswordClick = onForgotPasswordClick,
-        modifier = modifier
-    )
+    Box(modifier = modifier) {
+        LoginContent(
+            state = state,
+            onEmailChange = viewModel::onEmailChanged,
+            onPasswordChange = viewModel::onPasswordChanged,
+            onLoginClick = {
+                focusManager.clearFocus()
+                viewModel.onLoginClick()
+            },
+            onSignUpClick = onSignUpClick,
+            onForgotPasswordClick = onForgotPasswordClick,
+        )
 
-    Popup(alignment = Alignment.TopCenter, properties = PopupProperties(focusable = false)) {
-        SnackbarHost(hostState = snackbarHostState)
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .safeDrawingPadding()
+        )
     }
 }
 
