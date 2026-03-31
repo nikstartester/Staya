@@ -17,7 +17,7 @@ internal interface SignUpFlowCoordinator {
 
     /**
      * Сохраняет данные первого шага регистрации.
-     */
+     */sadsadas
     fun updateIntroduction(
         firstName: String,
         lastName: String,
