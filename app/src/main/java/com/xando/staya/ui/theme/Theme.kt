@@ -38,6 +38,8 @@ private val LightExtendedColors = ExtendedColors(
 
     iconColor = Color(0xFF333333),
 
+    // TODO: Вот от этой бодяги бы избавиться
+    primaryColor = LightColorScheme.primary,
     primaryTextColor = LightColorScheme.primary,
     primaryIconColor = LightColorScheme.primary,
 
@@ -45,8 +47,14 @@ private val LightExtendedColors = ExtendedColors(
     contrastIconColor = Color(0xFFFFFFFF),
 
     unaccentedTextColor = Color(0xFF797979),
-    unaccentedIconColor = Color(0xFF797979)
-)
+    unaccentedIconColor = Color(0xFF797979),
+
+
+    dangerColor = Color(0xFFCF4B42),
+
+    successColor = Color(0xFF3A9A5C),
+
+    )
 
 // Пока без темной темы
 private val DarkExtendedColors = LightExtendedColors

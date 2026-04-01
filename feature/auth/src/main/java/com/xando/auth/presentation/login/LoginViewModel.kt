@@ -15,6 +15,8 @@ import com.xando.core.api_models.NetworkException
 import com.xando.core.api_models.RateLimitException
 import com.xando.core.api_models.ServerUnavailableException
 import com.xando.core.api_models.UnauthorizedException
+import com.xando.design.ui.snackbar.SnackbarType
+import com.xando.design.ui.snackbar.StayaSnackbarData
 import com.xando.design.ui.theme.StayaString
 import com.xando.feature.auth.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +29,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.xando.core.common.R as RCommon
+import com.xando.core.design.R as RDesign
 
 /**
  * ViewModel экрана входа.
@@ -93,7 +95,7 @@ internal class LoginViewModel @Inject constructor(
             } catch (ex: ApiException) {
                 catchApiException(ex)
             } catch (th: Throwable) {
-                _events.trySend(LoginEvent.ShowError(StayaString.Res(RCommon.string.common_error_unknown)))
+                _events.trySend(LoginEvent.ShowSnackbar(StayaSnackbarData.unknown()))
                 // TODO: перейти на Timber
                 Log.w("LoginViewModel", th)
             } finally {
@@ -139,20 +141,34 @@ internal class LoginViewModel @Inject constructor(
     }
 
     private fun catchApiException(ex: ApiException) {
-        val message = StayaString.Res(
+        val message =
             when (ex) {
-                is UnauthorizedException -> R.string.auth_login_error_invalid_credentials
-                is ForbiddenException -> R.string.auth_login_error_account_banned
-                is NetworkException -> RCommon.string.common_error_no_internet
-                is ServerUnavailableException -> RCommon.string.common_error_server_unavailable
-                is RateLimitException -> RCommon.string.common_error_rate_limit
+                is UnauthorizedException -> {
+                    StayaSnackbarData(
+                        SnackbarType.ERROR,
+                        messageResId = R.string.auth_login_error_invalid_credentials,
+                        iconRes = RDesign.drawable.design_ic_lock_24dp
+                    )
+                }
+
+                is ForbiddenException -> {
+                    StayaSnackbarData(
+                        SnackbarType.ERROR,
+                        messageResId = R.string.auth_login_error_account_banned,
+                        iconRes = RDesign.drawable.account_circle_off_24px
+                    )
+                }
+
+                is NetworkException -> StayaSnackbarData.noInternet()
+                is ServerUnavailableException -> StayaSnackbarData.serverUnavailable()
+                is RateLimitException -> StayaSnackbarData.rateLimited()
+
                 else -> {
                     // TODO: перейти на Timber
                     Log.w("LoginViewModel", ex)
-                    RCommon.string.common_error_unknown
+                    StayaSnackbarData.unknown()
                 }
             }
-        )
-        _events.trySend(LoginEvent.ShowError(message))
+        _events.trySend(LoginEvent.ShowSnackbar(message))
     }
 }

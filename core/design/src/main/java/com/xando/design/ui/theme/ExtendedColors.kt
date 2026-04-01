@@ -13,6 +13,7 @@ data class ExtendedColors(
     val iconColor: Color,
 
     // Смысловые цвета
+    val primaryColor: Color,
     val primaryTextColor: Color,
     val primaryIconColor: Color,
 
@@ -20,7 +21,11 @@ data class ExtendedColors(
     val contrastIconColor: Color,
 
     val unaccentedTextColor: Color,
-    val unaccentedIconColor: Color
+    val unaccentedIconColor: Color,
+
+    val dangerColor: Color,
+
+    val successColor: Color
 )
 
 val MaterialTheme.extendedColors: ExtendedColors

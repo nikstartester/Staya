@@ -1,6 +1,5 @@
 package com.xando.auth.presentation.login
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,26 +9,20 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.xando.design.ui.snackbar.LocalSnackbarController
 import com.xando.design.ui.theme.getString
-import kotlinx.coroutines.launch
 
 /**@SelfDocumented*/
 @Composable
@@ -40,51 +33,34 @@ internal fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val focusManager = LocalFocusManager.current
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+    val snackbarController = LocalSnackbarController.current
 
     LaunchedEffect(Unit) {
         viewModel.events
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
             .collect { event ->
                 when (event) {
-                    is LoginEvent.ShowError -> {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        scope.launch {
-                            // TODO: добавить разнообразные цветные снекбары (SUCCESS, ERROR, INFO)
-                            snackbarHostState.showSnackbar(
-                                message = event.message.getString(context),
-                                duration = SnackbarDuration.Short,
-                            )
-                        }
+                    is LoginEvent.ShowSnackbar -> {
+                        snackbarController.show(event.snackbarData)
                     }
                 }
             }
     }
 
-    Box(modifier = modifier) {
-        LoginContent(
-            state = state,
-            onEmailChange = viewModel::onEmailChanged,
-            onPasswordChange = viewModel::onPasswordChanged,
-            onLoginClick = {
-                focusManager.clearFocus()
-                viewModel.onLoginClick()
-            },
-            onSignUpClick = onSignUpClick,
-            onForgotPasswordClick = onForgotPasswordClick,
-        )
-
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .safeDrawingPadding()
-        )
-    }
+    LoginContent(
+        state = state,
+        onEmailChange = viewModel::onEmailChanged,
+        onPasswordChange = viewModel::onPasswordChanged,
+        onLoginClick = {
+            focusManager.clearFocus()
+            viewModel.onLoginClick()
+        },
+        onSignUpClick = onSignUpClick,
+        onForgotPasswordClick = onForgotPasswordClick,
+        modifier = modifier,
+    )
 }
 
 @Composable

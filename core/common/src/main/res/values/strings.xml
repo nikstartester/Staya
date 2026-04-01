@@ -1,8 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Network errors -->
-    <string name="common_error_no_internet">No internet connection</string>
-    <string name="common_error_server_unavailable">Server unavailable</string>
-    <string name="common_error_rate_limit">Too many requests. Please try again later.</string>
-    <string name="common_error_unknown">Unknown error</string>
-</resources>
+<resources></resources>
