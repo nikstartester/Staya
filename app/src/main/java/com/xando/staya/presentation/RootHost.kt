@@ -1,8 +1,14 @@
 package com.xando.staya.presentation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,6 +21,9 @@ import com.xando.design.animations.noTransition
 import com.xando.design.animations.predictiveBackTransition
 import com.xando.design.animations.rightInTransition
 import com.xando.design.animations.rightOutTransition
+import com.xando.design.ui.snackbar.LocalSnackbarController
+import com.xando.design.ui.snackbar.StayaSnackbarHost
+import com.xando.design.ui.snackbar.rememberStayaSnackbarController
 import com.xando.navigation_api.EntryBuilder
 import com.xando.navigation_api.features.auth.LoginKey
 import com.xando.navigation_api.features.home.HomeKey
@@ -56,39 +65,52 @@ fun RootHost(
         }
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarController = rememberStayaSnackbarController(snackbarHostState)
+
     AppCloseBackHandler()
 
-    NavDisplay(
-        backStack = backStack,
-        modifier = modifier,
-        onBack = {
-            navigationController.navigateBack()
-        },
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
-        ),
-        transitionSpec = { rightInTransition() },
-        popTransitionSpec = { rightOutTransition() },
-        predictivePopTransitionSpec = {
-            predictiveBackTransition()
-        },
-        entryProvider =
-            entryProvider {
-                entry<HomeKey>(
-                    metadata = NavDisplay.transitionSpec { noTransition }
-                            + NavDisplay.popTransitionSpec { noTransition }
-                            + NavDisplay.predictivePopTransitionSpec { noTransition }
-                ) {
-                    BottomNavContainer(
-                        parentNavigationController = navigationController
-                    )
-                }
+    CompositionLocalProvider(LocalSnackbarController provides snackbarController) {
+        Box(modifier = modifier) {
+            NavDisplay(
+                backStack = backStack,
+                onBack = {
+                    navigationController.navigateBack()
+                },
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
+                transitionSpec = { rightInTransition() },
+                popTransitionSpec = { rightOutTransition() },
+                predictivePopTransitionSpec = {
+                    predictiveBackTransition()
+                },
+                entryProvider =
+                    entryProvider {
+                        entry<HomeKey>(
+                            metadata = NavDisplay.transitionSpec { noTransition }
+                                    + NavDisplay.popTransitionSpec { noTransition }
+                                    + NavDisplay.predictivePopTransitionSpec { noTransition }
+                        ) {
+                            BottomNavContainer(
+                                parentNavigationController = navigationController
+                            )
+                        }
 
-                entryBuilders.forEach { builder ->
-                    with(builder) {
-                        build(navigationController)
-                    }
-                }
-            })
+                        entryBuilders.forEach { builder ->
+                            with(builder) {
+                                build(navigationController)
+                            }
+                        }
+                    })
+
+            StayaSnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .safeDrawingPadding()
+            )
+        }
+    }
 }

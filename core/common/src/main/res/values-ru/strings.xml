@@ -1,8 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Network errors -->
-    <string name="common_error_no_internet">Отсутствует подключение к сети</string>
-    <string name="common_error_server_unavailable">Сервер недоступен</string>
-    <string name="common_error_rate_limit">Слишком много запросов. Попробуйте позже.</string>
-    <string name="common_error_unknown">Неизвестная ошибка</string>
-</resources>
+<resources></resources>
