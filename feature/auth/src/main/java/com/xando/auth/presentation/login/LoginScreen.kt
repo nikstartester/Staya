@@ -15,6 +15,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -36,6 +38,7 @@ internal fun LoginScreen(
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val focusManager = LocalFocusManager.current
     val snackbarController = LocalSnackbarController.current
+    val autofillManager = LocalContext.current.getSystemService(AutofillManager::class.java)
 
     LaunchedEffect(Unit) {
         viewModel.events
@@ -49,6 +52,11 @@ internal fun LoginScreen(
             }
     }
 
+    fun cancelAutofillAnd(action: () -> Unit) {
+        autofillManager?.cancel()
+        action()
+    }
+
     LoginContent(
         state = state,
         onEmailChange = viewModel::onEmailChanged,
@@ -57,8 +65,12 @@ internal fun LoginScreen(
             focusManager.clearFocus()
             viewModel.onLoginClick()
         },
-        onSignUpClick = onSignUpClick,
-        onForgotPasswordClick = onForgotPasswordClick,
+        onSignUpClick = { prefilledEmail ->
+            cancelAutofillAnd { onSignUpClick(prefilledEmail) }
+        },
+        onForgotPasswordClick = {
+            cancelAutofillAnd(onForgotPasswordClick)
+        },
         modifier = modifier,
     )
 }
