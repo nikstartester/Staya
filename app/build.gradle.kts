@@ -28,6 +28,9 @@ dependencies {
     // Features:
     implementation(project(":feature:auth"))
 
+    // Splash screen
+    implementation(libs.androidx.core.splashscreen)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
