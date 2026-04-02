@@ -2,6 +2,7 @@ package com.xando.design.ui.components.text_field
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.LocalAutofillHighlightBrush
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -10,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import com.xando.design.ui.theme.extendedColors
@@ -83,43 +86,47 @@ fun StayaOutlinedTextField(
         hasError -> errorColor
         else -> MaterialTheme.extendedColors.primaryIconColor
     }
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
-        label = label?.let { { Text(it) } },
-        placeholder = placeholder?.let {
-            {
-                Text(
-                    text = it,
-                    color = MaterialTheme.extendedColors.unaccentedTextColor
-                )
-            }
-        },
-        enabled = enabled,
-        readOnly = readOnly,
-        singleLine = singleLine,
-        maxLines = maxLines,
-        minLines = minLines,
-        textStyle = StayaTextFieldDefaults.textStyle,
-        shape = StayaTextFieldDefaults.shape,
-        leadingIcon = leadingIcon?.let {
-            {
-                CompositionLocalProvider(LocalContentColor provides iconColor) { it() }
-            }
-        },
-        trailingIcon = trailingIcon?.let {
-            {
-                CompositionLocalProvider(LocalContentColor provides iconColor) { it() }
-            }
-        },
-        supportingText =
-            if (hasError) {
-                { Text(errorText, color = errorColor) }
-            } else null,
-        isError = errorText != null,
-        visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions
-    )
+    val autofillHighlightColor = Color.Transparent
+
+    CompositionLocalProvider(LocalAutofillHighlightBrush provides SolidColor(autofillHighlightColor)) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            label = label?.let { { Text(it) } },
+            placeholder = placeholder?.let {
+                {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.extendedColors.unaccentedTextColor
+                    )
+                }
+            },
+            enabled = enabled,
+            readOnly = readOnly,
+            singleLine = singleLine,
+            maxLines = maxLines,
+            minLines = minLines,
+            textStyle = StayaTextFieldDefaults.textStyle,
+            shape = StayaTextFieldDefaults.shape,
+            leadingIcon = leadingIcon?.let {
+                {
+                    CompositionLocalProvider(LocalContentColor provides iconColor) { it() }
+                }
+            },
+            trailingIcon = trailingIcon?.let {
+                {
+                    CompositionLocalProvider(LocalContentColor provides iconColor) { it() }
+                }
+            },
+            supportingText =
+                if (hasError) {
+                    { Text(errorText, color = errorColor) }
+                } else null,
+            isError = errorText != null,
+            visualTransformation = visualTransformation,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions
+        )
+    }
 }
