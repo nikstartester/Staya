@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -37,15 +36,10 @@ import com.xando.staya.presentation.bottom_navigation_container.BottomNavContain
  * зарегистрированным [EntryBuilder]-ам.
  */
 @Composable
-fun RootHost(
-    entryBuilders: Set<EntryBuilder>,
-    modifier: Modifier = Modifier,
-    viewModel: RootViewModel = hiltViewModel(),
-) {
+fun RootHost(entryBuilders: Set<EntryBuilder>, modifier: Modifier = Modifier, viewModel: RootViewModel) {
     val isAuthorized by viewModel.isAuthorized.collectAsStateWithLifecycle()
 
-    // TODO: Будем задерживать splash screen пока нет данных авторизации.
-    //  Пока просто пустой экран - загрузка с диска быстро проходит.
+    // Держим сплеш пока не будет информации о логине. Это дополнительная проверка.
     if (isAuthorized == null) return
 
     val backStack = rememberNavBackStack(if (isAuthorized == true) HomeKey else LoginKey)

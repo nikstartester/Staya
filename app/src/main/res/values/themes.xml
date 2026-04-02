@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Staya" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Staya" parent="android:Theme.Material.Light.NoActionBar"/>
+
+    <style name="Theme.Staya.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/app_surface_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Staya</item>
+    </style>
 </resources>

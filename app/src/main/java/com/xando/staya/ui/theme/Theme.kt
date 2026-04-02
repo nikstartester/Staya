@@ -20,6 +20,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = PurpleGrey40,
     tertiary = Pink40,
     background = Color(0xFFFFFFFF),
+    // Дублируется в colors.xml (app_surface_color) для splash screen
     surface = Color(0xFFEFF5FC)
 
     /* Other default colors to override
