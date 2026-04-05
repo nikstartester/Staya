@@ -27,7 +27,7 @@ import com.xando.navigation_api.EntryBuilder
 import com.xando.navigation_api.features.auth.LoginKey
 import com.xando.navigation_api.features.home.HomeKey
 import com.xando.navigation_impl.rememberNavigationController
-import com.xando.staya.presentation.bottom_navigation_container.BottomNavContainer
+import com.xando.staya.presentation.home.HomeScreen
 
 /**
  * Корневой хост навигации приложения.
@@ -87,9 +87,7 @@ fun RootHost(entryBuilders: Set<EntryBuilder>, modifier: Modifier = Modifier, vi
                                     + NavDisplay.popTransitionSpec { noTransition }
                                     + NavDisplay.predictivePopTransitionSpec { noTransition }
                         ) {
-                            BottomNavContainer(
-                                parentNavigationController = navigationController
-                            )
+                            HomeScreen(entryBuilders, parentNavigationController = navigationController)
                         }
 
                         entryBuilders.forEach { builder ->

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Staya</string>
     <string name="app_close_press_again">Press again to exit</string>
+
+    <string name="app_bottom_tab_map">Walk</string>
+    <string name="app_bottom_tab_pets">Pets</string>
+    <string name="app_bottom_tab_messages">Messages</string>
+    <string name="app_bottom_tab_profile">Profile</string>
 </resources>

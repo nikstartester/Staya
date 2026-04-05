@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">Стая</string>
     <string name="app_close_press_again">Нажмите ещё раз для выхода</string>
+
+    <string name="app_bottom_tab_map">Прогулка</string>
+    <string name="app_bottom_tab_pets">Питомцы</string>
+    <string name="app_bottom_tab_messages">Сообщения</string>
+    <string name="app_bottom_tab_profile">Профиль</string>
 </resources>
