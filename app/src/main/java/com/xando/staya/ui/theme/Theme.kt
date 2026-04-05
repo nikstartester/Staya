@@ -55,7 +55,16 @@ private val LightExtendedColors = ExtendedColors(
 
     successColor = Color(0xFF3A9A5C),
 
-    )
+    navigationBackgroundColor = Color(0xFFFFFFFF),
+    navigationSeparatorColor = Color(0xFFF2F2F2),
+    navigationActiveItemColor = Color(0xFFEFF5FC),
+
+    navigationTextColor = Color(0xFF333333),
+    navigationActiveTextColor = Color(0xFF000000),
+
+    navigationIconColor = Color(0xFF333333),
+    navigationActiveIconColor = Color(0xFF000000),
+)
 
 // Пока без темной темы
 private val DarkExtendedColors = LightExtendedColors
