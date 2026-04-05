@@ -22,5 +22,15 @@ val LocalExtendedColors = staticCompositionLocalOf {
         dangerColor = Color.Unspecified,
 
         successColor = Color.Unspecified,
+
+        navigationBackgroundColor = Color.Unspecified,
+        navigationSeparatorColor = Color.Unspecified,
+        navigationActiveItemColor = Color.Unspecified,
+
+        navigationTextColor = Color.Unspecified,
+        navigationActiveTextColor = Color.Unspecified,
+
+        navigationIconColor = Color.Unspecified,
+        navigationActiveIconColor = Color.Unspecified,
     )
 }

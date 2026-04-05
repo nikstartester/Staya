@@ -25,7 +25,18 @@ data class ExtendedColors(
 
     val dangerColor: Color,
 
-    val successColor: Color
+    val successColor: Color,
+
+    // Навигация
+    val navigationBackgroundColor: Color,
+    val navigationSeparatorColor: Color,
+    val navigationActiveItemColor: Color,
+
+    val navigationTextColor: Color,
+    val navigationActiveTextColor: Color,
+
+    val navigationIconColor: Color,
+    val navigationActiveIconColor: Color
 )
 
 val MaterialTheme.extendedColors: ExtendedColors

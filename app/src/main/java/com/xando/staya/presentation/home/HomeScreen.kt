@@ -1,13 +1,9 @@
-package com.xando.staya.presentation.bottom_navigation_container
+package com.xando.staya.presentation.home
 
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,25 +13,31 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.xando.navigation_api.EntryBuilder
 import com.xando.navigation_api.NavigationController
 import com.xando.navigation_impl.rememberNavigationController
 import com.xando.staya.presentation.AppCloseBackHandler
+import com.xando.staya.presentation.home.bottom_navigation.BottomNavigationBar
+import com.xando.staya.presentation.home.bottom_navigation.BottomTab
 import kotlinx.serialization.Serializable
-import com.xando.core.design.R as RDesign
 
 /**
- * Контейнер с bottom navigation bar.
+ * Главный экран приложения. Контейнер с bottom navigation bar.
  * Имеет отдельный NavDisplay с собственными декораторами.
+ *
+ * @param entryBuilders общий набор экранов приложения, регистрируемых в навигационном графе
+ * HomeScreen. Сам экран определяет какие из них отображать во вкладках bottom navigation.
+ * @param parentNavigationController контроллер для навигации из вкладок.
  */
 @Composable
-internal fun BottomNavContainer(parentNavigationController: NavigationController) {
+internal fun HomeScreen(entryBuilders: Set<EntryBuilder>, parentNavigationController: NavigationController) {
     val bottomBackStack = rememberNavBackStack(MapKey)
     val bottomNavigationController = rememberNavigationController(bottomBackStack)
 
@@ -52,6 +54,7 @@ internal fun BottomNavContainer(parentNavigationController: NavigationController
                     val targetKey = when (tab) {
                         BottomTab.MAP -> MapKey
                         BottomTab.PETS -> MyPetsKey
+                        BottomTab.MESSAGES -> ProfileKey
                         BottomTab.PROFILE -> ProfileKey
                     }
                     bottomNavigationController.navigateAndClearStack(targetKey)
@@ -74,41 +77,15 @@ internal fun BottomNavContainer(parentNavigationController: NavigationController
                 entry<MapKey> { MapTabScreen() }
                 entry<MyPetsKey> { MyPetsTabScreen() }
                 entry<ProfileKey> { ProfileTabScreen() }
+
+                entryBuilders.forEach { builder ->
+                    with(builder) {
+                        build(parentNavigationController)
+                    }
+                }
             }
         )
     }
-}
-
-@Composable
-private fun BottomNavigationBar(
-    selectedTab: BottomTab,
-    onTabSelected: (BottomTab) -> Unit
-) {
-    NavigationBar {
-        BottomTab.entries.forEach { tab ->
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        painter = painterResource(RDesign.drawable.design_ic_arrow_back_24dp),
-                        contentDescription = tab.label
-                    )
-                },
-                label = { Text(tab.label) },
-                selected = tab == selectedTab,
-                onClick = { onTabSelected(tab) }
-            )
-        }
-    }
-}
-
-private enum class BottomTab(
-    val label: String,
-    @DrawableRes
-    val iconRes: Int
-) {
-    MAP("Карта", -1),
-    PETS("Питомцы", -1),
-    PROFILE("Профиль", -1)
 }
 
 //region Удалить после реализации
@@ -123,17 +100,17 @@ private object ProfileKey : NavKey
 
 @Composable
 private fun MapTabScreen() {
-    TestScreen(BottomTab.MAP.label)
+    TestScreen(stringResource(BottomTab.MAP.labelRes))
 }
 
 @Composable
 private fun MyPetsTabScreen() {
-    TestScreen(BottomTab.PETS.label)
+    TestScreen(stringResource(BottomTab.PETS.labelRes))
 }
 
 @Composable
 private fun ProfileTabScreen() {
-    TestScreen(BottomTab.PROFILE.label)
+    TestScreen(stringResource(BottomTab.PROFILE.labelRes))
 }
 
 @Composable
