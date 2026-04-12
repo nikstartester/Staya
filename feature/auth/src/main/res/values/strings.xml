@@ -30,6 +30,12 @@
     <string name="auth_sign_up_email_password_repeat_password_label">Repeat password</string>
     <string name="auth_sign_up_email_password_hint">Minimum length is %d characters.</string>
 
+    <!-- OTP Confirmation -->
+    <string name="auth_otp_title">Enter the four-digit code that was sent to your email address</string>
+    <string name="auth_otp_resend_text">Didn\'t receive code?</string>
+    <string name="auth_otp_resend_button">Send code again</string>
+    <string name="auth_otp_timer_text">Resend code via %02d:%02d</string>
+    <string name="auth_otp_code_label">Enter code</string>
     <!-- Login errors -->
     <string name="auth_login_error_invalid_credentials">Invalid login or password</string>
     <string name="auth_login_error_account_banned">Account is banned</string>

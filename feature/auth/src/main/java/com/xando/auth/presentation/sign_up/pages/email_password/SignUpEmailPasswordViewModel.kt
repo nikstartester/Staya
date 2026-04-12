@@ -4,15 +4,18 @@ import android.os.Parcelable
 import android.util.Patterns
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.xando.auth.domain.validation.AuthValidationRules
 import com.xando.auth.presentation.sign_up.SignUpFlowCoordinator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
@@ -91,13 +94,49 @@ internal class SignUpEmailPasswordViewModel @Inject constructor(
     }
 
     /**
-     * Сохраняет шаг в coordinator и публикует переход к следующему экрану.
+     * Сохраняет шаг в coordinator и открывает шторку OTP.
      */
     fun onContinueClick() {
         if (!validate()) return
 
-        updateCoordinator()
-        _events.trySend(SignUpEmailPasswordEvent.NavigateNext)
+        _uiState.update { it.copy(isOtpSheetVisible = true) }
+    }
+
+    /**
+     * Проверка введенного кода.
+     */
+    fun verifyOtp(code: String) {
+        _uiState.update { it.copy(isOtpLoading = true, otpError = null) }
+
+        viewModelScope.launch {
+            // Имитация запроса к серверу
+            delay(2000)
+
+            if (code == "1111") { // Если код верный
+                _uiState.update { it.copy(isOtpLoading = false, isOtpSheetVisible = false) }
+                updateCoordinator()
+                _events.trySend(SignUpEmailPasswordEvent.NavigateNext)
+            } else {
+                _uiState.update { it.copy(isOtpLoading = false, otpError = "Неверный код") }
+            }
+        }
+    }
+
+    /**
+     * Повторная отправка кода.
+     */
+    fun resendOtp() {
+        viewModelScope.launch {
+            // Здесь будет вызов API для повторной отправки
+            _uiState.update { it.copy(otpError = null) }
+        }
+    }
+
+    /**
+     * Закрытие шторки.
+     */
+    fun dismissOtp() {
+        _uiState.update { it.copy(isOtpSheetVisible = false, otpError = null) }
     }
 
     private fun updateCoordinator() {
@@ -157,6 +196,9 @@ internal data class SignUpEmailPasswordUiState(
     val repeatPasswordError: String? = null,
     val showPasswordButtonVisible: Boolean = false,
     val minPasswordLength: Int = 6,
+    val isOtpSheetVisible: Boolean = false,
+    val isOtpLoading: Boolean = false,
+    val otpError: String? = null,
 ) : Parcelable
 
 /**
