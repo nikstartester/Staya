@@ -13,20 +13,20 @@ internal enum class BottomTab(@param:StringRes val labelRes: Int, @param:Drawabl
     /**
      * Карта (Прогулка)
      */
-    MAP(R.string.app_bottom_tab_map, RDesign.drawable.design_map_24px),
+    MAP(R.string.app_bottom_tab_map, RDesign.drawable.design_ic_map_24px),
 
     /**
      * Питомцы
      */
-    PETS(R.string.app_bottom_tab_pets, RDesign.drawable.design_pets_24px),
+    PETS(R.string.app_bottom_tab_pets, RDesign.drawable.design_ic_pets_24px),
 
     /**
      * Сообщения
      */
-    MESSAGES(R.string.app_bottom_tab_messages, RDesign.drawable.design_chat_24px),
+    MESSAGES(R.string.app_bottom_tab_messages, RDesign.drawable.design_ic_chat_24px),
 
     /**
      * Профиль
      */
-    PROFILE(R.string.app_bottom_tab_profile, RDesign.drawable.design_settings_account_box_24px)
+    PROFILE(R.string.app_bottom_tab_profile, RDesign.drawable.design_ic_settings_account_box_24px)
 }

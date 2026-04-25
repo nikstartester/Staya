@@ -39,7 +39,7 @@ internal fun BottomNavigationBar(
                     label = {
                         Text(
                             text = stringResource(tab.labelRes),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.labelMedium,
                             maxLines = 1
                         )
                     },
