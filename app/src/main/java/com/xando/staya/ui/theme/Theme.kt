@@ -26,7 +26,6 @@ private val LightExtendedColors = ExtendedColors(
     iconColor = Color(0xFF333333),
     placeholderIconColor = Color(0xFFBECEE0),
 
-    // TODO: Вот от этой бодяги бы избавиться
     primaryColor = Color(0xFF466677),
     primaryTextColor = Color(0xFF466677),
     primaryIconColor = Color(0xFF466677),

@@ -5,4 +5,6 @@
     <string name="design_error_server_unavailable">Server unavailable</string>
     <string name="design_error_rate_limit">Too many requests. Please try again later.</string>
     <string name="design_error_unknown">Unknown error</string>
+
+    <string name="design_search_placeholder">Search</string>
 </resources>

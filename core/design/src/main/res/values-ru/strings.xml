@@ -5,4 +5,6 @@
     <string name="design_error_server_unavailable">Сервер недоступен</string>
     <string name="design_error_rate_limit">Слишком много запросов. Попробуйте позже.</string>
     <string name="design_error_unknown">Неизвестная ошибка</string>
+
+    <string name="design_search_placeholder">Поиск</string>
 </resources>
