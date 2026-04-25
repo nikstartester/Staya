@@ -33,28 +33,28 @@ data class StayaSnackbarData(
         fun noInternet() = StayaSnackbarData(
             type = SnackbarType.ERROR,
             messageResId = R.string.design_error_no_internet,
-            iconRes = R.drawable.design_wifi_off_24px
+            iconRes = R.drawable.design_ic_wifi_off_24px
         )
 
         /** Ошибка недоступности сервера. */
         fun serverUnavailable() = StayaSnackbarData(
             type = SnackbarType.ERROR,
             messageResId = R.string.design_error_server_unavailable,
-            iconRes = R.drawable.design_cloud_off_24px
+            iconRes = R.drawable.design_ic_cloud_off_24px
         )
 
         /** Ошибка превышения лимита запросов. */
         fun rateLimited() = StayaSnackbarData(
             type = SnackbarType.ERROR,
             messageResId = R.string.design_error_rate_limit,
-            iconRes = R.drawable.design_do_not_touch_24px
+            iconRes = R.drawable.design_ic_do_not_touch_24px
         )
 
         /** Неизвестная ошибка. */
         fun unknown() = StayaSnackbarData(
             type = SnackbarType.ERROR,
             messageResId = R.string.design_error_unknown,
-            iconRes = R.drawable.design_error_24px
+            iconRes = R.drawable.design_ic_error_24px
         )
     }
 }

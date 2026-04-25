@@ -155,7 +155,7 @@ internal class LoginViewModel @Inject constructor(
                     StayaSnackbarData(
                         SnackbarType.ERROR,
                         messageResId = R.string.auth_login_error_account_banned,
-                        iconRes = RDesign.drawable.account_circle_off_24px
+                        iconRes = RDesign.drawable.design_ic_account_circle_off_24px
                     )
                 }
 
