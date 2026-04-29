@@ -27,6 +27,7 @@ dependencies {
 
     // Features:
     implementation(project(":feature:auth"))
+    implementation(project(":feature:pet-list"))
 
     // Splash screen
     implementation(libs.androidx.core.splashscreen)

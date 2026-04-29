@@ -26,10 +26,11 @@ import java.net.SocketTimeoutException
  *
  * @param networkChecker Проверка наличия подключения к интернету.
  * @param block Suspend-блок с сетевым вызовом.
+ * @return Результат выполнения [block].
  * @throws ApiException При любой ошибке сети или сервера.
  */
-suspend fun <T> withApiException(networkChecker: NetworkChecker, block: suspend () -> T) {
-    try {
+suspend fun <T> withApiException(networkChecker: NetworkChecker, block: suspend () -> T): T {
+    return try {
         block()
     } catch (e: ResponseException) {
         val body = e.response.body<ErrorResponse>()

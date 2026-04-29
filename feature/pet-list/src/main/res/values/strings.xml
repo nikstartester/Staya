@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_list_title">My pets</string>
+    <string name="pet_list_add_pet">Add pet</string>
+    <string name="pet_list_empty_list_text">Here you will find your pets and a short\nlist of reminders</string>
+</resources>

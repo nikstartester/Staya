@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,7 +46,7 @@ import com.xando.design.ui.theme.extendedColors
  * @param contentPadding отступы содержимого списка
  * @param verticalArrangement вертикальное расстояние между элементами
  * @param onRefresh колбэк pull-to-refresh (null = без свайпа для обновления)
- * @param itemContent контент для каждого элемента списка
+ * @param itemContent контент для каждого элемента списка с его индексом
  */
 @Composable
 fun <T : Any> StayaLazyList(
@@ -60,7 +60,7 @@ fun <T : Any> StayaLazyList(
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(12.dp),
     @DrawableRes stubIconRes: Int = -1,
     onRefresh: (() -> Unit)? = null,
-    itemContent: @Composable LazyItemScope.(T) -> Unit,
+    itemContent: @Composable LazyItemScope.(index: Int, item: T) -> Unit,
 ) {
     if (onRefresh != null) {
         val refreshState = rememberPullToRefreshState()
@@ -131,7 +131,7 @@ private fun <T : Any> ListState(
     key: ((T) -> Any)? = null,
     contentPadding: PaddingValues = PaddingValues(16.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    itemContent: @Composable LazyItemScope.(T) -> Unit,
+    itemContent: @Composable LazyItemScope.(index: Int, item: T) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -139,9 +139,13 @@ private fun <T : Any> ListState(
         verticalArrangement = verticalArrangement
     ) {
         if (key != null) {
-            items(items, key = key) { itemContent(it) }
+            itemsIndexed(items, key = { _, item -> key(item) }) { index, item ->
+                itemContent(index, item)
+            }
         } else {
-            items(items) { itemContent(it) }
+            itemsIndexed(items) { index, item ->
+                itemContent(index, item)
+            }
         }
     }
 }
