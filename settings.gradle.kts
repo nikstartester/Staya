@@ -39,6 +39,8 @@ include(":core:network")
 
 //Data:
 include(":data:auth")
+include(":data:pet-list")
 
 //Features:
 include(":feature:auth")
+include(":feature:pet-list")

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_list_title">Мои питомцы</string>
+    <string name="pet_list_add_pet">Добавить питомца</string>
+    <string name="pet_list_empty_list_text">Здесь будут ваши питомцы и краткий\nсписок напоминаний</string>
+</resources>

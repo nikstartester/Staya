@@ -2,6 +2,7 @@ package com.xando.staya.presentation.home
 
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.xando.navigation_api.EntryBuilder
 import com.xando.navigation_api.NavigationController
+import com.xando.navigation_api.features.pets_list.PetListKey
 import com.xando.navigation_impl.rememberNavigationController
 import com.xando.staya.presentation.AppCloseBackHandler
 import com.xando.staya.presentation.home.bottom_navigation.BottomNavigationBar
@@ -46,6 +48,7 @@ internal fun HomeScreen(entryBuilders: Set<EntryBuilder>, parentNavigationContro
     AppCloseBackHandler()
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
             BottomNavigationBar(
                 selectedTab = selectedTab,
@@ -53,7 +56,7 @@ internal fun HomeScreen(entryBuilders: Set<EntryBuilder>, parentNavigationContro
                     selectedTab = tab
                     val targetKey = when (tab) {
                         BottomTab.MAP -> MapKey
-                        BottomTab.PETS -> MyPetsKey
+                        BottomTab.PETS -> PetListKey
                         BottomTab.MESSAGES -> ProfileKey
                         BottomTab.PROFILE -> ProfileKey
                     }
@@ -75,7 +78,6 @@ internal fun HomeScreen(entryBuilders: Set<EntryBuilder>, parentNavigationContro
 
             entryProvider = entryProvider {
                 entry<MapKey> { MapTabScreen() }
-                entry<MyPetsKey> { MyPetsTabScreen() }
                 entry<ProfileKey> { ProfileTabScreen() }
 
                 entryBuilders.forEach { builder ->
@@ -91,9 +93,6 @@ internal fun HomeScreen(entryBuilders: Set<EntryBuilder>, parentNavigationContro
 //region Удалить после реализации
 @Serializable
 private object MapKey : NavKey
-
-@Serializable
-private object MyPetsKey : NavKey
 
 @Serializable
 private object ProfileKey : NavKey
@@ -113,6 +112,11 @@ private fun ProfileTabScreen() {
     TestScreen(stringResource(BottomTab.PROFILE.labelRes))
 }
 
+/**
+ * Показывает временный экран с [text] в центре.
+ *
+ * @param text Текст для отображения.
+ */
 @Composable
 fun TestScreen(text: String) {
     Box(

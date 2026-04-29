@@ -4,12 +4,14 @@ import com.xando.core.network.client.NetworkConfig
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
-import io.ktor.http.HttpStatusCode
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
 
@@ -38,16 +40,15 @@ internal fun HttpClientConfig<*>.installTokenAuth(tokenStorage: TokenStorage, co
                 try {
                     val response = client.post(config.refreshUrl) {
                         markAsRefreshTokenRequest()
+                        contentType(ContentType.Application.Json)
                         setBody(AuthRefreshRequest(refresh))
                     }
                     val tokens = response.body<TokensDto>()
                     tokenStorage.save(tokens.accessToken, tokens.refreshToken)
                     BearerTokens(tokens.accessToken, tokens.refreshToken)
-                }
-                catch (ex: CancellationException) {
+                } catch (ex: CancellationException) {
                     throw ex
-                }
-                catch (ex: ClientRequestException) {
+                } catch (ex: ClientRequestException) {
                     if (ex.response.status in listOf(HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden)) {
                         tokenStorage.clear()
                     }
