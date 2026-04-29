@@ -13,6 +13,6 @@ internal data class NetworkConfig(
     val jsonIsLenient: Boolean = true,
 ) {
     companion object {
-        private const val DEFAULT_REFRESH_URL = "auth/refresh"
+        private const val DEFAULT_REFRESH_URL = "/auth/refresh"
     }
 }
