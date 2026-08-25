@@ -51,6 +51,9 @@ object StayaTextFieldDefaults {
  * @param readOnly Если `true`, текст можно выделить и скопировать, но нельзя редактировать
  * @param singleLine Ограничивает поле одной строкой текста
  * @param maxLines Максимальное количество видимых строк
+ * @param maxLength Максимальное количество символов. Ввод, после которого текст стал бы длиннее,
+ *      не применяется целиком: [onValueChange] не вызывается, а уже введённое остаётся на месте.
+ *      По умолчанию длина не ограничена
  * @param leadingIcon Composable для иконки в начале поля. Автоматически окрашивается в зависимости от состояния.
  * @param trailingIcon Composable для иконки в конце поля. Автоматически окрашивается в зависимости от состояния.
  * @param visualTransformation Трансформация отображения текста
@@ -72,6 +75,7 @@ fun StayaOutlinedTextField(
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1,
+    maxLength: Int = Int.MAX_VALUE,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -91,7 +95,7 @@ fun StayaOutlinedTextField(
     CompositionLocalProvider(LocalAutofillHighlightBrush provides SolidColor(autofillHighlightColor)) {
         OutlinedTextField(
             value = value,
-            onValueChange = onValueChange,
+            onValueChange = { newValue -> if (newValue.length <= maxLength) onValueChange(newValue) },
             modifier = modifier,
             label = label?.let { { Text(it) } },
             placeholder = placeholder?.let {

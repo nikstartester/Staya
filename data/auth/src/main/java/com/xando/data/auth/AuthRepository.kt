@@ -1,9 +1,9 @@
 package com.xando.data.auth
 
-import com.xando.core.api_models.ClientException
 import com.xando.core.api_models.ConflictException
 import com.xando.core.api_models.ForbiddenException
 import com.xando.core.api_models.UnauthorizedException
+import com.xando.core.api_models.ValidationException
 import com.xando.core.models.auth.data.SignUpData
 import com.xando.core.network.NetworkChecker
 import com.xando.core.network.auth.TokenStorage
@@ -59,7 +59,9 @@ class AuthRepository @Inject constructor(
      * Регистрирует пользователя. При успехе необходимо подтвердить email через [verifyEmail].
      *
      * @param data Данные для регистрации.
-     * @throws ConflictException При конфликте данных. Код ошибки: [AuthConflictCodes.EMAIL_EXISTS], [AuthConflictCodes.LOGIN_EXISTS].
+     * @throws ValidationException При невалидных данных. Код ошибки: [AuthValidationCodes.INVALID_FIRST_NAME],
+     *   [AuthValidationCodes.INVALID_LAST_NAME], [AuthValidationCodes.INVALID_EMAIL], [AuthValidationCodes.WEAK_PASSWORD].
+     * @throws ConflictException При конфликте данных. Код ошибки: [AuthConflictCodes.EMAIL_ALREADY_EXISTS], [AuthConflictCodes.LOGIN_ALREADY_EXISTS].
      */
     suspend fun signUp(data: SignUpData) {
         withApiException(networkChecker) {
@@ -75,11 +77,12 @@ class AuthRepository @Inject constructor(
      *
      * @param email Email пользователя.
      * @param code Код подтверждения.
-     * @throws ClientException При невалидном коде. Код ошибки: [AuthClientCodes.INVALID_CODE].
+     * @throws ValidationException При невалидном коде. Коды ошибок: [AuthValidationCodes.INVALID_CODE],
+     *   [AuthValidationCodes.CODE_NOT_FOUND], [AuthValidationCodes.CODE_EXPIRED], [AuthValidationCodes.CODE_MAX_ATTEMPTS].
      */
     suspend fun verifyEmail(email: String, code: String) {
         withApiException(networkChecker) {
-            val response = httpClient.post("/auth/verify-email") {
+            val response = httpClient.post("/auth/register/verify-email") {
                 contentType(ContentType.Application.Json)
                 setBody(VerifyEmailRequest(email = email, code = code))
             }.body<LoginResponse>()
@@ -91,7 +94,7 @@ class AuthRepository @Inject constructor(
     /** @SelfDocumented */
     suspend fun resendCode(email: String) {
         withApiException(networkChecker) {
-            httpClient.post("/auth/resend-code") {
+            httpClient.post("/auth/register/resend-code") {
                 contentType(ContentType.Application.Json)
                 setBody(ResendCodeRequest(email = email))
             }

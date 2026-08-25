@@ -18,6 +18,7 @@
     <string name="auth_sign_up_introduction_last_name_label">Last name</string>
     <string name="auth_sign_up_introduction_photo_content_description">Profile photo</string>
     <string name="auth_sign_up_introduction_photo_title">Choose photo</string>
+    <string name="auth_sign_up_introduction_photo_unsupported_format">This image is not supported</string>
     <string name="auth_sign_up_about_title">Tell us a little about yourself or skip this step. You can do it later anytime in profile settings.</string>
     <string name="auth_sign_up_about_placeholder">For example, I love wombats and playing ball with my dog. \uD83D\uDC15</string>
     <string name="auth_sign_up_login_title">Enter a login or skip this step. It can be used to sign in, and other people will also be able to find you by it.</string>
@@ -29,8 +30,23 @@
     <string name="auth_sign_up_email_password_password_label">Enter password</string>
     <string name="auth_sign_up_email_password_repeat_password_label">Repeat password</string>
     <string name="auth_sign_up_email_password_hint">Minimum length is %d characters.</string>
+    <string name="auth_sign_up_error_email_exists">This email is already registered.</string>
+    <string name="auth_sign_up_error_login_exists">This login is already taken.</string>
+    <string name="auth_sign_up_error_weak_password">Password is too weak.</string>
+    <string name="auth_sign_up_error_invalid_email">Invalid email format.</string>
+
+    <!-- Code Confirmation -->
+    <string name="auth_verification_code_title">Enter the four-digit code that was sent to your email address</string>
+    <string name="auth_verification_code_resend_text">Didn\'t receive code?</string>
+    <string name="auth_verification_code_resend_button">Send again</string>
+    <string name="auth_verification_code_timer_text">You can request a new code in %02d:%02d</string>
+    <string name="auth_verification_code_code_label">Enter code</string>
+    <string name="auth_verification_code_error_invalid_code">Invalid code. Check the code from the email.</string>
+    <string name="auth_verification_code_error_not_found">This code is no longer valid. Request a new one.</string>
+    <string name="auth_verification_code_error_expired">The code has expired. Request a new one.</string>
+    <string name="auth_verification_code_error_max_attempts">Too many attempts. Request a new code.</string>
 
     <!-- Login errors -->
     <string name="auth_login_error_invalid_credentials">Invalid login or password</string>
-    <string name="auth_login_error_account_banned">Account is banned</string>
+    <string name="auth_login_error_access_denied">Sign-in is unavailable. Your email may not be verified or the account is blocked.</string>
 </resources>
