@@ -18,6 +18,7 @@
     <string name="auth_sign_up_introduction_last_name_label">Ваша фамилия</string>
     <string name="auth_sign_up_introduction_photo_content_description">Фото профиля</string>
     <string name="auth_sign_up_introduction_photo_title">Выбрать фото</string>
+    <string name="auth_sign_up_introduction_photo_unsupported_format">Это изображение не поддерживается</string>
     <string name="auth_sign_up_about_title">Расскажите немного о себе или пропустите этот шаг. Вы можете сделать это в любое время в настройках профиля.</string>
     <string name="auth_sign_up_about_placeholder">Например, люблю вомбатов и играть с собакой в мяч. \uD83D\uDC15</string>
     <string name="auth_sign_up_login_title">Введите логин или пропустите этот шаг. Он может быть использован для входа в приложение, а также другие люди смогут вас по нему найти.</string>
@@ -29,8 +30,23 @@
     <string name="auth_sign_up_email_password_password_label">Введите пароль</string>
     <string name="auth_sign_up_email_password_repeat_password_label">Повторите пароль</string>
     <string name="auth_sign_up_email_password_hint">Минимальная длина %d символов.</string>
+    <string name="auth_sign_up_error_email_exists">Этот e-mail уже зарегистрирован.</string>
+    <string name="auth_sign_up_error_login_exists">Этот логин уже занят.</string>
+    <string name="auth_sign_up_error_weak_password">Пароль слишком слабый.</string>
+    <string name="auth_sign_up_error_invalid_email">Неверный формат e-mail.</string>
+
+    <!-- Code Confirmation -->
+    <string name="auth_verification_code_title">Введите четырехзначный код, который был отправлен на адресс электронной почты</string>
+    <string name="auth_verification_code_resend_text">Не пришел код?</string>
+    <string name="auth_verification_code_resend_button">Отправить снова</string>
+    <string name="auth_verification_code_timer_text">Вы можете запросить новый код через %02d:%02d</string>
+    <string name="auth_verification_code_code_label">Введите код</string>
+    <string name="auth_verification_code_error_invalid_code">Неверный код. Проверьте код из письма.</string>
+    <string name="auth_verification_code_error_not_found">Код больше не действителен. Запросите новый.</string>
+    <string name="auth_verification_code_error_expired">Срок действия кода истёк. Запросите новый.</string>
+    <string name="auth_verification_code_error_max_attempts">Слишком много попыток. Запросите новый код.</string>
 
     <!-- Login errors -->
     <string name="auth_login_error_invalid_credentials">Неверный логин или пароль</string>
-    <string name="auth_login_error_account_banned">Аккаунт забанен</string>
+    <string name="auth_login_error_access_denied">Вход недоступен. Возможно, e-mail не подтверждён или аккаунт заблокирован.</string>
 </resources>

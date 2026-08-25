@@ -10,7 +10,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -36,7 +39,7 @@ import com.xando.staya.presentation.home.HomeScreen
  * зарегистрированным [EntryBuilder]-ам.
  */
 @Composable
-fun RootHost(entryBuilders: Set<EntryBuilder>, modifier: Modifier = Modifier, viewModel: RootViewModel) {
+internal fun RootHost(entryBuilders: Set<EntryBuilder>, modifier: Modifier = Modifier, viewModel: RootViewModel) {
     val isAuthorized by viewModel.isAuthorized.collectAsStateWithLifecycle()
 
     // Держим сплеш пока не будет информации о логине. Это дополнительная проверка.
@@ -44,19 +47,22 @@ fun RootHost(entryBuilders: Set<EntryBuilder>, modifier: Modifier = Modifier, vi
 
     val backStack = rememberNavBackStack(if (isAuthorized == true) HomeKey else LoginKey)
     val navigationController = rememberNavigationController(backStack)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    LaunchedEffect(isAuthorized) {
-        when (isAuthorized) {
-            true -> if (backStack.last() != HomeKey) {
-                navigationController.navigateAndClearStack(HomeKey)
+    LaunchedEffect(Unit) {
+        viewModel.events
+            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .collect { event ->
+                when (event) {
+                    is RootEvent.AuthStateChanged -> {
+                        if (event.isAuthorized) {
+                            navigationController.navigateAndClearStack(HomeKey)
+                        } else {
+                            navigationController.navigateAndClearStack(LoginKey)
+                        }
+                    }
+                }
             }
-
-            false -> if (backStack.last() != LoginKey) {
-                navigationController.navigateAndClearStack(LoginKey)
-            }
-
-            else -> Unit
-        }
     }
 
     val snackbarHostState = remember { SnackbarHostState() }

@@ -37,6 +37,13 @@ class RateLimitException(message: String = "Too many requests") : ApiException(m
 class ConflictException(val code: String = "", message: String = "Conflict") : ApiException(message)
 
 /**
+ * Ошибка валидации переданных данных (400).
+ *
+ * @property code Код ошибки с сервера для идентификации невалидного поля.
+ */
+class ValidationException(val code: String = "", message: String = "Validation error") : ApiException(message)
+
+/**
  * Клиентская ошибка (4xx).
  *
  * @property code Код ошибки с сервера для идентификации типа ошибки.

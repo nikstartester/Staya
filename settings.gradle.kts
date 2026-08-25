@@ -40,6 +40,7 @@ include(":core:network")
 //Data:
 include(":data:auth")
 include(":data:pet-list")
+include(":data:user")
 
 //Features:
 include(":feature:auth")

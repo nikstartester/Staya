@@ -12,6 +12,7 @@ import com.xando.core.api_models.ServerUnavailableException
 import com.xando.core.api_models.TimeoutException
 import com.xando.core.api_models.UnauthorizedException
 import com.xando.core.api_models.UnknownApiException
+import com.xando.core.api_models.ValidationException
 import com.xando.core.network.model.ErrorResponse
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ResponseException
@@ -36,6 +37,7 @@ suspend fun <T> withApiException(networkChecker: NetworkChecker, block: suspend 
         val body = e.response.body<ErrorResponse>()
         val message = body.error.message
         throw when (e.response.status) {
+            HttpStatusCode.BadRequest -> ValidationException(code = body.error.code, message = message)
             HttpStatusCode.Unauthorized -> UnauthorizedException(message)
             HttpStatusCode.Forbidden -> ForbiddenException(message)
             HttpStatusCode.NotFound -> NotFoundException(message)

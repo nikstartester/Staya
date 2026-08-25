@@ -3,14 +3,13 @@ package com.xando.auth.navigation
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
+import com.xando.auth.forgot_password.ForgotPasswordScreen
+import com.xando.auth.login.presentation.LoginScreen
 import com.xando.auth.navigation.internal.ForgotPasswordKey
 import com.xando.auth.navigation.internal.SignUpKey
-import com.xando.auth.presentation.forgot_password.ForgotPasswordScreen
-import com.xando.auth.presentation.login.LoginScreen
-import com.xando.auth.presentation.sign_up.SignUpScreen
+import com.xando.auth.sign_up.SignUpScreen
 import com.xando.navigation_api.NavigationController
 import com.xando.navigation_api.features.auth.LoginKey
-import com.xando.navigation_api.features.home.HomeKey
 
 /**
  * Регистрирует navigation entries для модуля auth
@@ -30,9 +29,6 @@ internal fun EntryProviderScope<NavKey>.authEntryBuilder(navigationController: N
 
     entry<SignUpKey> {
         SignUpScreen(
-            onSignUpSuccess = {
-                navigationController.navigateAndClearStack(HomeKey)
-            },
             onBackClick = {
                 navigationController.navigateBack()
             }
