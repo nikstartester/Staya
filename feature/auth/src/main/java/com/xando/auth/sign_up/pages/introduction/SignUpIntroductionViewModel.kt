@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xando.auth.sign_up.SignUpFlowCoordinator
+import com.xando.auth.sign_up.di.SignUpAvatar
 import com.xando.auth.sign_up.domain.use_case.AvatarUploadUseCase
 import com.xando.design.ui.snackbar.SnackbarType
 import com.xando.design.ui.snackbar.StayaSnackbarData
@@ -30,7 +31,7 @@ import com.xando.core.design.R as RDesign
 @HiltViewModel
 internal class SignUpIntroductionViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
-    private val avatarUploadUseCase: AvatarUploadUseCase,
+    @param:SignUpAvatar private val avatarUploadUseCase: AvatarUploadUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 

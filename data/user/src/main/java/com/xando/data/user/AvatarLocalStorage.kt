@@ -21,7 +21,6 @@ import java.io.File
 import java.io.IOException
 import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -34,7 +33,6 @@ import kotlin.math.roundToInt
  *
  * Копия сохраняется уменьшенным JPEG независимо от исходного формата.
  */
-@Singleton
 class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private val context: Context) {
 
     private companion object {

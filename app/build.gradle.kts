@@ -32,10 +32,14 @@ dependencies {
     // Splash screen
     implementation(libs.androidx.core.splashscreen)
 
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.work)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

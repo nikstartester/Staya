@@ -1,6 +1,7 @@
 package com.xando.auth.sign_up.domain
 
 import android.net.Uri
+import com.xando.auth.sign_up.di.SignUpAvatar
 import com.xando.auth.sign_up.domain.use_case.AvatarUploadUseCase
 import com.xando.auth.sign_up.domain.use_case.SignUpUseCase
 import com.xando.core.models.auth.data.SignUpData
@@ -11,7 +12,7 @@ import javax.inject.Inject
  */
 internal class SignUpInteractor @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
-    private val avatarUploadUseCase: AvatarUploadUseCase
+    @param:SignUpAvatar private val avatarUploadUseCase: AvatarUploadUseCase
 ) {
     /**
      * Регистрирует пользователя.

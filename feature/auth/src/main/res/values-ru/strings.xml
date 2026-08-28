@@ -8,6 +8,8 @@
     <string name="auth_email_or_login_title">Email или логин</string>
     <string name="auth_password_title">Пароль</string>
 
+    <string name="auth_avatar_upload_error">Не удалось загрузить фото. Добавьте его позже в профиле.</string>
+
     <!-- Sign Up -->
     <string name="auth_sign_up_back_content_description">Назад</string>
     <string name="auth_sign_up_step_title">Шаг %1$d из %2$d</string>

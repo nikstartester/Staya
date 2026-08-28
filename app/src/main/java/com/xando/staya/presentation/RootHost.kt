@@ -49,6 +49,9 @@ internal fun RootHost(entryBuilders: Set<EntryBuilder>, modifier: Modifier = Mod
     val navigationController = rememberNavigationController(backStack)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarController = rememberStayaSnackbarController(snackbarHostState)
+
     LaunchedEffect(Unit) {
         viewModel.events
             .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
@@ -61,12 +64,11 @@ internal fun RootHost(entryBuilders: Set<EntryBuilder>, modifier: Modifier = Mod
                             navigationController.navigateAndClearStack(LoginKey)
                         }
                     }
+
+                    is RootEvent.ShowSnackbar -> snackbarController.show(event.data)
                 }
             }
     }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    val snackbarController = rememberStayaSnackbarController(snackbarHostState)
 
     AppCloseBackHandler()
 
