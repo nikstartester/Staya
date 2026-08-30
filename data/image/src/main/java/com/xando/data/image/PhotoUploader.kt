@@ -17,7 +17,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.TimeUnit
 
 /**
@@ -48,18 +47,24 @@ class PhotoUploader @AssistedInject constructor(
         fun create(target: PhotoUploadTarget, originTag: String): PhotoUploader
     }
 
+    private val workInfos: Flow<List<WorkInfo>> = workManager.getWorkInfosForUniqueWorkFlow(target.workName)
+
     /**
-     * Состояние текущей или последней завершившейся отправки, начатой с [originTag].
+     * Состояние текущей или последней завершившейся отправки, начатой с [originTag]. Чужие отправки
+     * неотличимы от их отсутствия.
      *
-     * Завершившаяся отправка выдаётся один раз: сразу после выдачи запись о ней удаляется, поэтому
-     * повторно, в том числе после перезапуска приложения, результат не придёт. Если показать его
-     * было некому - результат теряется, отдельного подтверждения от подписчика не требуется.
+     * Для того, кто отправку начал: по нему показывают её результат.
      */
-    val state: Flow<PhotoUploadState> = workManager
-        .getWorkInfosForUniqueWorkFlow(target.workName)
-        .map { workInfos -> workInfos.filter { originTag in it.tags }.actual().toUploadState() }
+    val originState: Flow<PhotoUploadState> = workInfos
+        .map { infos -> infos.filter { originTag in it.tags }.actual().toUploadState() }
         .distinctUntilChanged()
-        .onEach { state -> if (state is PhotoUploadState.Success || state is PhotoUploadState.Failed) consume() }
+
+    /**
+     * Состояние отправки в этот ресурс, чья бы метка на ней ни стояла.
+     */
+    val workState: Flow<PhotoUploadState> = workInfos
+        .map { infos -> infos.actual().toUploadState() }
+        .distinctUntilChanged()
 
     /**
      * Ставит отправку фотографии в очередь, вытесняя незавершённую отправку в тот же ресурс.
@@ -97,15 +102,6 @@ class PhotoUploader @AssistedInject constructor(
         .putAll(target.extras)
         .putAll(workDataOf(PhotoUploadWorker.KEY_PHOTO_URI to toString()))
         .build()
-
-    /**
-     * Убирает запись о завершившейся отправке, чтобы её результат не выдавался повторно.
-     */
-    //FIXME: метод отчищает вообще все завершенные результаты, не только этого WorkManager. Нужно иметь это ввиду.
-    // Фикс выглядит очень костыльно, поэтому до востребованности пока так.
-    private fun consume() {
-        workManager.pruneWork()
-    }
 
     /**
      * Выбирает работу, состояние которой актуально: незавершённую, а если таких нет - последнюю
