@@ -1,5 +1,6 @@
 package com.xando.data.user
 
+import android.graphics.RectF
 import android.net.Uri
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
@@ -70,17 +71,39 @@ class AvatarUploader @AssistedInject constructor(
     /**
      * Кэширует фотографию по [sourceUri] в кеш приложения.
      *
-     * Отправка ранее выбранной фотографии отменяется: сохранение вытесняет её локальную копию, без
-     * которой отправку всё равно не завершить.
+     * Ранее выбранная фотография остаётся на месте: выбор ещё не подтверждён, и от новой копии
+     * пользователь может отказаться. Вытесняет прежнюю копию только [crop].
      *
      * @param sourceUri Uri, выданный пикером.
      * @return Uri локальной копии.
      * @throws IllegalStateException Если файл по [sourceUri] не удалось прочитать.
      */
-    suspend fun cache(sourceUri: Uri): Uri {
+    suspend fun cache(sourceUri: Uri): Uri = localStorage.save(sourceUri)
+
+    /**
+     * Обрезает копию по [sourceUri] и делает результат единственной копией.
+     *
+     * Это точка подтверждения выбора: прежняя копия удаляется, а её отправка отменяется - без
+     * локальной копии завершить отправку всё равно нечем.
+     *
+     * @param sourceUri Uri копии, полученной из [cache].
+     * @param cropRect Область в долях сторон копии: границы лежат в 0..1, а не в пикселях.
+     * @return Uri обрезанной копии.
+     * @throws IllegalStateException Если копию не удалось прочитать.
+     */
+    suspend fun crop(sourceUri: Uri, cropRect: RectF): Uri {
+        val croppedUri = localStorage.crop(sourceUri, cropRect)
+
         workManager.cancelUniqueWork(UNIQUE_WORK_NAME)
-        return localStorage.save(sourceUri)
+        localStorage.keepOnly(croppedUri)
+
+        return croppedUri
     }
+
+    /**
+     * Удаляет копию по [photoUri], от которой пользователь отказался.
+     */
+    suspend fun discard(photoUri: Uri) = localStorage.delete(photoUri)
 
     /**
      * Ставит загрузку фотографии в очередь. Ошибка загрузки не прерывает пользовательский сценарий.

@@ -21,6 +21,7 @@
     <string name="auth_sign_up_introduction_photo_content_description">Profile photo</string>
     <string name="auth_sign_up_introduction_photo_title">Choose photo</string>
     <string name="auth_sign_up_introduction_photo_unsupported_format">This image is not supported</string>
+    <string name="auth_sign_up_introduction_photo_crop_error">Couldn\'t crop the photo</string>
     <string name="auth_sign_up_about_title">Tell us a little about yourself or skip this step. You can do it later anytime in profile settings.</string>
     <string name="auth_sign_up_about_placeholder">For example, I love wombats and playing ball with my dog. \uD83D\uDC15</string>
     <string name="auth_sign_up_login_title">Enter a login or skip this step. It can be used to sign in, and other people will also be able to find you by it.</string>

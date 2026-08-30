@@ -1,5 +1,6 @@
 package com.xando.data.user
 
+import android.content.ContentResolver
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.Matrix
+import android.graphics.RectF
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -22,6 +24,7 @@ import java.io.IOException
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -32,6 +35,11 @@ import kotlin.math.roundToInt
  * в кеш приложения сразу при выборе, и дальше флоу работает уже со своей копией.
  *
  * Копия сохраняется уменьшенным JPEG независимо от исходного формата.
+ *
+ * Копии не вытесняют друг друга: только что выбранная фотография лежит рядом с прежней, пока
+ * пользователь не подтвердит выбор. До подтверждения от новой копии можно отказаться через [delete],
+ * а после - убрать все остальные через [keepOnly]. Так отмена обрезки не стоит пользователю уже
+ * выбранной ранее фотографии.
  */
 class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private val context: Context) {
 
@@ -57,9 +65,54 @@ class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private v
      * поддерживается системным декодером.
      */
     suspend fun save(sourceUri: Uri): Uri = withContext(Dispatchers.IO) {
-        val bitmap = flattenAlpha(scaleDown(decode(sourceUri)))
+        Uri.fromFile(write(flattenAlpha(scaleDown(decode(sourceUri))), sourceUri))
+    }
 
-        clear()
+    /**
+     * Вырезает из копии по [sourceUri] квадрат, заданный [cropRect], и сохраняет его отдельной копией.
+     *
+     * Обрезается именно копия из [save]: она уже развёрнута по EXIF и приведена к JPEG, поэтому в
+     * квадрат попадают ровно те пиксели, которые пользователь видел, когда выбирал область.
+     *
+     * @param sourceUri Uri копии, полученной из [save].
+     * @param cropRect Область в долях сторон копии: границы лежат в 0..1, а не в пикселях.
+     * @return Uri обрезанной копии.
+     * @throws IllegalStateException Если копию не удалось прочитать или сжать.
+     */
+    suspend fun crop(sourceUri: Uri, cropRect: RectF): Uri = withContext(Dispatchers.IO) {
+        Uri.fromFile(write(cutOutSquare(decode(sourceUri), cropRect), sourceUri))
+    }
+
+    /**
+     * Удаляет все копии, кроме копии по [photoUri].
+     */
+    suspend fun keepOnly(photoUri: Uri) {
+        withContext(Dispatchers.IO) {
+            val kept = photoUri.toLocalFile()
+            directory.listFiles()?.forEach { file -> if (file != kept) file.delete() }
+        }
+    }
+
+    /**
+     * Удаляет копию по [photoUri]. Uri, указывающий не на копию, игнорируется.
+     */
+    suspend fun delete(photoUri: Uri) {
+        withContext(Dispatchers.IO) { photoUri.toLocalFile()?.delete() }
+    }
+
+    /**
+     * Удаляет локальные копии фотографии.
+     */
+    fun clear() {
+        directory.deleteRecursively()
+    }
+
+    /**
+     * Пишет [bitmap] новой копией и освобождает его.
+     *
+     * @param sourceUri Uri источника, нужен только для сообщения об ошибке.
+     */
+    private fun write(bitmap: Bitmap, sourceUri: Uri): File {
         directory.mkdirs()
 
         val target = File(directory, "${UUID.randomUUID()}.$EXTENSION")
@@ -70,14 +123,41 @@ class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private v
         }
         check(isCompressed) { "Не удалось сжать изображение по uri: $sourceUri" }
 
-        Uri.fromFile(target)
+        return target
     }
 
     /**
-     * Удаляет локальную копию фотографии.
+     * Вырезает из [bitmap] квадрат, заданный [cropRect].
+     *
+     * Область задавалась квадратом, и стороны здесь расходятся разве что на пиксель округления,
+     * поэтому за сторону берётся меньшая из них.
+     *
+     * @param cropRect Область в долях сторон [bitmap]: границы лежат в 0..1, а не в пикселях.
      */
-    fun clear() {
-        directory.deleteRecursively()
+    private fun cutOutSquare(bitmap: Bitmap, cropRect: RectF): Bitmap {
+        val left = (cropRect.left * bitmap.width).roundToInt().coerceIn(0, bitmap.width - 1)
+        val top = (cropRect.top * bitmap.height).roundToInt().coerceIn(0, bitmap.height - 1)
+        val right = (cropRect.right * bitmap.width).roundToInt().coerceIn(left + 1, bitmap.width)
+        val bottom = (cropRect.bottom * bitmap.height).roundToInt().coerceIn(top + 1, bitmap.height)
+
+        val side = min(right - left, bottom - top)
+
+        val cropped = Bitmap.createBitmap(bitmap, left, top, side, side)
+        // createBitmap отдаёт исходный битмап, когда область совпала с ним целиком.
+        if (cropped !== bitmap) bitmap.recycle()
+
+        return cropped
+    }
+
+    /**
+     * Приводит [Uri] к файлу копии. Возвращает `null`, если Uri указывает не на копию.
+     */
+    private fun Uri.toLocalFile(): File? {
+        if (scheme != ContentResolver.SCHEME_FILE) return null
+
+        val file = File(path ?: return null)
+
+        return file.takeIf { it.parentFile == directory }
     }
 
     /**

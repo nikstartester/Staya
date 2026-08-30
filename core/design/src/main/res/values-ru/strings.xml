@@ -7,4 +7,9 @@
     <string name="design_error_unknown">Неизвестная ошибка</string>
 
     <string name="design_search_placeholder">Поиск</string>
+
+    <!-- Обрезка изображения -->
+    <string name="design_image_crop_hint">Выберите область</string>
+    <string name="design_image_crop_confirm">Продолжить</string>
+    <string name="design_image_crop_close_content_description">Закрыть</string>
 </resources>

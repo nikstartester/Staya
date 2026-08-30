@@ -7,4 +7,9 @@
     <string name="design_error_unknown">Unknown error</string>
 
     <string name="design_search_placeholder">Search</string>
+
+    <!-- Image crop -->
+    <string name="design_image_crop_hint">Select an area</string>
+    <string name="design_image_crop_confirm">Continue</string>
+    <string name="design_image_crop_close_content_description">Close</string>
 </resources>
