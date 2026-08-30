@@ -27,5 +27,8 @@ dependencies {
     // Data:
     implementation(project(":data:auth"))
     implementation(project(":data:image"))
+
+    // Domain:
+    implementation(project(":domain:image"))
     implementation(project(":data:user"))
 }

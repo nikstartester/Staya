@@ -1,8 +1,8 @@
 package com.xando.auth.sign_up.snackbar
 
 import com.xando.auth.sign_up.di.SignUpAvatar
-import com.xando.auth.sign_up.domain.use_case.AvatarUploadUseCase
 import com.xando.data.image.PhotoUploadState
+import com.xando.domain.image.PhotoUploadUseCase
 import com.xando.design.ui.snackbar.BackgroundSnackbarSource
 import com.xando.design.ui.snackbar.SnackbarType
 import com.xando.design.ui.snackbar.StayaSnackbarData
@@ -19,10 +19,10 @@ import com.xando.core.design.R as RDesign
  * показать результат экрану регистрации некому - это делает корень приложения.
  */
 internal class AvatarUploadSnackbarSource @Inject constructor(
-    @SignUpAvatar avatarUploadUseCase: AvatarUploadUseCase,
+    @SignUpAvatar photoUploadUseCase: PhotoUploadUseCase,
 ) : BackgroundSnackbarSource {
 
-    override val snackbars: Flow<StayaSnackbarData> = avatarUploadUseCase.uploadState.mapNotNull { state ->
+    override val snackbars: Flow<StayaSnackbarData> = photoUploadUseCase.uploadState.mapNotNull { state ->
         when (state) {
             PhotoUploadState.Failed -> StayaSnackbarData(
                 type = SnackbarType.ERROR,

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xando.auth.sign_up.SignUpFlowCoordinator
 import com.xando.auth.sign_up.di.SignUpAvatar
-import com.xando.auth.sign_up.domain.use_case.AvatarUploadUseCase
+import com.xando.domain.image.PhotoUploadUseCase
 import com.xando.design.ui.snackbar.SnackbarType
 import com.xando.design.ui.snackbar.StayaSnackbarData
 import com.xando.feature.auth.R
@@ -32,7 +32,7 @@ import com.xando.core.design.R as RDesign
 @HiltViewModel
 internal class SignUpIntroductionViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
-    @param:SignUpAvatar private val avatarUploadUseCase: AvatarUploadUseCase,
+    @param:SignUpAvatar private val photoUploadUseCase: PhotoUploadUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -92,7 +92,7 @@ internal class SignUpIntroductionViewModel @Inject constructor(
     fun onPhotoPicked(photoUri: Uri) {
         viewModelScope.launch {
             val cachedPhotoUri = try {
-                avatarUploadUseCase.cachePhoto(photoUri)
+                photoUploadUseCase.cachePhoto(photoUri)
             } catch (ex: CancellationException) {
                 throw ex
             } catch (th: Throwable) {
@@ -119,13 +119,13 @@ internal class SignUpIntroductionViewModel @Inject constructor(
 
         viewModelScope.launch {
             val croppedPhotoUri = try {
-                avatarUploadUseCase.cutPhoto(sourceUri, cropRect)
+                photoUploadUseCase.cutPhoto(sourceUri, cropRect).also { photoUploadUseCase.confirmPhoto(it) }
             } catch (ex: CancellationException) {
                 throw ex
             } catch (th: Throwable) {
                 // TODO: перейти на Timber
                 Log.w(TAG, "Не удалось обрезать фото", th)
-                avatarUploadUseCase.discardPhoto(sourceUri)
+                photoUploadUseCase.discardPhoto(sourceUri)
                 _events.trySend(SignUpIntroductionEvent.ShowSnackbar(photoCropFailed()))
                 return@launch
             }
@@ -141,7 +141,7 @@ internal class SignUpIntroductionViewModel @Inject constructor(
         val sourceUri = _uiState.value.cropPhotoUri ?: return
         _uiState.update { it.copy(cropPhotoUri = null) }
 
-        viewModelScope.launch { avatarUploadUseCase.discardPhoto(sourceUri) }
+        viewModelScope.launch { photoUploadUseCase.discardPhoto(sourceUri) }
     }
 
     /**
