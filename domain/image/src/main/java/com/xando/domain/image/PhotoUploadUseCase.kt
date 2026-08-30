@@ -23,12 +23,16 @@ class PhotoUploadUseCase(
 ) {
 
     /**
-     * Состояние текущей или последней завершившейся отправки.
+     * Состояние отправки, начатой этим юзкейсом.
      *
-     * Завершившаяся отправка выдаётся один раз: показать её результат можно только тому, кто
-     * подписан в этот момент.
+     * Для того, кто отправку начал: по нему показывают её результат.
      */
-    val uploadState: Flow<PhotoUploadState> = photoUploader.state
+    val originUploadState: Flow<PhotoUploadState> = photoUploader.originState
+
+    /**
+     * Состояние отправки в тот же ресурс, кто бы её ни начал.
+     */
+    val workUploadState: Flow<PhotoUploadState> = photoUploader.workState
 
     /**
      * Сохраняет выбранную фотографию в кеш приложения, чтобы доступ к ней не зависел от гранта пикера.
