@@ -45,6 +45,7 @@ import androidx.lifecycle.flowWithLifecycle
 import coil3.compose.AsyncImage
 import com.xando.auth.sign_up.components.BottomSectionAction
 import com.xando.auth.sign_up.components.SignUpPage
+import com.xando.design.ui.components.image_crop.StayaCircleCropDialog
 import com.xando.design.ui.components.text_field.StayaOutlinedTextField
 import com.xando.design.ui.snackbar.LocalSnackbarController
 import com.xando.design.ui.theme.extendedColors
@@ -87,7 +88,7 @@ internal fun SignUpIntroductionScreen(
     ) {
         PhotoPicker(
             photoUri = uiState.photoUri,
-            onPhotoSelected = { viewModel.updatePhotoUri(it) },
+            onPhotoSelected = { viewModel.onPhotoPicked(it) },
             modifier = Modifier.size(120.dp)
         )
 
@@ -126,6 +127,14 @@ internal fun SignUpIntroductionScreen(
                 imeAction = ImeAction.Done
             ),
             errorText = uiState.lastNameError,
+        )
+    }
+
+    uiState.cropPhotoUri?.let { cropPhotoUri ->
+        StayaCircleCropDialog(
+            model = cropPhotoUri,
+            onCropConfirmed = { viewModel.onCropConfirmed(it) },
+            onDismiss = { viewModel.onCropDismissed() },
         )
     }
 }

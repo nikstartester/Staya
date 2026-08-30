@@ -34,7 +34,7 @@ class UserRepository @Inject constructor(
         const val AVATAR_PART_NAME = "file"
         const val AVATAR_FILE_NAME = "avatar"
 
-        /** [AvatarLocalStorage] отдаёт копию всегда в этом формате. */
+        /** [PhotoLocalStorage][com.xando.data.image.PhotoLocalStorage] отдаёт копию всегда в этом формате. */
         const val AVATAR_CONTENT_TYPE = "image/jpeg"
     }
 

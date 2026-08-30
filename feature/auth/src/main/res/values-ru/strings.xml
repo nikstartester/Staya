@@ -21,6 +21,7 @@
     <string name="auth_sign_up_introduction_photo_content_description">Фото профиля</string>
     <string name="auth_sign_up_introduction_photo_title">Выбрать фото</string>
     <string name="auth_sign_up_introduction_photo_unsupported_format">Это изображение не поддерживается</string>
+    <string name="auth_sign_up_introduction_photo_crop_error">Не удалось обрезать фото</string>
     <string name="auth_sign_up_about_title">Расскажите немного о себе или пропустите этот шаг. Вы можете сделать это в любое время в настройках профиля.</string>
     <string name="auth_sign_up_about_placeholder">Например, люблю вомбатов и играть с собакой в мяч. \uD83D\uDC15</string>
     <string name="auth_sign_up_login_title">Введите логин или пропустите этот шаг. Он может быть использован для входа в приложение, а также другие люди смогут вас по нему найти.</string>

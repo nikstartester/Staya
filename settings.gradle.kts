@@ -39,8 +39,12 @@ include(":core:network")
 
 //Data:
 include(":data:auth")
+include(":data:image")
 include(":data:pet-list")
 include(":data:user")
+
+//Domain:
+include(":domain:image")
 
 //Features:
 include(":feature:auth")
