@@ -119,7 +119,7 @@ internal class SignUpIntroductionViewModel @Inject constructor(
 
         viewModelScope.launch {
             val croppedPhotoUri = try {
-                avatarUploadUseCase.cropPhoto(sourceUri, cropRect)
+                avatarUploadUseCase.cutPhoto(sourceUri, cropRect)
             } catch (ex: CancellationException) {
                 throw ex
             } catch (th: Throwable) {

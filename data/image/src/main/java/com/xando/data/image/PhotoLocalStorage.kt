@@ -87,18 +87,18 @@ class PhotoLocalStorage @AssistedInject constructor(
     }
 
     /**
-     * Вырезает из копии по [sourceUri] квадрат, заданный [cropRect], и сохраняет его отдельной копией.
+     * Вырезает из копии по [sourceUri] квадрат, заданный [cutRect], и сохраняет его отдельной копией.
      *
      * Обрезается именно копия из [save]: она уже развёрнута по EXIF и приведена к JPEG, поэтому в
      * квадрат попадают ровно те пиксели, которые пользователь видел, когда выбирал область.
      *
      * @param sourceUri Uri копии, полученной из [save].
-     * @param cropRect Область в долях сторон копии: границы лежат в 0..1, а не в пикселях.
+     * @param cutRect Область в долях сторон копии: границы лежат в 0..1, а не в пикселях.
      * @return Uri обрезанной копии.
      * @throws IllegalStateException Если копию не удалось прочитать или сжать.
      */
-    suspend fun crop(sourceUri: Uri, cropRect: RectF): Uri = withContext(Dispatchers.IO) {
-        Uri.fromFile(write(cutOutSquare(decode(sourceUri), cropRect), sourceUri))
+    suspend fun cut(sourceUri: Uri, cutRect: RectF): Uri = withContext(Dispatchers.IO) {
+        Uri.fromFile(write(cutOutSquare(decode(sourceUri), cutRect), sourceUri))
     }
 
     /**

@@ -29,7 +29,7 @@ internal class AvatarUploadUseCase(
     /**
      * Сохраняет выбранную фотографию в кеш приложения, чтобы доступ к ней не зависел от гранта пикера.
      *
-     * Ранее выбранная фотография сохраняется: заменит её только подтверждённая через [cropPhoto].
+     * Ранее выбранная фотография сохраняется: заменит её только подтверждённая через [cutPhoto].
      *
      * @param photoUri Uri, выданный пикером.
      * @return Uri локальной копии.
@@ -46,8 +46,8 @@ internal class AvatarUploadUseCase(
      * @param cropRect Область в долях сторон копии: границы лежат в 0..1, а не в пикселях.
      * @return Uri обрезанной копии.
      */
-    suspend fun cropPhoto(photoUri: Uri, cropRect: RectF): Uri {
-        val croppedPhotoUri = photoLocalStorage.crop(photoUri, cropRect)
+    suspend fun cutPhoto(photoUri: Uri, cropRect: RectF): Uri {
+        val croppedPhotoUri = photoLocalStorage.cut(photoUri, cropRect)
 
         photoUploader.cancel()
         photoLocalStorage.keepOnly(croppedPhotoUri)
@@ -63,7 +63,7 @@ internal class AvatarUploadUseCase(
     /**
      * Ставит в очередь отправку фотографии профиля. Требует уже подтверждённого e-mail.
      *
-     * @param photoUri Uri локальной копии, подтверждённой в [cropPhoto].
+     * @param photoUri Uri локальной копии, подтверждённой в [cutPhoto].
      */
     fun uploadAvatar(photoUri: Uri) {
         photoUploader.enqueue(photoUri)
