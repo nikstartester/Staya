@@ -26,5 +26,6 @@ dependencies {
 
     // Data:
     implementation(project(":data:auth"))
+    implementation(project(":data:image"))
     implementation(project(":data:user"))
 }

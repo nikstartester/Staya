@@ -5,19 +5,18 @@ plugins {
 }
 
 android {
-    namespace = "com.xando.data.user"
+    namespace = "com.xando.data.image"
 }
 
 dependencies {
     implementation(project(":core:api-models"))
-    implementation(project(":core:network"))
 
-    // Data:
-    api(project(":data:image"))
+    implementation(libs.androidx.exifinterface)
+
+    // WorkManager
+    api(libs.androidx.work.runtime.ktx)
 
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.work)
-    ksp(libs.androidx.hilt.compiler)
 }

@@ -39,6 +39,7 @@ include(":core:network")
 
 //Data:
 include(":data:auth")
+include(":data:image")
 include(":data:pet-list")
 include(":data:user")
 

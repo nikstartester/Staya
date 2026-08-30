@@ -1,4 +1,4 @@
-package com.xando.data.user.di
+package com.xando.staya.di
 
 import android.content.Context
 import androidx.work.WorkManager
@@ -9,12 +9,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-/** Hilt-модуль, предоставляющий зависимости данных пользователя. */
+/**
+ * Фоновая работа.
+ *
+ * [WorkManager] один на приложение
+ */
 @Module
 @InstallIn(SingletonComponent::class)
-object UserDataModule {
+object WorkManagerModule {
 
-    /** @SelfDocumented */
+    /**@SelfDocumented*/
     @Provides
     @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager = WorkManager.getInstance(context)

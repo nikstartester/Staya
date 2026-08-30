@@ -1,4 +1,4 @@
-package com.xando.data.user
+package com.xando.data.image
 
 import android.content.ContentResolver
 import android.content.Context
@@ -15,36 +15,54 @@ import androidx.annotation.RequiresApi
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.scale
 import androidx.exifinterface.media.ExifInterface
-import com.xando.data.user.AvatarLocalStorage.Companion.MAX_SIZE_PX
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.util.UUID
-import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * Локальная копия выбранной фотографии профиля.
+ * Каталог локальных копий фотографии.
  *
  * Системный фотопикер выдаёт [Uri] с временным доступом на чтение, который не переживает смерть
  * процесса и не может быть продлён через `takePersistableUriPermission`. Поэтому файл копируется
- * в кеш приложения сразу при выборе, и дальше флоу работает уже со своей копией.
+ * в кеш приложения сразу при выборе, и дальше работа идёт уже со своей копией.
  *
  * Копия сохраняется уменьшенным JPEG независимо от исходного формата.
  *
  * Копии не вытесняют друг друга: только что выбранная фотография лежит рядом с прежней, пока
  * пользователь не подтвердит выбор. До подтверждения от новой копии можно отказаться через [delete],
- * а после - убрать все остальные через [keepOnly]. Так отмена обрезки не стоит пользователю уже
- * выбранной ранее фотографии.
+ * а после - убрать все остальные через [keepOnly]. Так отмена не стоит пользователю уже выбранной
+ * ранее фотографии.
+ *
+ * Каталог задаётся ресурсом, а не экраном: две фичи, правящие одну и ту же фотографию, работают с
+ * одним каталогом, и выбор, сделанный в одной из них, корректно вытесняет выбор из другой.
+ *
+ * @param directoryName Имя каталога копий внутри кеша приложения.
+ * @param maxSizePx Максимальная сторона копии в пикселях.
  */
-class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private val context: Context) {
+class PhotoLocalStorage @AssistedInject constructor(
+    @Assisted private val directoryName: String,
+    @Assisted private val maxSizePx: Int,
+    @param:ApplicationContext private val context: Context,
+) {
+
+    /**@SelfDocumented*/
+    @AssistedFactory
+    interface Factory {
+
+        /**@SelfDocumented*/
+        fun create(directoryName: String, maxSizePx: Int = MAX_SIZE_PX): PhotoLocalStorage
+    }
 
     private companion object {
-        const val DIRECTORY_NAME = "signup_avatar"
         const val EXTENSION = "jpg"
 
         /** Максимальная сторона копии в пикселях. */
@@ -54,7 +72,7 @@ class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private v
     }
 
     private val directory: File
-        get() = File(context.cacheDir, DIRECTORY_NAME)
+        get() = File(context.cacheDir, directoryName)
 
     /**
      * Сохраняет фотографию по [sourceUri] в кеш приложения, уменьшая её и перекодируя в JPEG.
@@ -101,7 +119,7 @@ class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private v
     }
 
     /**
-     * Удаляет локальные копии фотографии.
+     * Удаляет все копии.
      */
     fun clear() {
         directory.deleteRecursively()
@@ -214,12 +232,12 @@ class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private v
     }
 
     /**
-     * Подбирает степень двойки, при которой изображение остаётся не меньше [MAX_SIZE_PX] по
+     * Подбирает степень двойки, при которой изображение остаётся не меньше [maxSizePx] по
      * большей стороне: точный размер доводится уже ресайзом.
      */
     private fun calculateSampleSize(width: Int, height: Int): Int {
         var sampleSize = 1
-        while (max(width, height) / (sampleSize * 2) >= MAX_SIZE_PX) {
+        while (max(width, height) / (sampleSize * 2) >= maxSizePx) {
             sampleSize *= 2
         }
 
@@ -251,13 +269,13 @@ class AvatarLocalStorage @Inject constructor(@param:ApplicationContext private v
     }
 
     /**
-     * Уменьшает изображение до [MAX_SIZE_PX] по большей стороне, сохраняя пропорции.
+     * Уменьшает изображение до [maxSizePx] по большей стороне, сохраняя пропорции.
      */
     private fun scaleDown(bitmap: Bitmap): Bitmap {
         val maxDimension = max(bitmap.width, bitmap.height)
-        if (maxDimension <= MAX_SIZE_PX) return bitmap
+        if (maxDimension <= maxSizePx) return bitmap
 
-        val scale = MAX_SIZE_PX.toFloat() / maxDimension
+        val scale = maxSizePx.toFloat() / maxDimension
         val scaled = bitmap.scale(
             (bitmap.width * scale).roundToInt().coerceAtLeast(1),
             (bitmap.height * scale).roundToInt().coerceAtLeast(1),
