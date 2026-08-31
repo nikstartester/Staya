@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
+   Правила бэкапа и переноса данных для API 31+.
+   См. https://developer.android.com/about/versions/12/backup-restore#xml-changes
+
+   Хранилище токенов исключено и из облачного бэкапа, и из переноса между
+   устройствами: keyset Tink зашифрован мастер-ключом из Android Keystore,
+   который не переносится. Без него keyset становится нечитаемым.
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <!-- Keyset Tink, которым шифруются токены -->
+        <exclude
+            domain="sharedpref"
+            path="token_keyset_prefs.xml"/>
+        <!-- DataStore с зашифрованными токенами -->
+        <exclude
+            domain="file"
+            path="datastore/token_prefs.preferences_pb"/>
     </cloud-backup>
-    <!--
     <device-transfer>
-        <include .../>
-        <exclude .../>
+        <!-- Keyset Tink, которым шифруются токены -->
+        <exclude
+            domain="sharedpref"
+            path="token_keyset_prefs.xml"/>
+        <!-- DataStore с зашифрованными токенами -->
+        <exclude
+            domain="file"
+            path="datastore/token_prefs.preferences_pb"/>
     </device-transfer>
-    -->
 </data-extraction-rules>

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-   Sample backup rules file; uncomment and customize as necessary.
-   See https://developer.android.com/guide/topics/data/autobackup
-   for details.
-   Note: This file is ignored for devices older than API 31
-   See https://developer.android.com/about/versions/12/backup-restore
+   Правила автобэкапа для устройств до API 31.
+   Начиная с API 31 используется data_extraction_rules.xml.
+
+   Хранилище токенов исключено из бэкапа: keyset Tink зашифрован мастер-ключом
+   из Android Keystore, а Keystore не бэкапится. При восстановлении на другом
+   устройстве keyset вернулся бы без ключа и стал бы нечитаемым.
 -->
 <full-backup-content>
-    <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+    <!-- Keyset Tink, которым шифруются токены -->
+    <exclude
+        domain="sharedpref"
+        path="token_keyset_prefs.xml"/>
+    <!-- DataStore с зашифрованными токенами -->
+    <exclude
+        domain="file"
+        path="datastore/token_prefs.preferences_pb"/>
 </full-backup-content>
