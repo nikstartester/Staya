@@ -8,6 +8,7 @@ import com.xando.core.models.auth.data.SignUpData
 import com.xando.core.network.NetworkChecker
 import com.xando.core.network.auth.TokenStorage
 import com.xando.core.network.withApiException
+import com.xando.data.auth.model.LoginAvailabilityResponse
 import com.xando.data.auth.model.LoginRequest
 import com.xando.data.auth.model.LoginResponse
 import com.xando.data.auth.model.PasswordResetConfirmRequest
@@ -17,6 +18,8 @@ import com.xando.data.auth.model.VerifyEmailRequest
 import com.xando.data.auth.model.toRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -54,6 +57,21 @@ class AuthRepository @Inject constructor(
             }.body<LoginResponse>()
 
             tokenStorage.save(access = response.accessToken, refresh = response.refreshToken)
+        }
+    }
+
+    /**
+     * Проверяет, свободен ли логин.
+     *
+     * @param login Проверяемый логин.
+     * @return `true`, если логин свободен и его можно занять.
+     * @throws ValidationException При невалидном формате логина.
+     */
+    suspend fun checkLoginAvailability(login: String): Boolean {
+        return withApiException(networkChecker) {
+            httpClient.get("/auth/login-availability") {
+                parameter("login", login)
+            }.body<LoginAvailabilityResponse>().available
         }
     }
 

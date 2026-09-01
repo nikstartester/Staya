@@ -37,6 +37,13 @@
     <string name="auth_sign_up_error_login_exists">This login is already taken.</string>
     <string name="auth_sign_up_error_weak_password">Password is too weak.</string>
     <string name="auth_sign_up_error_invalid_email">Invalid email format.</string>
+    <string name="auth_sign_up_error_login_check_failed">Couldn\'t check the login. Try again.</string>
+    <string name="auth_sign_up_login_available_content_description">Login is available</string>
+    <string name="auth_sign_up_close_content_description">Close sign-up</string>
+    <string name="auth_sign_up_exit_confirmation_title">Cancel sign-up?</string>
+    <string name="auth_sign_up_exit_confirmation_message">The entered data will not be saved.</string>
+    <string name="auth_sign_up_exit_confirmation_confirm">Exit</string>
+    <string name="auth_sign_up_exit_confirmation_dismiss">Stay</string>
 
     <!-- Forgot password -->
     <string name="auth_forgot_password_screen_title">Password recovery</string>

@@ -37,6 +37,13 @@
     <string name="auth_sign_up_error_login_exists">Этот логин уже занят.</string>
     <string name="auth_sign_up_error_weak_password">Пароль слишком слабый.</string>
     <string name="auth_sign_up_error_invalid_email">Неверный формат e-mail.</string>
+    <string name="auth_sign_up_error_login_check_failed">Не удалось проверить логин. Попробуйте ещё раз.</string>
+    <string name="auth_sign_up_login_available_content_description">Логин свободен</string>
+    <string name="auth_sign_up_close_content_description">Закрыть регистрацию</string>
+    <string name="auth_sign_up_exit_confirmation_title">Прервать регистрацию?</string>
+    <string name="auth_sign_up_exit_confirmation_message">Введённые данные не сохранятся.</string>
+    <string name="auth_sign_up_exit_confirmation_confirm">Выйти</string>
+    <string name="auth_sign_up_exit_confirmation_dismiss">Остаться</string>
 
     <!-- Forgot password -->
     <string name="auth_forgot_password_screen_title">Восстановление пароля</string>

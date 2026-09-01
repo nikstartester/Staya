@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.LocalAutofillHighlightBrush
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -62,6 +63,8 @@ object StayaTextFieldDefaults {
  * @param errorText Текст ошибки валидации. При установке:
  *      - Поле переходит в error state (красный цвет границы, label и иконок (если цвет не определен извне))
  *      - Если не пустой, текст отображается под полем
+ * @param isSuccess Признак успешной проверки значения. При `true` граница, label и иконки окрашиваются
+ *      цветом успеха. Игнорируется, пока задан [errorText]: ошибка приоритетнее.
  */
 @Composable
 fun StayaOutlinedTextField(
@@ -81,14 +84,29 @@ fun StayaOutlinedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    errorText: String? = null
+    errorText: String? = null,
+    isSuccess: Boolean = false
 ) {
-    val hasError = !errorText.isNullOrBlank()
+    val hasError = errorText != null
     val errorColor = MaterialTheme.colorScheme.error
+    val successColor = MaterialTheme.extendedColors.successColor
+    val showSuccess = isSuccess && !hasError
     // Определяем цвет иконок в зависимости от состояния
     val iconColor = when {
         hasError -> errorColor
+        showSuccess -> successColor
         else -> MaterialTheme.extendedColors.primaryIconColor
+    }
+    val colors = if (showSuccess) {
+        OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = successColor,
+            unfocusedBorderColor = successColor,
+            focusedLabelColor = successColor,
+            unfocusedLabelColor = successColor,
+            cursorColor = successColor
+        )
+    } else {
+        OutlinedTextFieldDefaults.colors()
     }
     val autofillHighlightColor = Color.Transparent
 
@@ -123,8 +141,9 @@ fun StayaOutlinedTextField(
                     CompositionLocalProvider(LocalContentColor provides iconColor) { it() }
                 }
             },
+            colors = colors,
             supportingText =
-                if (hasError) {
+                if (!errorText.isNullOrBlank()) {
                     { Text(errorText, color = errorColor) }
                 } else null,
             isError = errorText != null,

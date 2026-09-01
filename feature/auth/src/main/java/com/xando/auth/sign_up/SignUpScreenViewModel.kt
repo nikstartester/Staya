@@ -115,6 +115,18 @@ internal class SignUpScreenViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Обрабатывает нажатие на крестик, когда флоу уже начат: показывает диалог подтверждения выхода.
+     */
+    fun onCloseClick() {
+        _uiState.update { it.copy(isExitConfirmationVisible = true) }
+    }
+
+    /**@SelfDocumented*/
+    fun hideExitConfirmation() {
+        _uiState.update { it.copy(isExitConfirmationVisible = false) }
+    }
+
     /**@SelfDocumented*/
     fun hideVerificationCodeBottomSheet() {
         _uiState.update { it.copy(isVerificationCodeBottomSheetVisible = false) }
@@ -291,6 +303,7 @@ private fun SignUpFlowData.toSignUpData() = SignUpData(
  * @property isVerificationCodeBottomSheetVisible Признак видимости шторки ввода кода подтверждения.
  * @property isVerificationLoading Флаг выполнения запроса подтверждения или переотправки кода.
  *   Не сохраняется при смерти процесса — запрос его не переживает.
+ * @property isExitConfirmationVisible Признак видимости диалога подтверждения выхода из флоу регистрации.
  */
 @Parcelize
 internal data class SignUpScreenUiState(
@@ -299,6 +312,7 @@ internal data class SignUpScreenUiState(
     val isVerificationCodeBottomSheetVisible: Boolean = false,
     @IgnoredOnParcel
     val isVerificationLoading: Boolean = false,
+    val isExitConfirmationVisible: Boolean = false,
 ) : Parcelable
 
 /**

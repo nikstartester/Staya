@@ -17,6 +17,7 @@ import com.xando.core.network.model.ErrorResponse
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ResponseException
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.CancellationException
 import java.io.IOException
 import java.net.SocketTimeoutException
 
@@ -53,6 +54,9 @@ suspend fun <T> withApiException(networkChecker: NetworkChecker, block: suspend 
         throw TimeoutException(e)
     } catch (e: IOException) {
         throw if (networkChecker.isConnected()) ServerUnavailableException(e) else NetworkException(e)
+    } catch (e: CancellationException) {
+        // Отмена корутины - не ошибка запроса: пробрасываем как есть
+        throw e
     } catch (e: Exception) {
         throw UnknownApiException(e)
     }
