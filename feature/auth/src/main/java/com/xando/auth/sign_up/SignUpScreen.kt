@@ -71,7 +71,7 @@ internal fun SignUpScreen(onBackClick: () -> Unit) {
                     }) {
                         Icon(
                             painter = painterResource(RDesign.drawable.design_ic_arrow_back_24dp),
-                            contentDescription = stringResource(R.string.auth_sign_up_back_content_description)
+                            contentDescription = stringResource(R.string.auth_back_content_description)
                         )
                     }
                 }

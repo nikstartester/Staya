@@ -2,6 +2,7 @@
 <resources>
     <string name="auth_app_name">Staya</string>
     <string name="auth_forgot_password_title">Forgot password?</string>
+    <string name="auth_back_content_description">Back</string>
     <string name="auth_login_title">Log In</string>
     <string name="auth_or_title">or</string>
     <string name="auth_sign_up_title">Sign Up</string>
@@ -11,7 +12,6 @@
     <string name="auth_avatar_upload_error">Couldn\'t upload your photo. Add it later in your profile.</string>
 
     <!-- Sign Up -->
-    <string name="auth_sign_up_back_content_description">Back</string>
     <string name="auth_sign_up_step_title">Step %1$d of %2$d</string>
     <string name="auth_sign_up_continue_title">Continue</string>
     <string name="auth_sign_up_skip_title">Skip</string>
@@ -37,6 +37,13 @@
     <string name="auth_sign_up_error_login_exists">This login is already taken.</string>
     <string name="auth_sign_up_error_weak_password">Password is too weak.</string>
     <string name="auth_sign_up_error_invalid_email">Invalid email format.</string>
+
+    <!-- Forgot password -->
+    <string name="auth_forgot_password_screen_title">Password recovery</string>
+    <string name="auth_forgot_password_form_title">Enter the email address of your account and create a new password. We\'ll send a confirmation code to that email.</string>
+    <string name="auth_forgot_password_continue_title">Continue</string>
+    <string name="auth_forgot_password_new_password_label">New password</string>
+    <string name="auth_forgot_password_success">Password changed. Sign in with the new one.</string>
 
     <!-- Code Confirmation -->
     <string name="auth_verification_code_title">Enter the four-digit code that was sent to your email address</string>

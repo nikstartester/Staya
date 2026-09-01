@@ -10,6 +10,8 @@ import com.xando.core.network.auth.TokenStorage
 import com.xando.core.network.withApiException
 import com.xando.data.auth.model.LoginRequest
 import com.xando.data.auth.model.LoginResponse
+import com.xando.data.auth.model.PasswordResetConfirmRequest
+import com.xando.data.auth.model.PasswordResetRequest
 import com.xando.data.auth.model.ResendCodeRequest
 import com.xando.data.auth.model.VerifyEmailRequest
 import com.xando.data.auth.model.toRequest
@@ -24,7 +26,7 @@ import javax.inject.Inject
 /**
  * Репозиторий авторизации.
  *
- * Выполняет запросы авторизации, регистрации, подтверждения email и переотправки кода.
+ * Выполняет запросы авторизации, регистрации, подтверждения email, переотправки кода и сброса пароля.
  *
  * @param httpClient HTTP-клиент для сетевых запросов.
  * @param tokenStorage Хранилище токенов авторизации.
@@ -97,6 +99,50 @@ class AuthRepository @Inject constructor(
             httpClient.post("/auth/register/resend-code") {
                 contentType(ContentType.Application.Json)
                 setBody(ResendCodeRequest(email = email))
+            }
+        }
+    }
+
+    /**
+     * Запрашивает код подтверждения для сброса пароля.
+     *
+     * Сервер отвечает успехом и для незарегистрированного email, чтобы не раскрывать наличие аккаунта:
+     * узнать, что кода не было, можно только по ошибке [confirmPasswordReset].
+     *
+     * @param email Email пользователя.
+     * @throws ValidationException При невалидном email. Код ошибки: [AuthValidationCodes.INVALID_EMAIL].
+     */
+    suspend fun requestPasswordReset(email: String) {
+        withApiException(networkChecker) {
+            httpClient.post("/auth/password-reset/request") {
+                contentType(ContentType.Application.Json)
+                setBody(PasswordResetRequest(email = email))
+            }
+        }
+    }
+
+    /**
+     * Устанавливает новый пароль по коду подтверждения. Все сессии пользователя на сервере
+     * завершаются, войти нужно заново.
+     *
+     * @param email Email пользователя.
+     * @param code Код подтверждения из письма.
+     * @param newPassword Новый пароль.
+     * @throws ValidationException При невалидных данных. Коды ошибок: [AuthValidationCodes.INVALID_EMAIL],
+     *   [AuthValidationCodes.WEAK_PASSWORD], [AuthValidationCodes.INVALID_CODE], [AuthValidationCodes.CODE_NOT_FOUND],
+     *   [AuthValidationCodes.CODE_EXPIRED], [AuthValidationCodes.CODE_MAX_ATTEMPTS].
+     */
+    suspend fun confirmPasswordReset(email: String, code: String, newPassword: String) {
+        withApiException(networkChecker) {
+            httpClient.post("/auth/password-reset/confirm") {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    PasswordResetConfirmRequest(
+                        email = email,
+                        code = code,
+                        newPassword = newPassword
+                    )
+                )
             }
         }
     }
