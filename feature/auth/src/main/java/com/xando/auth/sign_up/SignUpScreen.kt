@@ -5,12 +5,12 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,6 +39,7 @@ import com.xando.auth.sign_up.pages.login.SignUpLoginScreen
 import com.xando.auth.verification_code.VerificationCodeBottomSheet
 import com.xando.design.animations.rightInLeftOutTransition
 import com.xando.design.animations.rightOutLeftInTransition
+import com.xando.design.ui.components.dialog.StayaConfirmationDialog
 import com.xando.design.ui.snackbar.LocalSnackbarController
 import com.xando.feature.auth.R
 import com.xando.navigation_impl.rememberNavigationController
@@ -55,6 +56,7 @@ internal fun SignUpScreen(onBackClick: () -> Unit) {
 
     val backStack = rememberNavBackStack(SignUpIntroductionKey)
     val navigationController = rememberNavigationController(backStack)
+    val canNavigateBack = navigationController.canNavigateBack()
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val snackbarController = LocalSnackbarController.current
@@ -62,16 +64,28 @@ internal fun SignUpScreen(onBackClick: () -> Unit) {
     Scaffold(
         modifier = Modifier.imePadding(),
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.auth_sign_up_title)) },
                 navigationIcon = {
+                    // На первом шаге возвращаться некуда: флоу закрывается крестиком.
+                    if (canNavigateBack) {
+                        IconButton(onClick = { navigationController.navigateBack() }) {
+                            Icon(
+                                painter = painterResource(RDesign.drawable.design_ic_arrow_back_24dp),
+                                contentDescription = stringResource(R.string.auth_back_content_description)
+                            )
+                        }
+                    }
+                },
+                actions = {
                     IconButton(onClick = {
-                        if (navigationController.canNavigateBack()) navigationController.navigateBack()
+                        if (canNavigateBack) viewModel.onCloseClick()
+                        // С первого шага выходим сразу.
                         else onBackClick()
                     }) {
                         Icon(
-                            painter = painterResource(RDesign.drawable.design_ic_arrow_back_24dp),
-                            contentDescription = stringResource(R.string.auth_back_content_description)
+                            painter = painterResource(RDesign.drawable.design_ic_close_24px),
+                            contentDescription = stringResource(R.string.auth_sign_up_close_content_description)
                         )
                     }
                 }
@@ -144,6 +158,20 @@ internal fun SignUpScreen(onBackClick: () -> Unit) {
                 }
             }
         )
+
+        if (uiState.isExitConfirmationVisible) {
+            StayaConfirmationDialog(
+                title = stringResource(R.string.auth_sign_up_exit_confirmation_title),
+                text = stringResource(R.string.auth_sign_up_exit_confirmation_message),
+                confirmText = stringResource(R.string.auth_sign_up_exit_confirmation_confirm),
+                dismissText = stringResource(R.string.auth_sign_up_exit_confirmation_dismiss),
+                onConfirm = {
+                    viewModel.hideExitConfirmation()
+                    onBackClick()
+                },
+                onDismiss = viewModel::hideExitConfirmation
+            )
+        }
 
         if (uiState.isVerificationCodeBottomSheetVisible) {
             VerificationCodeBottomSheet(
