@@ -2,6 +2,7 @@
 <resources>
     <string name="auth_app_name">Стая</string>
     <string name="auth_forgot_password_title">Забыли пароль?</string>
+    <string name="auth_back_content_description">Назад</string>
     <string name="auth_login_title">Войти</string>
     <string name="auth_or_title">или</string>
     <string name="auth_sign_up_title">Зарегистрироваться</string>
@@ -11,7 +12,6 @@
     <string name="auth_avatar_upload_error">Не удалось загрузить фото. Добавьте его позже в профиле.</string>
 
     <!-- Sign Up -->
-    <string name="auth_sign_up_back_content_description">Назад</string>
     <string name="auth_sign_up_step_title">Шаг %1$d из %2$d</string>
     <string name="auth_sign_up_continue_title">Продолжить</string>
     <string name="auth_sign_up_skip_title">Пропустить</string>
@@ -37,6 +37,13 @@
     <string name="auth_sign_up_error_login_exists">Этот логин уже занят.</string>
     <string name="auth_sign_up_error_weak_password">Пароль слишком слабый.</string>
     <string name="auth_sign_up_error_invalid_email">Неверный формат e-mail.</string>
+
+    <!-- Forgot password -->
+    <string name="auth_forgot_password_screen_title">Восстановление пароля</string>
+    <string name="auth_forgot_password_form_title">Укажите e-mail адрес вашего аккаунта и придумайте новый пароль. Мы отправим на почту код подтверждения.</string>
+    <string name="auth_forgot_password_continue_title">Продолжить</string>
+    <string name="auth_forgot_password_new_password_label">Новый пароль</string>
+    <string name="auth_forgot_password_success">Пароль изменён. Войдите с новым паролем.</string>
 
     <!-- Code Confirmation -->
     <string name="auth_verification_code_title">Введите четырехзначный код, который был отправлен на адресс электронной почты</string>

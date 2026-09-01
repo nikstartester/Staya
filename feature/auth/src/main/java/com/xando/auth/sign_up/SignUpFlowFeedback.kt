@@ -1,6 +1,5 @@
 package com.xando.auth.sign_up
 
-import com.xando.auth.verification_code.VerificationCodeError
 import com.xando.design.ui.theme.StayaString
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.channels.Channel
@@ -31,11 +30,6 @@ internal interface SignUpFlowFeedback {
     val emailPasswordErrors: Flow<EmailPasswordErrors>
 
     /**
-     * Ошибки кода подтверждения.
-     */
-    val verificationErrors: Flow<VerificationCodeError>
-
-    /**
      * Отправляет ошибку на шаг ввода логина.
      */
     fun sendLoginError(error: StayaString)
@@ -47,14 +41,6 @@ internal interface SignUpFlowFeedback {
      * @param passwordError Ошибка пароля или `null`, если поле в порядке.
      */
     fun sendEmailPasswordErrors(emailError: StayaString?, passwordError: StayaString?)
-
-    /**
-     * Отправляет ошибку в шторку ввода кода подтверждения.
-     *
-     * @param error Текст ошибки под полем ввода кода.
-     * @param isResendAllowed `true`, если текущий код непригоден и повторную отправку нужно разблокировать.
-     */
-    fun sendVerificationError(error: StayaString, isResendAllowed: Boolean)
 
     /**
      * Выбрасывает недоставленные события. Нужен при старте нового флоу, чтобы ошибка прошлой попытки
@@ -89,16 +75,12 @@ internal class SignUpFlowFeedbackImpl @Inject constructor() : SignUpFlowFeedback
 
     private val loginErrorsChannel = eventChannel<LoginError>()
     private val emailPasswordErrorsChannel = eventChannel<EmailPasswordErrors>()
-    private val verificationErrorsChannel = eventChannel<VerificationCodeError>()
 
     /**@SelfDocumented*/
     override val loginErrors: Flow<LoginError> = loginErrorsChannel.receiveAsFlow()
 
     /**@SelfDocumented*/
     override val emailPasswordErrors: Flow<EmailPasswordErrors> = emailPasswordErrorsChannel.receiveAsFlow()
-
-    /**@SelfDocumented*/
-    override val verificationErrors: Flow<VerificationCodeError> = verificationErrorsChannel.receiveAsFlow()
 
     /**@SelfDocumented*/
     override fun sendLoginError(error: StayaString) {
@@ -108,11 +90,6 @@ internal class SignUpFlowFeedbackImpl @Inject constructor() : SignUpFlowFeedback
     /**@SelfDocumented*/
     override fun sendEmailPasswordErrors(emailError: StayaString?, passwordError: StayaString?) {
         emailPasswordErrorsChannel.trySend(EmailPasswordErrors(emailError, passwordError))
-    }
-
-    /**@SelfDocumented*/
-    override fun sendVerificationError(error: StayaString, isResendAllowed: Boolean) {
-        verificationErrorsChannel.trySend(VerificationCodeError(error, isResendAllowed))
     }
 
     /**@SelfDocumented*/

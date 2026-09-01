@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xando.auth.sign_up.domain.SignUpInteractor
+import com.xando.auth.verification_code.VerificationCodeFeedback
 import com.xando.core.api_models.ApiException
 import com.xando.core.api_models.ConflictException
 import com.xando.core.api_models.NetworkException
@@ -44,6 +45,7 @@ import com.xando.core.design.R as RDesign
 internal class SignUpScreenViewModel @Inject constructor(
     private val coordinator: SignUpFlowCoordinator,
     private val serverFeedback: SignUpFlowFeedback,
+    private val verificationFeedback: VerificationCodeFeedback,
     private val savedStateHandle: SavedStateHandle,
     private val interactor: SignUpInteractor
 ) : ViewModel() {
@@ -70,6 +72,7 @@ internal class SignUpScreenViewModel @Inject constructor(
 
     init {
         serverFeedback.clear()
+        verificationFeedback.clear()
 
         savedStateHandle.get<SignUpFlowData>(KEY_FLOW_DATA)?.let {
             coordinator.restoreFrom(it)
@@ -237,7 +240,7 @@ internal class SignUpScreenViewModel @Inject constructor(
         // При CODE_MAX_ATTEMPTS лимит исчерпан попытками пользователя — отсчёт дожидается конца.
         val isResendAllowed = code == CODE_NOT_FOUND || code == CODE_EXPIRED
 
-        serverFeedback.sendVerificationError(
+        verificationFeedback.sendError(
             error = StayaString.Res(errorResId),
             isResendAllowed = isResendAllowed
         )

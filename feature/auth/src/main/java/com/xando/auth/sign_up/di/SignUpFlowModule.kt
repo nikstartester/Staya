@@ -6,7 +6,6 @@ import com.xando.auth.sign_up.SignUpFlowCoordinator
 import com.xando.auth.sign_up.SignUpFlowCoordinatorImpl
 import com.xando.auth.sign_up.SignUpFlowFeedback
 import com.xando.auth.sign_up.SignUpFlowFeedbackImpl
-import com.xando.auth.verification_code.VerificationCodeError
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -43,10 +42,5 @@ internal abstract class SignUpFlowModule {
         @Provides
         fun provideEmailPasswordErrors(feedback: SignUpFlowFeedback): Flow<EmailPasswordErrors> =
             feedback.emailPasswordErrors
-
-        /**@SelfDocumented*/
-        @Provides
-        fun provideVerificationErrors(feedback: SignUpFlowFeedback): Flow<VerificationCodeError> =
-            feedback.verificationErrors
     }
 }
