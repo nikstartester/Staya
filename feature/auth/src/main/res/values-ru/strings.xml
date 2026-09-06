@@ -53,7 +53,7 @@
     <string name="auth_forgot_password_success">Пароль изменён. Войдите с новым паролем.</string>
 
     <!-- Code Confirmation -->
-    <string name="auth_verification_code_title">Введите четырехзначный код, который был отправлен на адресс электронной почты</string>
+    <string name="auth_verification_code_title">Введите четырехзначный код, который был отправлен на адрес электронной почты</string>
     <string name="auth_verification_code_resend_text">Не пришел код?</string>
     <string name="auth_verification_code_resend_button">Отправить снова</string>
     <string name="auth_verification_code_timer_text">Вы можете запросить новый код через %02d:%02d</string>
