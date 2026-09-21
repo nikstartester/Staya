@@ -15,7 +15,7 @@ import kotlinx.parcelize.Parcelize
 internal data class InterestsPickerUiState(
     val query: String = "",
     val selected: List<PetInterest> = emptyList(),
-    val maxSelection: Int = Int.MAX_VALUE,
+    val maxSelection: Int,
 ) : Parcelable {
 
     /** Признак того, что выбрано максимально допустимое количество интересов. */

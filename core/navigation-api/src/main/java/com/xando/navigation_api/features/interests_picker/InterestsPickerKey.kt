@@ -17,5 +17,5 @@ import kotlinx.serialization.Serializable
 data class InterestsPickerKey(
     val requestKey: String,
     val currentInterests: List<PetInterest> = emptyList(),
-    val maxSelection: Int = Int.MAX_VALUE,
+    val maxSelection: Int,
 ) : NavKey
