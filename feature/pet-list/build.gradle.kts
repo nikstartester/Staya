@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.staya.android.baseCfg)
     alias(libs.plugins.staya.compose)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
@@ -23,5 +22,5 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     // Data:
-    implementation(project(":data:pet-list"))
+    implementation(project(":data:pet"))
 }

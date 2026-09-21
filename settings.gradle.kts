@@ -36,11 +36,12 @@ include(":core:models")
 include(":core:navigation-api")
 include(":core:navigation-impl")
 include(":core:network")
+include(":core:pet-dictionary")
 
 //Data:
 include(":data:auth")
 include(":data:image")
-include(":data:pet-list")
+include(":data:pet")
 include(":data:user")
 
 //Domain:
@@ -48,4 +49,7 @@ include(":domain:image")
 
 //Features:
 include(":feature:auth")
+include(":feature:pet-breed-picker")
+include(":feature:pet-form")
+include(":feature:pet-interests-picker")
 include(":feature:pet-list")

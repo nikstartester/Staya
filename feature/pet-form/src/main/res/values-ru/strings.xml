@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_form_title_create">Мой питомец</string>
+    <string name="pet_form_title_edit">Изменить данные</string>
+    <string name="pet_form_photo_caption">Выбрать фото</string>
+    <string name="pet_form_photo_content_description">Фото питомца</string>
+    <string name="pet_form_photo_remove">Удалить фото</string>
+    <string name="pet_form_name_label">Кличка</string>
+    <string name="pet_form_birth_date_label">Дата рождения</string>
+    <string name="pet_form_birth_date_placeholder">ДД.ММ.ГГГГ</string>
+    <string name="pet_form_birth_date_invalid">Некорректная дата</string>
+    <string name="pet_form_birth_date_future">Заглянули в будущее? Питомец ещё не родился</string>
+    <string name="pet_form_birth_date_calendar">Выбрать дату в календаре</string>
+    <string name="pet_form_weight_label">Вес, кг</string>
+    <string name="pet_form_weight_placeholder">Например, 12,5</string>
+    <string name="pet_form_breed_label">Порода</string>
+    <string name="pet_form_breed_placeholder">Не выбрано</string>
+    <string name="pet_form_sex_label">Пол</string>
+    <string name="pet_form_sex_male">Кобель</string>
+    <string name="pet_form_sex_female">Сука</string>
+    <string name="pet_form_interests_label">Чем любит заниматься</string>
+    <string name="pet_form_interests_count">Выбрано: %1$d из %2$d</string>
+    <string name="pet_form_interests_more">Ещё</string>
+    <string name="pet_form_about_label">Характер, привычки и всё остальное</string>
+    <string name="pet_form_about_placeholder">Например, храпит как трактор, обожает сыр и занимает всю кровать</string>
+    <string name="pet_form_save_create">Добавить</string>
+    <string name="pet_form_save_edit">Сохранить</string>
+    <string name="pet_form_save_error">Не удалось сохранить питомца. Попробуйте ещё раз.</string>
+    <string name="pet_form_photo_unsupported_format">Не получилось использовать это фото, выберите другое</string>
+    <string name="pet_form_photo_crop_error">Не удалось обрезать фото, попробуйте ещё раз</string>
+</resources>

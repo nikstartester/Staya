@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_breed_picker_title">Breed</string>
+    <string name="pet_breed_picker_search_placeholder">Find a breed</string>
+    <string name="pet_breed_picker_popular">Popular</string>
+    <string name="pet_breed_picker_confirm">Choose</string>
+</resources>

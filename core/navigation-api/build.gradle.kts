@@ -8,6 +8,8 @@ android {
 }
 
 dependencies {
+    api(project(":core:models"))
+
     api(libs.kotlinx.serialization.json)
 
     api(libs.androidx.navigation3.runtime)

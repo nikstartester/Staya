@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,6 +54,8 @@ import com.xando.core.design.R as RDesign
 @Composable
 fun PetListScreen(
     viewModel: PetListViewModel,
+    onPetClick: (String) -> Unit,
+    onAddPetClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -77,7 +80,7 @@ fun PetListScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets(),
+        contentWindowInsets = WindowInsets.safeDrawing,
         containerColor = if (petList.isNotEmpty()) {
             MaterialTheme.extendedColors.unaccentedBackgroundColor
         } else MaterialTheme.colorScheme.background,
@@ -87,7 +90,7 @@ fun PetListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = onAddPetClick) {
                 Icon(
                     painter = painterResource(RDesign.drawable.design_ic_add_24px),
                     contentDescription = stringResource(R.string.pet_list_add_pet)
@@ -109,7 +112,8 @@ fun PetListScreen(
             PetListItem(
                 pet = pet,
                 isFirst = index == 0,
-                isLast = index == petList.lastIndex
+                isLast = index == petList.lastIndex,
+                modifier = Modifier.clickable(onClick = { onPetClick(pet.id) })
             )
         }
     }
@@ -127,9 +131,7 @@ private fun PetListItem(
         shape = petListItemShape(isFirst, isLast)
     ) {
         Row(
-            modifier = Modifier
-                .clickable { }
-                .padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -140,7 +142,7 @@ private fun PetListItem(
                     .size(60.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (pet.photoUrl.isEmpty()) {
+                if (pet.photoThumbnailUrl.isEmpty()) {
                     Icon(
                         modifier = Modifier.size(32.dp),
                         painter = painterResource(RDesign.drawable.design_ic_photo_camera_24dp),
@@ -149,7 +151,7 @@ private fun PetListItem(
                     )
                 } else {
                     AsyncImage(
-                        model = pet.photoUrl,
+                        model = pet.photoThumbnailUrl,
                         fallback = painterResource(RDesign.drawable.design_ic_photo_camera_24dp),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),

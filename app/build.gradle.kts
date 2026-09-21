@@ -27,6 +27,9 @@ dependencies {
 
     // Features:
     implementation(project(":feature:auth"))
+    implementation(project(":feature:pet-breed-picker"))
+    implementation(project(":feature:pet-form"))
+    implementation(project(":feature:pet-interests-picker"))
     implementation(project(":feature:pet-list"))
 
     // Splash screen

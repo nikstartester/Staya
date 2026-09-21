@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Названия интересов питомца и их групп. Порядок соответствует объявлению констант PetInterest.
+-->
+<resources>
+    <!-- Группы -->
+    <string name="pet_dictionary_interest_group_walk">Walk</string>
+    <string name="pet_dictionary_interest_group_games">Games</string>
+    <string name="pet_dictionary_interest_group_sport">Sport and training</string>
+    <string name="pet_dictionary_interest_group_social">Socializing</string>
+    <string name="pet_dictionary_interest_group_home">At home</string>
+    <string name="pet_dictionary_interest_group_quirks">Quirks</string>
+
+    <!-- Прогулка -->
+    <string name="pet_dictionary_interest_forest_walks">Forest walks</string>
+    <string name="pet_dictionary_interest_city_walks">City walks</string>
+    <string name="pet_dictionary_interest_dog_park">Dog parks</string>
+    <string name="pet_dictionary_interest_swimming">Swimming</string>
+    <string name="pet_dictionary_interest_snow_play">Playing in the snow</string>
+    <string name="pet_dictionary_interest_countryside_trips">Countryside trips</string>
+    <string name="pet_dictionary_interest_long_hikes">Long hikes</string>
+    <string name="pet_dictionary_interest_jogging_with_owner">Jogging with the owner</string>
+
+    <!-- Игры -->
+    <string name="pet_dictionary_interest_playing_fetch">Playing fetch</string>
+    <string name="pet_dictionary_interest_tug_of_war">Tug of war</string>
+    <string name="pet_dictionary_interest_puller">Puller rings</string>
+    <string name="pet_dictionary_interest_squeaky_toys">Squeaky and plush toys</string>
+    <string name="pet_dictionary_interest_chew_toys">Chew toys</string>
+    <string name="pet_dictionary_interest_puzzle_toys">Puzzle toys</string>
+    <string name="pet_dictionary_interest_hide_and_seek">Hide and seek</string>
+
+    <!-- Спорт и тренировки -->
+    <string name="pet_dictionary_interest_agility">Agility</string>
+    <string name="pet_dictionary_interest_frisbee">Frisbee (disc dog)</string>
+    <string name="pet_dictionary_interest_flyball">Flyball</string>
+    <string name="pet_dictionary_interest_canicross">Canicross</string>
+    <string name="pet_dictionary_interest_bikejoring">Bikejoring</string>
+    <string name="pet_dictionary_interest_dog_dancing">Dog dancing (freestyle)</string>
+    <string name="pet_dictionary_interest_scent_tracking">Scent work (nosework)</string>
+    <string name="pet_dictionary_interest_obedience">Obedience</string>
+
+    <!-- Общение -->
+    <string name="pet_dictionary_interest_meeting_puppies">Meeting puppies</string>
+    <string name="pet_dictionary_interest_pack_play">Pack play</string>
+    <string name="pet_dictionary_interest_chasing_other_dogs">Chasing other dogs</string>
+    <string name="pet_dictionary_interest_calm_meetups">Calm meetups</string>
+    <string name="pet_dictionary_interest_small_dogs">Friendly with small dogs</string>
+    <string name="pet_dictionary_interest_big_dogs">Friendly with big dogs</string>
+    <string name="pet_dictionary_interest_cats_and_other_pets">Gets along with cats</string>
+    <string name="pet_dictionary_interest_kids_and_noisy_company">Kids and noisy company</string>
+    <string name="pet_dictionary_interest_meeting_people">Meeting new people</string>
+
+    <!-- Дома -->
+    <string name="pet_dictionary_interest_cuddling">Cuddling on the couch</string>
+    <string name="pet_dictionary_interest_window_watching">Window watching</string>
+    <string name="pet_dictionary_interest_trick_training">Trick training</string>
+    <string name="pet_dictionary_interest_massage_and_grooming">Massage and grooming</string>
+
+    <!-- Милые странности -->
+    <string name="pet_dictionary_interest_zoomies">Zoomies</string>
+    <string name="pet_dictionary_interest_belly_rubs">Belly rubs on demand</string>
+    <string name="pet_dictionary_interest_sock_stealing">Stealing socks</string>
+    <string name="pet_dictionary_interest_puddle_splashing">Splashing in puddles</string>
+    <string name="pet_dictionary_interest_rolling_in_grass">Rolling in the grass</string>
+    <string name="pet_dictionary_interest_chasing_pigeons">Chasing pigeons</string>
+    <string name="pet_dictionary_interest_vacuum_hunting">Hunting the vacuum</string>
+    <string name="pet_dictionary_interest_bathroom_escort">Bathroom escort duty</string>
+</resources>

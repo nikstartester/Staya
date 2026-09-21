@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_interests_picker_title">What they like doing</string>
+    <string name="pet_interests_picker_search_placeholder">Find an activity</string>
+    <string name="pet_interests_picker_done">Done</string>
+    <string name="pet_interests_picker_selected_count">Selected: %1$d of %2$d</string>
+    <plurals name="pet_interests_picker_limit_hint">
+        <item quantity="one">You can pick up to %d activity</item>
+        <item quantity="other">You can pick up to %d activities</item>
+    </plurals>
+    <plurals name="pet_interests_picker_limit_reached">
+        <item quantity="one">You can\'t pick more than %d activity</item>
+        <item quantity="other">You can\'t pick more than %d activities</item>
+    </plurals>
+</resources>

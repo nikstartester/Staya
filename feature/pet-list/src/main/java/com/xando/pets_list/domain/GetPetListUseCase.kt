@@ -1,16 +1,16 @@
 package com.xando.pets_list.domain
 
 import com.xando.core.models.pet.PetSummary
-import com.xando.data.pet_list.PetListRepository
+import com.xando.data.pet.PetRepository
 import javax.inject.Inject
 
 /**
  * Сценарий получения списка питомцев.
  *
- * @param petListRepository Репозиторий списка питомцев.
+ * @param petRepository Репозиторий питомцев.
  */
 class GetPetListUseCase @Inject constructor(
-    private val petListRepository: PetListRepository
+    private val petRepository: PetRepository
 ) {
     /**
      * Получает список питомцев.
@@ -18,6 +18,6 @@ class GetPetListUseCase @Inject constructor(
      * @return Список кратких данных питомцев.
      */
     suspend operator fun invoke(): List<PetSummary> {
-        return petListRepository.getPetList()
+        return petRepository.getPetList()
     }
 }
