@@ -13,6 +13,7 @@
     <string name="pet_form_weight_placeholder">e.g. 12.5</string>
     <string name="pet_form_breed_label">Breed</string>
     <string name="pet_form_breed_placeholder">Not selected</string>
+    <string name="pet_form_breed_pick">Choose breed</string>
     <string name="pet_form_sex_label">Sex</string>
     <string name="pet_form_sex_male">Male</string>
     <string name="pet_form_sex_female">Female</string>

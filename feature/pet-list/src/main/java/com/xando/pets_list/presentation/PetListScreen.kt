@@ -1,7 +1,6 @@
 package com.xando.pets_list.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -113,7 +112,7 @@ fun PetListScreen(
                 pet = pet,
                 isFirst = index == 0,
                 isLast = index == petList.lastIndex,
-                modifier = Modifier.clickable(onClick = { onPetClick(pet.id) })
+                onClick = { onPetClick(pet.id) }
             )
         }
     }
@@ -124,10 +123,12 @@ private fun PetListItem(
     pet: PetSummary,
     isFirst: Boolean,
     isLast: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier.fillMaxWidth(),
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
         shape = petListItemShape(isFirst, isLast)
     ) {
         Row(

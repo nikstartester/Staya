@@ -17,6 +17,7 @@ import kotlinx.parcelize.Parcelize
  * Состояние экрана создания/редактирования питомца.
  *
  * @property petId Идентификатор питомца при редактировании; `null` при создании.
+ * @property maxInterests Максимальное количество интересов, которое можно выбрать.
  * @property photoUri Uri локальной копии новой фотографии, выбранной и подтверждённой пользователем.
  * @property cropPhotoUri Копия, для которой сейчас выбирается область обрезки. `null`, если обрезка не идёт.
  * @property existingPhotoUrl URL текущей фотографии питомца при редактировании, пока пользователь не выбрал
@@ -72,8 +73,8 @@ internal data class PetFormUiState(
 
     /**
      * Введённая дата рождения в миллисекундах эпохи (UTC), с которой открывается календарь; `null`,
-     * если дата введена не полностью, такой даты нет или она позже [com.xando.pet_form.presentation.utils.latestBirthDate]: в календаре
-     * её всё равно нельзя выбрать.
+     * если дата введена не полностью, такой даты нет или она позже [latestBirthDate]: в календаре её
+     * всё равно нельзя выбрать.
      */
     val birthDateMillis: Long?
         get() = birthDate.toBirthDateOrNull()?.takeUnless { it.isAfter(latestBirthDate()) }?.toUtcEpochMillis()

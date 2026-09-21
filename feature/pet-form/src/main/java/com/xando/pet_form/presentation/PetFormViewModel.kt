@@ -26,7 +26,8 @@ import com.xando.pet_form.domain.GetPetDetailUseCase
 import com.xando.pet_form.domain.SavePetUseCase
 import com.xando.pet_form.navigation.BREED_PICKER_KEY
 import com.xando.pet_form.navigation.INTERESTS_PICKER_KEY
-import com.xando.pet_form.presentation.PetFormViewModel.Companion.WEIGHT_INPUT_REGEX
+import com.xando.pet_form.presentation.PetFormViewModel.Companion.MAX_INTERESTS
+import com.xando.pet_form.presentation.PetFormViewModel.Companion.WEIGHT_INTEGER_DIGITS
 import com.xando.pet_form.presentation.PetFormViewModel.Companion.WEIGHT_PRECISION
 import com.xando.pet_form.presentation.utils.BIRTH_DATE_DIGITS
 import com.xando.pet_form.presentation.utils.latestBirthDate
@@ -45,10 +46,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.time.LocalDate
-import kotlin.math.pow
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 import com.xando.core.design.R as RDesign
 
 /**
@@ -72,10 +72,17 @@ internal class PetFormViewModel @AssistedInject constructor(
 
         const val KEY_PET_DETAILS_LOADED = "PetDetailsLoaded"
 
+        /** Сколько цифр веса допустимо до разделителя: 999 кг с запасом покрывают любую собаку. */
+        const val WEIGHT_INTEGER_DIGITS = 3
+
+        /** Сколько цифр веса допустимо после разделителя: точность до грамма. */
         const val WEIGHT_PRECISION = 3
 
-        /** Допустимый ввод веса: цифры, не более одного разделителя (точка или запятая) и до 3 цифр после него. */
-        val WEIGHT_INPUT_REGEX = Regex("^\\d*([.,]\\d{0,$WEIGHT_PRECISION})?$")
+        /**
+         * Допустимый ввод веса: до [WEIGHT_INTEGER_DIGITS] цифр, не более одного разделителя (точка или
+         * запятая) и до [WEIGHT_PRECISION] цифр после него.
+         */
+        val WEIGHT_INPUT_REGEX = Regex("^\\d{0,$WEIGHT_INTEGER_DIGITS}([.,]\\d{0,$WEIGHT_PRECISION})?$")
 
         /** Максимальное количество интересов, которое можно выбрать для питомца. */
         private const val MAX_INTERESTS = 6
@@ -141,7 +148,7 @@ internal class PetFormViewModel @AssistedInject constructor(
                         weight = detail.weightGrams.toKgInput(),
                         breed = detail.breed,
                         sex = detail.sex,
-                        about = detail.description.orEmpty(),
+                        about = detail.description,
                         existingPhotoUrl = detail.photoUrl,
                         isLoading = false
                     ).withChosenInterests(detail.interests)
@@ -164,7 +171,7 @@ internal class PetFormViewModel @AssistedInject constructor(
 
     /**
      * Обновляет дату рождения, введённую с клавиатуры, и очищает ошибку поля. Из [input] берутся только
-     * цифры, поэтому вставка «12.09.2022» тоже работает; ввод длиннее [com.xando.pet_form.presentation.utils.BIRTH_DATE_DIGITS] цифр игнорируется.
+     * цифры, поэтому вставка «12.09.2022» тоже работает; ввод длиннее [BIRTH_DATE_DIGITS] цифр игнорируется.
      */
     fun updateBirthDate(input: String) {
         val digits = input.filter(Char::isDigit)
@@ -197,7 +204,8 @@ internal class PetFormViewModel @AssistedInject constructor(
     }
 
     /**
-     * Обновляет вес и очищает ошибку поля.
+     * Обновляет вес и очищает ошибку поля. Ввод, не похожий на вес (до трёх цифр, разделитель и до трёх
+     * цифр после него), игнорируется.
      */
     fun updateWeight(weight: String) {
         if (!WEIGHT_INPUT_REGEX.matches(weight)) return
@@ -387,7 +395,7 @@ internal class PetFormViewModel @AssistedInject constructor(
     /**
      * Ошибка поля даты рождения по введённому [birthDate][PetFormUiState.birthDate] и результату его
      * разбора [parsedBirthDate]: подсветка без текста для пустого поля, текст для неполной или
-     * несуществующей даты и для даты позже [com.xando.pet_form.presentation.utils.latestBirthDate]; `null`, если дата в порядке.
+     * несуществующей даты и для даты позже [latestBirthDate]; `null`, если дата в порядке.
      */
     private fun PetFormUiState.birthDateError(parsedBirthDate: LocalDate?): StayaString? = when {
         parsedBirthDate == null && birthDate.isEmpty() -> StayaString.EMPTY
@@ -406,12 +414,9 @@ internal class PetFormViewModel @AssistedInject constructor(
     private fun String.isoDateToBirthDateInput(): String =
         runCatching { LocalDate.parse(this) }.getOrNull()?.toBirthDateInput().orEmpty()
 
-    /** Вес в граммах как строка в килограммах: целое - без дробной части, дробное - с [WEIGHT_PRECISION] знаками. */
-    private fun Int.toKgInput(): String {
-        val precisionValue = 10.0.pow(WEIGHT_PRECISION)
-        val kg = (this * precisionValue / GRAMS_IN_KG).roundToLong() / precisionValue
-        return if (kg == kg.toLong().toDouble()) kg.toLong().toString() else kg.toString()
-    }
+    /** Вес в граммах как строка в килограммах без хвостовых нулей: «12», «12.5», «0.004». */
+    private fun Int.toKgInput(): String =
+        BigDecimal.valueOf(toLong()).divide(BigDecimal(GRAMS_IN_KG)).stripTrailingZeros().toPlainString()
 
     /** Введённый пользователем вес в килограммах как вес в граммах; `null`, если ввод не вес. */
     private fun String.toWeightGramsOrNull(): Int? {

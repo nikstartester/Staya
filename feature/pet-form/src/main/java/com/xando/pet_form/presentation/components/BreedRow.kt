@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import com.xando.core.models.pet.PetBreed
 import com.xando.core.pet_dictionary.labelRes
 import com.xando.design.ui.components.text_field.StayaOutlinedTextField
@@ -29,14 +30,18 @@ import com.xando.core.design.R as RDesign
 internal fun BreedRow(
     breed: PetBreed?,
     error: StayaString?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
 ) {
-    OnlyClickableOutlinedTextField(onClick = onClick) {
+    ClickOverlay(
+        onClick = onClick,
+        onClickLabel = stringResource(R.string.pet_form_breed_pick),
+        modifier = modifier,
+    ) {
         StayaOutlinedTextField(
             value = stringResource(breed?.labelRes ?: R.string.pet_form_breed_placeholder),
             onValueChange = {},
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             label = stringResource(R.string.pet_form_breed_label),
             readOnly = true,
             singleLine = true,
@@ -51,18 +56,22 @@ internal fun BreedRow(
     }
 }
 
+/**
+ * Кладёт поверх [content] невидимый слой, который перехватывает нажатия: содержимое остаётся только для показа.
+ */
 @Composable
-private fun OnlyClickableOutlinedTextField(
+private fun ClickOverlay(
     onClick: () -> Unit,
+    onClickLabel: String,
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = modifier) {
         content()
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .matchParentSize()
-                .clickable(onClick = onClick)
+                .clickable(role = Role.Button, onClickLabel = onClickLabel, onClick = onClick)
         )
     }
 }

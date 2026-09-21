@@ -83,40 +83,52 @@ class PetRepository @Inject constructor(
      * Сохраняет питомца на сервере: создаёт нового или обновляет существующего с [PetDraft.petId].
      * Если [PetDraft.photo] требует новое фото, сначала загружает его; удаление текущего фото сервер выполняет сам.
      *
+     * @param draft Черновик формы: что сохранить и что сделать с фото.
      * @return Сохранённый питомец в том виде, в каком его вернул сервер.
+     * @throws IllegalStateException Если новое фото не удалось прочитать по его Uri.
      * @throws com.xando.core.api_models.ApiException Если запрос не удался.
      */
-    suspend fun savePet(draft: PetDraft): PetDetail = withApiException(networkChecker) {
-        val photoFileId = (draft.photo as? PetDraftPhoto.Replace)?.let { uploadPhoto(it.localUri) }
-        val body = draft.toRequest(photoFileId)
+    suspend fun savePet(draft: PetDraft): PetDetail {
+        val photoBytes = (draft.photo as? PetDraftPhoto.Replace)?.let { readPhoto(it.localUri) }
 
-        val response = if (draft.petId == null) {
-            httpClient.post(PETS_URL) {
-                contentType(ContentType.Application.Json)
-                setBody(body)
+        return withApiException(networkChecker) {
+            val photoFileId = photoBytes?.let { uploadPhoto(it) }
+            val body = draft.toRequest(photoFileId)
+
+            val response = if (draft.petId == null) {
+                httpClient.post(PETS_URL) {
+                    contentType(ContentType.Application.Json)
+                    setBody(body)
+                }
+            } else {
+                httpClient.put("$PETS_URL/${draft.petId}") {
+                    contentType(ContentType.Application.Json)
+                    setBody(body)
+                }
             }
-        } else {
-            httpClient.put("$PETS_URL/${draft.petId}") {
-                contentType(ContentType.Application.Json)
-                setBody(body)
-            }
+
+            response.body<PetCardResponse>().mapToDomain()
         }
-
-        response.body<PetCardResponse>().mapToDomain()
     }
 
     /**
-     * Загружает фото по [uriString] на сервер.
+     * Читает файл фото по [uriString].
      *
-     * @return Идентификатор загруженного файла.
      * @throws IllegalStateException Если файл по [uriString] не удалось прочитать.
      */
-    private suspend fun uploadPhoto(uriString: String): String {
+    private suspend fun readPhoto(uriString: String): ByteArray {
         // TODO: принимать извне. См. todo в PetPhotoModule
-        val bytes = withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uriString.toUri())?.use { it.readBytes() }
         } ?: error("Не удалось прочитать файл по uri: $uriString")
+    }
 
+    /**
+     * Загружает фото [bytes] на сервер.
+     *
+     * @return Идентификатор загруженного файла.
+     */
+    private suspend fun uploadPhoto(bytes: ByteArray): String {
         val response = httpClient.post(FILE_UPLOAD_URL) {
             setBody(
                 multipartFile(

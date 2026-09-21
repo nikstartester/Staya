@@ -11,9 +11,7 @@ import javax.inject.Inject
  *
  * @param petRepository Репозиторий питомцев.
  */
-class SavePetUseCase @Inject constructor(
-    private val petRepository: PetRepository
-) {
+internal class SavePetUseCase @Inject constructor(private val petRepository: PetRepository) {
     /**
      * Сохраняет питомца по [draft] и возвращает его в том виде, в каком его вернул сервер.
      *

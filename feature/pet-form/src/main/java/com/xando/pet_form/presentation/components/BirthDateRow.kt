@@ -1,6 +1,5 @@
 package com.xando.pet_form.presentation.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +31,7 @@ internal fun BirthDateRow(
     error: StayaString?,
     onValueChange: (String) -> Unit,
     onCalendarClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -57,6 +57,6 @@ internal fun BirthDateRow(
                 )
             }
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     )
 }

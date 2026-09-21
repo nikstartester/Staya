@@ -121,7 +121,7 @@ internal fun PetFormScreen(
             LoadingState(paddingValues)
         } else {
             EditState(
-                paddingValues,
+                paddingValues = paddingValues,
                 state = state,
                 onPhotoSelected = viewModel::onPhotoPicked,
                 onPhotoRemove = viewModel::removePhoto,
@@ -220,6 +220,7 @@ private fun EditState(
             breed = state.breed,
             error = state.breedError,
             onClick = onPickBreedClick,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(FieldSpacing))
@@ -242,6 +243,7 @@ private fun EditState(
             error = state.birthDateError,
             onValueChange = onBirthDateChange,
             onCalendarClick = onCalendarClick,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(SectionSpacing))

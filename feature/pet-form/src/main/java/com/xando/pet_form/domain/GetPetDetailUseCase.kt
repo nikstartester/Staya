@@ -9,9 +9,7 @@ import javax.inject.Inject
  *
  * @param petRepository Репозиторий питомцев.
  */
-class GetPetDetailUseCase @Inject constructor(
-    private val petRepository: PetRepository
-) {
+internal class GetPetDetailUseCase @Inject constructor(private val petRepository: PetRepository) {
     /**
      * Получает полную информацию о питомце.
      *
