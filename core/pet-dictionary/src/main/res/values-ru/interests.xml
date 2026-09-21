@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Названия интересов питомца и их групп. Порядок соответствует объявлению констант PetInterest.
+-->
+<resources>
+    <!-- Группы -->
+    <string name="pet_dictionary_interest_group_walk">Прогулка</string>
+    <string name="pet_dictionary_interest_group_games">Игры</string>
+    <string name="pet_dictionary_interest_group_sport">Спорт и тренировки</string>
+    <string name="pet_dictionary_interest_group_social">Общение</string>
+    <string name="pet_dictionary_interest_group_home">Дома</string>
+    <string name="pet_dictionary_interest_group_quirks">Милые странности</string>
+
+    <!-- Прогулка -->
+    <string name="pet_dictionary_interest_forest_walks">Прогулки в лесу</string>
+    <string name="pet_dictionary_interest_city_walks">Прогулки по городу</string>
+    <string name="pet_dictionary_interest_dog_park">Собачьи площадки</string>
+    <string name="pet_dictionary_interest_swimming">Купание в водоёмах</string>
+    <string name="pet_dictionary_interest_snow_play">Игры в снегу</string>
+    <string name="pet_dictionary_interest_countryside_trips">Поездки за город</string>
+    <string name="pet_dictionary_interest_long_hikes">Долгие пешие маршруты</string>
+    <string name="pet_dictionary_interest_jogging_with_owner">Пробежки с хозяином</string>
+
+    <!-- Игры -->
+    <string name="pet_dictionary_interest_playing_fetch">Игра в мяч</string>
+    <string name="pet_dictionary_interest_tug_of_war">Перетягивание каната</string>
+    <string name="pet_dictionary_interest_puller">Пуллер (кольца)</string>
+    <string name="pet_dictionary_interest_squeaky_toys">Пищалки и мягкие игрушки</string>
+    <string name="pet_dictionary_interest_chew_toys">Жевательные игры</string>
+    <string name="pet_dictionary_interest_puzzle_toys">Интеллектуальные игрушки</string>
+    <string name="pet_dictionary_interest_hide_and_seek">Прятки и поиск игрушек</string>
+
+    <!-- Спорт и тренировки -->
+    <string name="pet_dictionary_interest_agility">Аджилити</string>
+    <string name="pet_dictionary_interest_frisbee">Фрисби (дог-фризби)</string>
+    <string name="pet_dictionary_interest_flyball">Флайбол</string>
+    <string name="pet_dictionary_interest_canicross">Каникросс</string>
+    <string name="pet_dictionary_interest_bikejoring">Байкджоринг</string>
+    <string name="pet_dictionary_interest_dog_dancing">Фристайл (танцы с собакой)</string>
+    <string name="pet_dictionary_interest_scent_tracking">Поиск по запаху (ноузворк)</string>
+    <string name="pet_dictionary_interest_obedience">Послушание (обидиенс)</string>
+
+    <!-- Общение -->
+    <string name="pet_dictionary_interest_meeting_puppies">Знакомства с щенками</string>
+    <string name="pet_dictionary_interest_pack_play">Игры в стае</string>
+    <string name="pet_dictionary_interest_chasing_other_dogs">Догонялки с собаками</string>
+    <string name="pet_dictionary_interest_calm_meetups">Спокойные встречи</string>
+    <string name="pet_dictionary_interest_small_dogs">Дружит с мелкими собаками</string>
+    <string name="pet_dictionary_interest_big_dogs">Дружит с крупными собаками</string>
+    <string name="pet_dictionary_interest_cats_and_other_pets">Ладит с кошками</string>
+    <string name="pet_dictionary_interest_kids_and_noisy_company">Дети и шумные компании</string>
+    <string name="pet_dictionary_interest_meeting_people">Любит новых людей</string>
+
+    <!-- Дома -->
+    <string name="pet_dictionary_interest_cuddling">Обнимашки на диване</string>
+    <string name="pet_dictionary_interest_window_watching">Наблюдение в окно</string>
+    <string name="pet_dictionary_interest_trick_training">Обучение трюкам</string>
+    <string name="pet_dictionary_interest_massage_and_grooming">Массаж и вычесывание</string>
+
+    <!-- Милые странности -->
+    <string name="pet_dictionary_interest_zoomies">Зумис (гонки по квартире)</string>
+    <string name="pet_dictionary_interest_belly_rubs">Требовать почесать пузо</string>
+    <string name="pet_dictionary_interest_sock_stealing">Кража носков</string>
+    <string name="pet_dictionary_interest_puddle_splashing">Прыжки по лужам</string>
+    <string name="pet_dictionary_interest_rolling_in_grass">Валяние в траве</string>
+    <string name="pet_dictionary_interest_chasing_pigeons">Погоня за голубями</string>
+    <string name="pet_dictionary_interest_vacuum_hunting">Охота на пылесос</string>
+    <string name="pet_dictionary_interest_bathroom_escort">Сопровождение в ванную</string>
+</resources>

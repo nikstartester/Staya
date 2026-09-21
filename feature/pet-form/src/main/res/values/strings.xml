@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_form_title_create">My pet</string>
+    <string name="pet_form_title_edit">Edit details</string>
+    <string name="pet_form_photo_content_description">Pet photo</string>
+    <string name="pet_form_name_label">Name</string>
+    <string name="pet_form_birth_date_label">Date of birth</string>
+    <string name="pet_form_birth_date_placeholder">DD.MM.YYYY</string>
+    <string name="pet_form_birth_date_invalid">Invalid date</string>
+    <string name="pet_form_birth_date_future">Peeking into the future? Your pet isn\'t born yet</string>
+    <string name="pet_form_birth_date_calendar">Pick a date from the calendar</string>
+    <string name="pet_form_weight_label">Weight, kg</string>
+    <string name="pet_form_weight_placeholder">e.g. 12.5</string>
+    <string name="pet_form_breed_label">Breed</string>
+    <string name="pet_form_breed_placeholder">Not selected</string>
+    <string name="pet_form_breed_pick">Choose breed</string>
+    <string name="pet_form_sex_label">Sex</string>
+    <string name="pet_form_sex_male">Male</string>
+    <string name="pet_form_sex_female">Female</string>
+    <string name="pet_form_interests_label">What they like doing</string>
+    <string name="pet_form_interests_count">Selected: %1$d of %2$d</string>
+    <string name="pet_form_interests_more">More</string>
+    <string name="pet_form_about_label">Personality, habits and anything else</string>
+    <string name="pet_form_about_placeholder">For example, snores like a tractor, would sell you for cheese and takes up the whole bed</string>
+    <string name="pet_form_save_create">Add</string>
+    <string name="pet_form_save_edit">Save</string>
+    <string name="pet_form_save_error">Failed to save the pet. Please try again.</string>
+    <string name="pet_form_photo_unsupported_format">Couldn\'t use this photo, try another one</string>
+    <string name="pet_form_photo_crop_error">Couldn\'t crop the photo, try again</string>
+</resources>

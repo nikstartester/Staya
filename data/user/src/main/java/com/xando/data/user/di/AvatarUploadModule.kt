@@ -27,6 +27,9 @@ object AvatarUploadModule {
     /** Каталог копий фотографии профиля в кеше приложения. */
     private const val DIRECTORY_NAME = "user_avatar"
 
+    // TODO: убрать зависимость data:user от data:image.
+    //  Этот provide вместе с квалификатором должен переехать в feature:auth; AvatarUploadWorker
+    //  тоже использует PhotoLocalStorage, придётся что-то придумать.
     /**@SelfDocumented*/
     @Provides
     @Singleton

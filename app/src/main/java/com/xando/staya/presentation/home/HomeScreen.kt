@@ -3,6 +3,7 @@ package com.xando.staya.presentation.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -67,7 +68,9 @@ internal fun HomeScreen(entryBuilders: Set<EntryBuilder>, parentNavigationContro
     ) { paddingValues ->
         NavDisplay(
             backStack = bottomBackStack,
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues),
             onBack = {
                 bottomNavigationController.navigateBack()
             },

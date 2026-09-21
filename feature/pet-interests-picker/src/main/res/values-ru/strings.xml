@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_interests_picker_title">Чем любит заниматься</string>
+    <string name="pet_interests_picker_search_placeholder">Найти занятие</string>
+    <string name="pet_interests_picker_done">Готово</string>
+    <string name="pet_interests_picker_selected_count">Выбрано: %1$d из %2$d</string>
+    <plurals name="pet_interests_picker_limit_hint">
+        <item quantity="one">Можно выбрать до %d занятия</item>
+        <item quantity="few">Можно выбрать до %d занятий</item>
+        <item quantity="many">Можно выбрать до %d занятий</item>
+        <item quantity="other">Можно выбрать до %d занятий</item>
+    </plurals>
+    <plurals name="pet_interests_picker_limit_reached">
+        <item quantity="one">Больше %d занятия выбрать нельзя</item>
+        <item quantity="few">Больше %d занятий выбрать нельзя</item>
+        <item quantity="many">Больше %d занятий выбрать нельзя</item>
+        <item quantity="other">Больше %d занятий выбрать нельзя</item>
+    </plurals>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pet_breed_picker_title">Порода</string>
+    <string name="pet_breed_picker_search_placeholder">Найти породу</string>
+    <string name="pet_breed_picker_popular">Популярные</string>
+    <string name="pet_breed_picker_confirm">Выбрать</string>
+</resources>
