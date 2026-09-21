@@ -192,6 +192,7 @@ internal fun InterestsPickerScreen(
                             )
                         }
                     } else {
+                        // TODO: поддержать пустое состояние, когда по запросу ничего не найдено
                         interestItems(
                             interests = searchResults,
                             selected = state.selected,

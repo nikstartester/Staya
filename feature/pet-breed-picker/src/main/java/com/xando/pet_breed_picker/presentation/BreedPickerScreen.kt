@@ -133,6 +133,7 @@ internal fun BreedPickerScreen(
                             .padding(bottom = ConfirmButtonAreaHeight)
                     )
                 } else {
+                    // TODO: поддержать пустое состояние, когда по запросу ничего не найдено
                     BreedSearchResultsList(
                         results = searchResults,
                         selectedBreed = state.selected,
