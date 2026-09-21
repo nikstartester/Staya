@@ -41,6 +41,7 @@ import com.xando.core.models.pet.PetInterest
 import com.xando.core.models.pet.PetSex
 import com.xando.design.ui.components.button.StayaButton
 import com.xando.design.ui.components.image_crop.StayaCircleCropDialog
+import com.xando.design.ui.components.photo_picker.StayaPhotoPicker
 import com.xando.design.ui.components.text_field.StayaOutlinedTextField
 import com.xando.design.ui.snackbar.LocalSnackbarController
 import com.xando.design.ui.theme.getString
@@ -50,7 +51,6 @@ import com.xando.pet_form.presentation.components.BirthDatePickerDialog
 import com.xando.pet_form.presentation.components.BirthDateRow
 import com.xando.pet_form.presentation.components.BreedRow
 import com.xando.pet_form.presentation.components.InterestsSection
-import com.xando.pet_form.presentation.components.PhotoPicker
 import com.xando.pet_form.presentation.components.SexPicker
 import com.xando.core.design.R as RDesign
 
@@ -193,11 +193,11 @@ private fun EditState(
             .padding(horizontal = 24.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        PhotoPicker(
-            photoUri = state.photoUri,
-            existingPhotoUrl = state.existingPhotoUrl,
+        StayaPhotoPicker(
+            model = state.photoUri ?: state.existingPhotoUrl,
+            contentDescription = stringResource(R.string.pet_form_photo_content_description),
             onPhotoSelected = onPhotoSelected,
-            onPhotoRemove = onPhotoRemove,
+            onRemoveClick = onPhotoRemove,
             modifier = Modifier.size(120.dp)
         )
 

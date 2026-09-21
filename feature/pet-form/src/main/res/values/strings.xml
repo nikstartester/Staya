@@ -2,9 +2,7 @@
 <resources>
     <string name="pet_form_title_create">My pet</string>
     <string name="pet_form_title_edit">Edit details</string>
-    <string name="pet_form_photo_caption">Choose photo</string>
     <string name="pet_form_photo_content_description">Pet photo</string>
-    <string name="pet_form_photo_remove">Remove photo</string>
     <string name="pet_form_name_label">Name</string>
     <string name="pet_form_birth_date_label">Date of birth</string>
     <string name="pet_form_birth_date_placeholder">DD.MM.YYYY</string>

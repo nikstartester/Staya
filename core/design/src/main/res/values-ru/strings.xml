@@ -8,6 +8,10 @@
 
     <string name="design_search_placeholder">Поиск</string>
 
+    <!-- Пикер фотографии -->
+    <string name="design_photo_picker_caption">Выбрать фото</string>
+    <string name="design_photo_picker_remove_content_description">Удалить фото</string>
+
     <!-- Обрезка изображения -->
     <string name="design_image_crop_hint">Выберите область</string>
     <string name="design_image_crop_confirm">Продолжить</string>

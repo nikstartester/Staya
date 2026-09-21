@@ -8,6 +8,10 @@
 
     <string name="design_search_placeholder">Search</string>
 
+    <!-- Photo picker -->
+    <string name="design_photo_picker_caption">Choose photo</string>
+    <string name="design_photo_picker_remove_content_description">Remove photo</string>
+
     <!-- Image crop -->
     <string name="design_image_crop_hint">Select an area</string>
     <string name="design_image_crop_confirm">Continue</string>

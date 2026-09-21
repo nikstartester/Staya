@@ -19,7 +19,6 @@
     <string name="auth_sign_up_introduction_first_name_label">First name</string>
     <string name="auth_sign_up_introduction_last_name_label">Last name</string>
     <string name="auth_sign_up_introduction_photo_content_description">Profile photo</string>
-    <string name="auth_sign_up_introduction_photo_title">Choose photo</string>
     <string name="auth_sign_up_introduction_photo_unsupported_format">This image is not supported</string>
     <string name="auth_sign_up_introduction_photo_crop_error">Couldn\'t crop the photo</string>
     <string name="auth_sign_up_about_title">Tell us a little about yourself or skip this step. You can do it later anytime in profile settings.</string>

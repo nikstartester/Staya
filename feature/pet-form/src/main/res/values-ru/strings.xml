@@ -2,9 +2,7 @@
 <resources>
     <string name="pet_form_title_create">Мой питомец</string>
     <string name="pet_form_title_edit">Изменить данные</string>
-    <string name="pet_form_photo_caption">Выбрать фото</string>
     <string name="pet_form_photo_content_description">Фото питомца</string>
-    <string name="pet_form_photo_remove">Удалить фото</string>
     <string name="pet_form_name_label">Кличка</string>
     <string name="pet_form_birth_date_label">Дата рождения</string>
     <string name="pet_form_birth_date_placeholder">ДД.ММ.ГГГГ</string>

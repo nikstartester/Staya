@@ -1,4 +1,4 @@
-package com.xando.pet_form.presentation.components
+package com.xando.design.ui.components.photo_picker
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -9,8 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,38 +25,50 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.xando.core.design.R
 import com.xando.design.ui.theme.extendedColors
-import com.xando.feature.pet_form.R
-import com.xando.core.design.R as RDesign
+
+/** Размер иконки камеры, пока фото не выбрано. */
+private val CameraIconSize = 40.dp
+
+/** Отступ иконки и подписи от края круга: подпись не должна упираться в обводку. */
+private val CaptionPadding = 12.dp
+
+/** До какого размера может ужиматься подпись, чтобы уместиться в одну строку. */
+private val CaptionMinFontSize = 6.sp
 
 /** Размер кнопки удаления фото. */
-private val RemovePhotoButtonSize = 28.dp
+private val RemoveButtonSize = 28.dp
 
 /** Размер крестика внутри кнопки удаления фото. */
-private val RemovePhotoIconSize = 16.dp
+private val RemoveIconSize = 16.dp
 
 /**
- * Круглый пикер фотографии питомца. Нажатие открывает системный выбор изображения; пока фото есть,
- * справа сверху показывается кнопка, которая его убирает.
+ * Круглый пикер фотографии. Нажатие открывает системный выбор изображения. Выбранное фото
+ * показывается внутри круга, пока его нет - иконка камеры с подписью [caption]. Если передан
+ * [onRemoveClick], поверх фото справа сверху показывается кнопка, которая его убирает.
  *
- * @param photoUri Uri новой локальной копии фото; показывается вместо [existingPhotoUrl].
- * @param existingPhotoUrl URL фото с сервера, пока пользователь не выбрал новое и не убрал его.
+ * @param model Что показывать: Uri локальной копии, URL с сервера или `null`, если фото нет.
+ * @param contentDescription Описание фото для accessibility.
  * @param onPhotoSelected Вызывается с Uri, выданным системным пикером.
- * @param onPhotoRemove Вызывается по нажатию на кнопку удаления фото.
+ * @param modifier Модификатор для кастомизации компонента.
+ * @param caption Подпись под иконкой камеры, пока фото нет.
+ * @param onRemoveClick Обработчик кнопки удаления фото; `null`, если убирать фото нельзя.
  */
 @Composable
-internal fun PhotoPicker(
-    photoUri: Uri?,
-    existingPhotoUrl: String?,
+fun StayaPhotoPicker(
+    model: Any?,
+    contentDescription: String,
     onPhotoSelected: (Uri) -> Unit,
-    onPhotoRemove: () -> Unit,
     modifier: Modifier = Modifier,
+    caption: String = stringResource(R.string.design_photo_picker_caption),
+    onRemoveClick: (() -> Unit)? = null,
 ) {
     val photoPickerLauncher = rememberLauncherForActivityResult(contract = PickVisualMedia()) { uri ->
         if (uri != null) onPhotoSelected(uri)
     }
-    val model = photoUri ?: existingPhotoUrl
 
     Box(modifier = modifier) {
         Box(
@@ -62,7 +76,7 @@ internal fun PhotoPicker(
                 .matchParentSize()
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surface)
-                .clickable {
+                .clickable(role = Role.Button) {
                     photoPickerLauncher.launch(PickVisualMediaRequest(mediaType = PickVisualMedia.ImageOnly))
                 },
             contentAlignment = Alignment.Center
@@ -70,30 +84,38 @@ internal fun PhotoPicker(
             if (model != null) {
                 AsyncImage(
                     model = model,
-                    contentDescription = stringResource(R.string.pet_form_photo_content_description),
+                    contentDescription = contentDescription,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
             } else {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.padding(CaptionPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Icon(
-                        modifier = Modifier.size(40.dp),
-                        painter = painterResource(RDesign.drawable.design_ic_photo_camera_24dp),
+                        modifier = Modifier.size(CameraIconSize),
+                        painter = painterResource(R.drawable.design_ic_photo_camera_24dp),
                         contentDescription = null,
                         tint = MaterialTheme.extendedColors.iconColor
                     )
                     Text(
-                        text = stringResource(R.string.pet_form_photo_caption),
+                        text = caption,
+                        autoSize = TextAutoSize.StepBased(
+                            minFontSize = CaptionMinFontSize,
+                            maxFontSize = MaterialTheme.typography.bodyMedium.fontSize
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
                         color = MaterialTheme.extendedColors.textColor
                     )
                 }
             }
         }
 
-        if (model != null) {
+        if (model != null && onRemoveClick != null) {
             RemovePhotoButton(
-                onClick = onPhotoRemove,
+                onClick = onRemoveClick,
                 modifier = Modifier.align(Alignment.TopEnd)
             )
         }
@@ -110,17 +132,17 @@ private fun RemovePhotoButton(
 ) {
     Box(
         modifier = modifier
-            .size(RemovePhotoButtonSize)
+            .size(RemoveButtonSize)
             .clip(CircleShape)
             .background(MaterialTheme.extendedColors.secondaryBackgroundColor)
             .clickable(onClick = onClick, role = Role.Button),
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(RDesign.drawable.design_ic_close_24px),
-            contentDescription = stringResource(R.string.pet_form_photo_remove),
+            painter = painterResource(R.drawable.design_ic_close_24px),
+            contentDescription = stringResource(R.string.design_photo_picker_remove_content_description),
             tint = MaterialTheme.extendedColors.secondaryBackgroundTextColor,
-            modifier = Modifier.size(RemovePhotoIconSize)
+            modifier = Modifier.size(RemoveIconSize)
         )
     }
 }

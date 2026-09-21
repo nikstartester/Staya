@@ -19,7 +19,6 @@
     <string name="auth_sign_up_introduction_first_name_label">Ваше имя</string>
     <string name="auth_sign_up_introduction_last_name_label">Ваша фамилия</string>
     <string name="auth_sign_up_introduction_photo_content_description">Фото профиля</string>
-    <string name="auth_sign_up_introduction_photo_title">Выбрать фото</string>
     <string name="auth_sign_up_introduction_photo_unsupported_format">Это изображение не поддерживается</string>
     <string name="auth_sign_up_introduction_photo_crop_error">Не удалось обрезать фото</string>
     <string name="auth_sign_up_about_title">Расскажите немного о себе или пропустите этот шаг. Вы можете сделать это в любое время в настройках профиля.</string>
