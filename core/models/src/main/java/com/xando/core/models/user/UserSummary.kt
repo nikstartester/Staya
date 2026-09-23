@@ -10,13 +10,13 @@ import kotlinx.parcelize.Parcelize
  * @property firstName Имя.
  * @property lastName Фамилия.
  * @property login Логин; `null`, если пользователь его не задал.
- * @property photoThumbnailUrl URL миниатюры фотографии; пустая строка, если фото нет.
+ * @property photoThumbnailUrl URL миниатюры фотографии; `null`, если фото нет.
  */
 @Parcelize
 data class UserSummary(
     val id: String,
     val firstName: String,
     val lastName: String,
-    val login: String,
-    val photoThumbnailUrl: String,
+    val login: String?,
+    val photoThumbnailUrl: String?,
 ) : Parcelable

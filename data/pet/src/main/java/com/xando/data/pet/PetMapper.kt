@@ -70,8 +70,8 @@ internal fun PetEntity.toSummary() = PetSummary(
     id = id,
     name = name,
     breed = PetBreed.fromCodeOrNull(breed) ?: PetBreed.MIXED_BREED,
-    photoUrl = photoUrl ?: "",
-    photoThumbnailUrl = photoThumbnailUrl ?: "",
+    photoUrl = photoUrl,
+    photoThumbnailUrl = photoThumbnailUrl,
     status = status.toPetStatus(),
     isOwner = viewerRole == PetViewerRoles.OWNER,
 )
@@ -91,8 +91,8 @@ internal fun PetWithDetails.toDetail(): PetDetail? {
         weightGrams = pet.weightGrams,
         interests = interestCodes.mapNotNull { PetInterest.fromCodeOrNull(it) },
         description = pet.description ?: "",
-        photoUrl = pet.photoUrl ?: "",
-        photoThumbnailUrl = pet.photoThumbnailUrl ?: "",
+        photoUrl = pet.photoUrl,
+        photoThumbnailUrl = pet.photoThumbnailUrl,
         status = pet.status.toPetStatus(),
         // Неизвестная роль не даёт прав: питомец считается чужим
         viewerRole = pet.viewerRole.toEnumOrNull<PetViewerRole>() ?: PetViewerRole.OTHER,
@@ -112,8 +112,8 @@ private fun UserEntity.toSummary() = UserSummary(
     id = id,
     firstName = firstName,
     lastName = lastName,
-    login = login ?: "",
-    photoThumbnailUrl = photoThumbnailUrl ?: "",
+    login = login,
+    photoThumbnailUrl = photoThumbnailUrl,
 )
 
 /** Коды в базе совпадают с именами констант доменных enum. */

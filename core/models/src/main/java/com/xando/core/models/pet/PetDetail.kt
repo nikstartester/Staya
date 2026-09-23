@@ -14,8 +14,8 @@ import kotlinx.parcelize.Parcelize
  * @property weightGrams Вес питомца в граммах.
  * @property interests Список интересов питомца.
  * @property description Описание питомца.
- * @property photoUrl URL фотографии питомца в исходном размере.
- * @property photoThumbnailUrl URL миниатюры фотографии для списков.
+ * @property photoUrl URL фотографии питомца в исходном размере; `null`, если фото нет.
+ * @property photoThumbnailUrl URL миниатюры фотографии для списков; `null`, если фото нет.
  * @property status Состояние питомца.
  * @property viewerRole Роль текущего пользователя по отношению к питомцу.
  * @property owners Владельцы.
@@ -30,8 +30,8 @@ data class PetDetail(
     val weightGrams: Int,
     val interests: List<PetInterest>,
     val description: String,
-    val photoUrl: String,
-    val photoThumbnailUrl: String,
+    val photoUrl: String?,
+    val photoThumbnailUrl: String?,
     val status: PetStatus,
     val viewerRole: PetViewerRole,
     val owners: List<PetOwner>,
