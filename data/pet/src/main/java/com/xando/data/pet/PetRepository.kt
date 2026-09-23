@@ -14,7 +14,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -108,18 +107,6 @@ class PetRepository @Inject internal constructor(
         }
 
         savePetCard(card)
-    }
-
-    /**
-     * Обновляет питомца с сервера и отдаёт его.
-     *
-     * @throws com.xando.core.api_models.ApiException Если запрос не удался.
-     * @throws IllegalStateException Если питомца не удалось прочитать из локальной базы.
-     */
-    @Deprecated("Используйте observePet() и refreshPet()")
-    suspend fun getPetDetail(petId: String): PetDetail {
-        refreshPet(petId)
-        return observePet(petId).first() ?: error("Питомец $petId не прочитан из базы")
     }
 
     private suspend fun savePetCard(card: PetCardResponse) {
