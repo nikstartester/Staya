@@ -4,6 +4,7 @@ import com.xando.core.api_models.ConflictException
 import com.xando.core.api_models.ForbiddenException
 import com.xando.core.api_models.UnauthorizedException
 import com.xando.core.api_models.ValidationException
+import com.xando.core.common.session.SessionStartListener
 import com.xando.core.models.auth.data.SignUpData
 import com.xando.core.network.NetworkChecker
 import com.xando.core.network.auth.TokenStorage
@@ -34,15 +35,18 @@ import javax.inject.Inject
  * @param httpClient HTTP-клиент для сетевых запросов.
  * @param tokenStorage Хранилище токенов авторизации.
  * @param networkChecker Проверка наличия подключения к интернету.
+ * @param sessionStartListeners Участники начала сессии.
  */
 class AuthRepository @Inject constructor(
     private val httpClient: HttpClient,
     private val tokenStorage: TokenStorage,
     private val networkChecker: NetworkChecker,
+    private val sessionStartListeners: Set<@JvmSuppressWildcards SessionStartListener>,
 ) {
 
     /**
-     * Авторизует пользователя по email/логину и паролю. При успехе сохраняет токены в [TokenStorage].
+     * Авторизует пользователя по email/логину и паролю. При успехе начинает сессию: участники
+     * сбрасывают данные прошлой, а токены сохраняются в [TokenStorage].
      *
      * @param emailOrLogin Email или логин пользователя.
      * @param password Пароль.
@@ -56,7 +60,7 @@ class AuthRepository @Inject constructor(
                 setBody(LoginRequest(emailOrLogin = emailOrLogin, password = password))
             }.body<LoginResponse>()
 
-            tokenStorage.save(access = response.accessToken, refresh = response.refreshToken)
+            startSession(response)
         }
     }
 
@@ -93,7 +97,8 @@ class AuthRepository @Inject constructor(
     }
 
     /**
-     * Подтверждает email кодом. При успехе сохраняет токены в [TokenStorage].
+     * Подтверждает email кодом. При успехе начинает сессию: участники сбрасывают данные прошлой, а
+     * токены сохраняются в [TokenStorage].
      *
      * @param email Email пользователя.
      * @param code Код подтверждения.
@@ -107,7 +112,7 @@ class AuthRepository @Inject constructor(
                 setBody(VerifyEmailRequest(email = email, code = code))
             }.body<LoginResponse>()
 
-            tokenStorage.save(access = response.accessToken, refresh = response.refreshToken)
+            startSession(response)
         }
     }
 
@@ -163,5 +168,15 @@ class AuthRepository @Inject constructor(
                 )
             }
         }
+    }
+
+    /**
+     * Начинает сессию. Участники сбрасывают данные прошлой сессии до сохранения токенов: к моменту,
+     * когда приложение считает пользователя авторизованным, их уже нет — как бы та сессия ни
+     * завершилась.
+     */
+    private suspend fun startSession(response: LoginResponse) {
+        sessionStartListeners.forEach { it.onSessionStart() }
+        tokenStorage.save(access = response.accessToken, refresh = response.refreshToken)
     }
 }

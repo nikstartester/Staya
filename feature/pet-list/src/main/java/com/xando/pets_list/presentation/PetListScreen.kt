@@ -74,8 +74,6 @@ fun PetListScreen(
     }
 
     val petList = state.pets
-    val isLoading = state.isLoading
-    val isEmptyState = petList.isEmpty() && !isLoading
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -99,8 +97,8 @@ fun PetListScreen(
     ) { paddingValues ->
         StayaLazyList(
             petList,
-            isLoadingState = isLoading,
-            isEmptyState = isEmptyState,
+            isLoadingState = state.isLoading,
+            isEmptyState = state.isEmptyStubVisible,
             modifier = Modifier.padding(paddingValues),
             stubTextRes = R.string.pet_list_empty_list_text,
             stubIconRes = R.drawable.pet_list_empty_list_placeholder,
@@ -143,7 +141,7 @@ private fun PetListItem(
                     .size(60.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (pet.photoThumbnailUrl.isEmpty()) {
+                if (pet.photoThumbnailUrl == null) {
                     Icon(
                         modifier = Modifier.size(32.dp),
                         painter = painterResource(RDesign.drawable.design_ic_photo_camera_24dp),
@@ -153,7 +151,6 @@ private fun PetListItem(
                 } else {
                     AsyncImage(
                         model = pet.photoThumbnailUrl,
-                        fallback = painterResource(RDesign.drawable.design_ic_photo_camera_24dp),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
