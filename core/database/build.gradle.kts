@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.staya.android.baseCfg)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room3)
 }
@@ -17,4 +18,8 @@ dependencies {
     api(libs.androidx.room3.runtime)
     implementation(libs.androidx.sqlite.framework)
     ksp(libs.androidx.room3.compiler)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 }
