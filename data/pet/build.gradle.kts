@@ -10,6 +10,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:database"))
     implementation(project(":core:models"))
     implementation(project(":core:network"))
 

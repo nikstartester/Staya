@@ -16,6 +16,9 @@ import kotlinx.parcelize.Parcelize
  * @property description Описание питомца.
  * @property photoUrl URL фотографии питомца в исходном размере.
  * @property photoThumbnailUrl URL миниатюры фотографии для списков.
+ * @property status Состояние питомца.
+ * @property viewerRole Роль текущего пользователя по отношению к питомцу.
+ * @property owners Владельцы.
  */
 @Parcelize
 data class PetDetail(
@@ -29,4 +32,7 @@ data class PetDetail(
     val description: String,
     val photoUrl: String,
     val photoThumbnailUrl: String,
+    val status: PetStatus,
+    val viewerRole: PetViewerRole,
+    val owners: List<PetOwner>,
 ) : Parcelable

@@ -1,6 +1,5 @@
 package com.xando.pet_form.domain
 
-import com.xando.core.models.pet.PetDetail
 import com.xando.core.models.pet.PetDraft
 import com.xando.data.pet.PetRepository
 import javax.inject.Inject
@@ -13,11 +12,10 @@ import javax.inject.Inject
  */
 internal class SavePetUseCase @Inject constructor(private val petRepository: PetRepository) {
     /**
-     * Сохраняет питомца по [draft] и возвращает его в том виде, в каком его вернул сервер.
-     *
+     * Сохраняет питомца по [draft].
      * @throws com.xando.core.api_models.ApiException Если запрос не удался.
      */
-    suspend operator fun invoke(draft: PetDraft): PetDetail {
-        return petRepository.savePet(draft)
+    suspend operator fun invoke(draft: PetDraft) {
+        petRepository.savePet(draft)
     }
 }

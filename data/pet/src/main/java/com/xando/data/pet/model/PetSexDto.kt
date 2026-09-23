@@ -16,12 +16,6 @@ internal enum class PetSexDto {
     FEMALE
 }
 
-/** Маппинг [PetSexDto] в [PetSex]. */
-internal fun PetSexDto.mapToDomain() = when (this) {
-    PetSexDto.MALE -> PetSex.MALE
-    PetSexDto.FEMALE -> PetSex.FEMALE
-}
-
 /** Маппинг [PetSex] в [PetSexDto]. */
 internal fun PetSex.toDto() = when (this) {
     PetSex.MALE -> PetSexDto.MALE

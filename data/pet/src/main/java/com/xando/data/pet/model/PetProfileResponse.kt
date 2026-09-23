@@ -2,15 +2,18 @@
 
 package com.xando.data.pet.model
 
+import com.xando.core.database.pet.PetViewerRoles
 import com.xando.core.models.pet.PetBreed
-import com.xando.core.models.pet.PetDetail
 import com.xando.core.models.pet.PetInterest
-import com.xando.core.models.pet.PetSummary
+import com.xando.core.models.pet.PetStatus
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
 /**
  * Сетевая модель питомца.
+ *
+ * Коды, которые сервер может расширить, приходят строками, а не enum: новый код не должен ломать разбор
+ * всего ответа в старых версиях приложения.
  *
  * @property id Уникальный идентификатор питомца.
  * @property name Кличка питомца.
@@ -20,11 +23,11 @@ import kotlinx.serialization.Serializable
  * @property weightGrams Вес питомца в граммах.
  * @property interests Коды интересов питомца - имена констант [PetInterest].
  * @property description Описание питомца.
- * @property status Состояние питомца.
+ * @property status Код состояния питомца - имя константы [PetStatus].
  * @property photoUrl URL фотографии питомца в исходном размере.
  * @property photoThumbnailUrl URL миниатюры фотографии.
  * @property createdAt Момент создания питомца на сервере в формате ISO-8601 со смещением.
- * @property viewerRole Роль текущего пользователя по отношению к питомцу.
+ * @property viewerRole Код роли текущего пользователя по отношению к питомцу - одна из [PetViewerRoles].
  */
 @Serializable
 internal data class PetProfileResponse(
@@ -36,38 +39,9 @@ internal data class PetProfileResponse(
     val weightGrams: Int,
     val interests: List<String>,
     val description: String?,
-    val status: PetStatusResponse,
+    val status: String,
     val photoUrl: String?,
     val photoThumbnailUrl: String?,
     val createdAt: String,
-    val viewerRole: ViewerRoleResponse,
-)
-
-/**
- * Маппинг [PetProfileResponse] в [PetSummary].
- */
-internal fun PetProfileResponse.mapToSummary() = PetSummary(
-    id = id,
-    name = name,
-    breed = PetBreed.fromCodeOrNull(breed) ?: PetBreed.MIXED_BREED,
-    photoUrl = photoUrl ?: "",
-    photoThumbnailUrl = photoThumbnailUrl ?: "",
-    status = status.mapToDomain(),
-    isOwner = viewerRole == ViewerRoleResponse.OWNER,
-)
-
-/**
- * Маппинг [PetProfileResponse] в [PetDetail].
- */
-internal fun PetProfileResponse.mapToDetail() = PetDetail(
-    id = id,
-    name = name,
-    birthDate = birthDate,
-    breed = PetBreed.fromCodeOrNull(breed) ?: PetBreed.MIXED_BREED,
-    sex = sex.mapToDomain(),
-    weightGrams = weightGrams,
-    interests = interests.mapNotNull { PetInterest.fromCodeOrNull(it) },
-    description = description ?: "",
-    photoUrl = photoUrl ?: "",
-    photoThumbnailUrl = photoThumbnailUrl ?: "",
+    val viewerRole: String,
 )
