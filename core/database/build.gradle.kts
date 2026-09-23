@@ -14,6 +14,8 @@ room3 {
 }
 
 dependencies {
+    implementation(project(":core:common"))
+
     // Room
     api(libs.androidx.room3.runtime)
     implementation(libs.androidx.sqlite.framework)

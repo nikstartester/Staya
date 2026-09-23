@@ -10,6 +10,8 @@ import com.xando.core.database.user.UserEntity
 
 /**
  * Локальная база данных приложения.
+ *
+ * Не видна за пределами модуля: снаружи доступны только DAO.
  */
 @Database(
     entities = [
@@ -20,7 +22,7 @@ import com.xando.core.database.user.UserEntity
     ],
     version = 1,
 )
-abstract class StayaDatabase : RoomDatabase() {
+internal abstract class StayaDatabase : RoomDatabase() {
 
     /** @SelfDocumented */
     abstract fun petDao(): PetDao
