@@ -74,8 +74,6 @@ fun PetListScreen(
     }
 
     val petList = state.pets
-    val isLoading = state.isLoading
-    val isEmptyState = petList.isEmpty() && !isLoading
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -99,8 +97,8 @@ fun PetListScreen(
     ) { paddingValues ->
         StayaLazyList(
             petList,
-            isLoadingState = isLoading,
-            isEmptyState = isEmptyState,
+            isLoadingState = state.isLoading,
+            isEmptyState = state.isEmptyStubVisible,
             modifier = Modifier.padding(paddingValues),
             stubTextRes = R.string.pet_list_empty_list_text,
             stubIconRes = R.drawable.pet_list_empty_list_placeholder,

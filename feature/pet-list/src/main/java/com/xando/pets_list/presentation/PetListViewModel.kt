@@ -1,7 +1,6 @@
 package com.xando.pets_list.presentation
 
 import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xando.core.api_models.ApiException
@@ -13,38 +12,51 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * ViewModel экрана списка питомцев.
  *
- * @param savedStateHandle Хранилище состояния экрана.
  * @param getPetListUseCase Сценарий получения списка питомцев.
  */
 @HiltViewModel
 class PetListViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    private val getPetListUseCase: GetPetListUseCase
+    private val getPetListUseCase: GetPetListUseCase,
 ) : ViewModel() {
 
-    companion object {
-        private const val KEY_STATE = "PetListUiState"
+    private companion object {
+        const val TAG = "PetListViewModel"
+
+        /** Сколько держать подписку на базу после ухода экрана - переживает поворот без перезапроса. */
+        const val STOP_TIMEOUT_MILLIS = 5_000L
     }
 
-    private val _uiState = savedStateHandle.getMutableStateFlow(
-        KEY_STATE,
-        PetListUiState()
-    )
+    private val isRefreshing = MutableStateFlow(false)
 
     /**
      * Состояние экрана списка питомцев.
      */
-    val uiState: StateFlow<PetListUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<PetListUiState> = combine(
+        getPetListUseCase(),
+        isRefreshing,
+    ) { pets, refreshing ->
+        PetListUiState(
+            pets = pets,
+            isLoading = refreshing,
+            isEmptyStubVisible = pets.isEmpty() && !refreshing,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+        initialValue = PetListUiState(isLoading = true),
+    )
 
     private val _events = Channel<PetListEvent>(capacity = Channel.UNLIMITED)
 
@@ -54,38 +66,34 @@ class PetListViewModel @Inject constructor(
     val events: Flow<PetListEvent> = _events.receiveAsFlow()
 
     init {
-        loadPets()
-    }
-
-    /**
-     * Загружает список питомцев.
-     */
-    fun loadPets() {
-        if (_uiState.value.isLoading) return
-
-        _uiState.update { it.copy(isLoading = true) }
-
-        viewModelScope.launch {
-            try {
-                val pets = getPetListUseCase()
-                _uiState.update { it.copy(pets = pets, isLoading = false) }
-            } catch (ex: ApiException) {
-                catchApiException(ex)
-            } catch (th: Throwable) {
-                ensureActive()
-                _events.trySend(PetListEvent.ShowSnackbar(StayaSnackbarData.unknown()))
-                Log.w("PetListViewModel", th)
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
-            }
-        }
+        refresh()
     }
 
     /**
      * Запускает обновление списка питомцев через pull-to-refresh.
      */
     fun onRefresh() {
-        loadPets()
+        refresh()
+    }
+
+    private fun refresh() {
+        if (isRefreshing.value) return
+
+        isRefreshing.value = true
+
+        viewModelScope.launch {
+            try {
+                getPetListUseCase.refresh()
+            } catch (ex: ApiException) {
+                catchApiException(ex)
+            } catch (th: Throwable) {
+                ensureActive()
+                _events.trySend(PetListEvent.ShowSnackbar(StayaSnackbarData.unknown()))
+                Log.w(TAG, th)
+            } finally {
+                isRefreshing.value = false
+            }
+        }
     }
 
     private fun catchApiException(ex: ApiException) {
@@ -93,7 +101,7 @@ class PetListViewModel @Inject constructor(
             is NetworkException -> StayaSnackbarData.noInternet()
             is ServerUnavailableException -> StayaSnackbarData.serverUnavailable()
             else -> {
-                Log.w("PetListViewModel", ex)
+                Log.w(TAG, ex)
                 StayaSnackbarData.unknown()
             }
         }

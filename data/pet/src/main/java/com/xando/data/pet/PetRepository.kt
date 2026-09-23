@@ -111,17 +111,6 @@ class PetRepository @Inject internal constructor(
     }
 
     /**
-     * Обновляет питомцев с сервера и отдаёт их.
-     *
-     * @throws com.xando.core.api_models.ApiException Если запрос не удался.
-     */
-    @Deprecated("Используйте observePets() и refreshPets()")
-    suspend fun getPetList(): List<PetSummary> {
-        refreshPets()
-        return observePets().first()
-    }
-
-    /**
      * Обновляет питомца с сервера и отдаёт его.
      *
      * @throws com.xando.core.api_models.ApiException Если запрос не удался.
