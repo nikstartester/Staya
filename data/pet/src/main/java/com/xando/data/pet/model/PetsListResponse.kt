@@ -6,11 +6,11 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
 /**
- * Сетевой ответ со списком питомцев.
+ * Сетевой ответ со списком питомцев текущего пользователя.
  *
- * @property pets Список кратких данных питомцев.
+ * @property pets Данные питомцев.
  */
 @Serializable
 internal data class PetsListResponse(
-    val pets: List<PetSummaryResponse>
+    val pets: List<PetProfileResponse>
 )
