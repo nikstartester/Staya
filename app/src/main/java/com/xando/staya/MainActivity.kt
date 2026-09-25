@@ -8,10 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.xando.design.ui.theme.StayaTheme
 import com.xando.navigation_api.EntryBuilder
 import com.xando.staya.presentation.RootHost
 import com.xando.staya.presentation.RootViewModel
-import com.xando.staya.ui.theme.StayaTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

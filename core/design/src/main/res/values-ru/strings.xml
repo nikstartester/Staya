@@ -8,6 +8,15 @@
 
     <string name="design_search_placeholder">Поиск</string>
 
+    <!-- Статус питомца -->
+    <string name="design_pet_status_ready_to_socialize">Готовы общаться</string>
+    <string name="design_pet_status_in_heat">Течка</string>
+    <string name="design_pet_status_do_not_approach">Не подходить</string>
+
+    <!-- Пол питомца -->
+    <string name="design_pet_sex_male">Мальчик</string>
+    <string name="design_pet_sex_female">Девочка</string>
+
     <!-- Пикер фотографии -->
     <string name="design_photo_picker_caption">Выбрать фото</string>
     <string name="design_photo_picker_remove_content_description">Удалить фото</string>

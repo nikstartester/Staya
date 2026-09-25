@@ -15,8 +15,6 @@
     <string name="pet_form_breed_placeholder">Not selected</string>
     <string name="pet_form_breed_pick">Choose breed</string>
     <string name="pet_form_sex_label">Sex</string>
-    <string name="pet_form_sex_male">Male</string>
-    <string name="pet_form_sex_female">Female</string>
     <string name="pet_form_interests_label">What they like doing</string>
     <string name="pet_form_interests_count">Selected: %1$d of %2$d</string>
     <string name="pet_form_interests_more">More</string>

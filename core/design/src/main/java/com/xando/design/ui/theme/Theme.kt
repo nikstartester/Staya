@@ -1,4 +1,4 @@
-package com.xando.staya.ui.theme
+package com.xando.design.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -6,8 +6,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
-import com.xando.design.ui.theme.ExtendedColors
-import com.xando.design.ui.theme.LocalExtendedColors
 
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF466677),
@@ -31,7 +29,7 @@ private val LightExtendedColors = ExtendedColors(
     primaryIconColor = Color(0xFF466677),
     primaryBackgroundColor = Color(0xFFC6E7FB),
     primaryBackgroundTextColor = Color(0xFF004D66),
-    // Используется как Surface. Дублируется в colors.xml (app_surface_color) для splash screen. При изменении менять в двух местах!
+    // Используется как Surface. Дублируется в colors.xml модуля :app (app_surface_color) для splash screen. При изменении менять в двух местах!
     primaryUnaccentedBackgroundColor = Color(0xFFEFF5FC),
 
     secondaryColor = Color(0xFF4E626D),
@@ -48,6 +46,15 @@ private val LightExtendedColors = ExtendedColors(
     dangerColor = Color(0xFFCF4B42),
 
     successColor = Color(0xFF3A9A5C),
+
+    statusReadyBackgroundColor = Color(0xFFE2F0E7),
+    statusReadyBackgroundTextColor = Color(0xFF2C7548),
+
+    statusHeatBackgroundColor = Color(0xFFF6E6EF),
+    statusHeatBackgroundTextColor = Color(0xFF7D5260),
+
+    statusAvoidBackgroundColor = Color(0xFFFBECEB),
+    statusAvoidBackgroundTextColor = Color(0xFFCF4B42),
 
     navigationBackgroundColor = Color(0xFFFFFFFF),
     navigationSeparatorColor = Color(0xFFF2F2F2),
@@ -83,7 +90,7 @@ private val LightColorScheme = lightColorScheme(
     background = LightExtendedColors.backgroundColor,
     onBackground = LightExtendedColors.textColor,
 
-    // Surface дублируется в colors.xml (app_surface_color) для splash screen. При изменении менять в двух местах!
+    // Surface дублируется в colors.xml модуля :app (app_surface_color) для splash screen. При изменении менять в двух местах!
     surface = LightExtendedColors.primaryUnaccentedBackgroundColor,
     onSurface = LightExtendedColors.textColor,
     surfaceVariant = LightExtendedColors.primaryUnaccentedBackgroundColor,
@@ -114,6 +121,13 @@ private val LightColorScheme = lightColorScheme(
 private val DarkExtendedColors = LightExtendedColors
 
 
+/**
+ * Тема приложения: цветовая схема Material, типографика и расширенные цвета
+ * [MaterialTheme.extendedColors]. Оборачивает корень приложения и превью компонентов.
+ *
+ * @param darkTheme Признак тёмной темы. Пока тёмная тема совпадает со светлой.
+ * @param content Содержимое, к которому применяется тема.
+ */
 @Composable
 fun StayaTheme(
     darkTheme: Boolean = false, //isSystemInDarkTheme(),

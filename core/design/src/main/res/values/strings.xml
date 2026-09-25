@@ -8,6 +8,15 @@
 
     <string name="design_search_placeholder">Search</string>
 
+    <!-- Pet status -->
+    <string name="design_pet_status_ready_to_socialize">Ready to socialize</string>
+    <string name="design_pet_status_in_heat">In heat</string>
+    <string name="design_pet_status_do_not_approach">Do not approach</string>
+
+    <!-- Pet sex -->
+    <string name="design_pet_sex_male">Male</string>
+    <string name="design_pet_sex_female">Female</string>
+
     <!-- Photo picker -->
     <string name="design_photo_picker_caption">Choose photo</string>
     <string name="design_photo_picker_remove_content_description">Remove photo</string>

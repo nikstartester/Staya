@@ -15,8 +15,6 @@
     <string name="pet_form_breed_placeholder">Не выбрано</string>
     <string name="pet_form_breed_pick">Выбрать породу</string>
     <string name="pet_form_sex_label">Пол</string>
-    <string name="pet_form_sex_male">Кобель</string>
-    <string name="pet_form_sex_female">Сука</string>
     <string name="pet_form_interests_label">Чем любит заниматься</string>
     <string name="pet_form_interests_count">Выбрано: %1$d из %2$d</string>
     <string name="pet_form_interests_more">Ещё</string>

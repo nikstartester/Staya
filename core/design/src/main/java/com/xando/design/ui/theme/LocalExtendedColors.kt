@@ -37,6 +37,15 @@ val LocalExtendedColors = staticCompositionLocalOf {
 
         successColor = Color.Unspecified,
 
+        statusReadyBackgroundColor = Color.Unspecified,
+        statusReadyBackgroundTextColor = Color.Unspecified,
+
+        statusHeatBackgroundColor = Color.Unspecified,
+        statusHeatBackgroundTextColor = Color.Unspecified,
+
+        statusAvoidBackgroundColor = Color.Unspecified,
+        statusAvoidBackgroundTextColor = Color.Unspecified,
+
         navigationBackgroundColor = Color.Unspecified,
         navigationSeparatorColor = Color.Unspecified,
         navigationActiveItemColor = Color.Unspecified,

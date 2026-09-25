@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.xando.core.design.R as RDesign
 import com.xando.core.models.pet.PetSex
 import com.xando.design.ui.theme.StayaString
 import com.xando.design.ui.theme.extendedColors
@@ -46,13 +47,13 @@ internal fun SexPicker(
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             SexOption(
-                label = stringResource(R.string.pet_form_sex_male),
+                label = stringResource(RDesign.string.design_pet_sex_male),
                 isSelected = selected == PetSex.MALE,
                 onClick = { onSelect(PetSex.MALE) },
                 modifier = Modifier.weight(1f)
             )
             SexOption(
-                label = stringResource(R.string.pet_form_sex_female),
+                label = stringResource(RDesign.string.design_pet_sex_female),
                 isSelected = selected == PetSex.FEMALE,
                 onClick = { onSelect(PetSex.FEMALE) },
                 modifier = Modifier.weight(1f)

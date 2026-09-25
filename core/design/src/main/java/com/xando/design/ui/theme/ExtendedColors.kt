@@ -43,6 +43,16 @@ data class ExtendedColors(
 
     val successColor: Color,
 
+    // Статусы питомца
+    val statusReadyBackgroundColor: Color,
+    val statusReadyBackgroundTextColor: Color,
+
+    val statusHeatBackgroundColor: Color,
+    val statusHeatBackgroundTextColor: Color,
+
+    val statusAvoidBackgroundColor: Color,
+    val statusAvoidBackgroundTextColor: Color,
+
     // Навигация
     val navigationBackgroundColor: Color,
     val navigationSeparatorColor: Color,
