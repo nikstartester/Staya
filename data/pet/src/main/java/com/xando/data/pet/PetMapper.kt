@@ -4,6 +4,9 @@ import com.xando.core.database.pet.PetEntity
 import com.xando.core.database.pet.PetInterestEntity
 import com.xando.core.database.pet.PetOwnerEntity
 import com.xando.core.database.pet.PetOwnerWithUser
+import com.xando.core.database.pet.PetProfileEntity
+import com.xando.core.database.pet.PetRelationPreviewEntity
+import com.xando.core.database.pet.PetRelationsEntity
 import com.xando.core.database.pet.PetViewerRoles
 import com.xando.core.database.pet.PetWithDetails
 import com.xando.core.database.user.UserEntity
@@ -13,6 +16,8 @@ import com.xando.core.models.pet.PetDetail
 import com.xando.core.models.pet.PetInterest
 import com.xando.core.models.pet.PetOwner
 import com.xando.core.models.pet.PetOwnerRole
+import com.xando.core.models.pet.PetRelation
+import com.xando.core.models.pet.PetRelations
 import com.xando.core.models.pet.PetSex
 import com.xando.core.models.pet.PetStatus
 import com.xando.core.models.pet.PetSummary
@@ -26,8 +31,8 @@ import java.time.OffsetDateTime
 // DTO → Entity. Коды пишутся в базу как есть, в том числе неизвестные этой версии приложения: их
 // судьбу решает маппинг в домен.
 
-/** Маппинг [PetProfileResponse] в [PetEntity]. */
-internal fun PetProfileResponse.toEntity() = PetEntity(
+/** Маппинг [PetProfileResponse] в [PetProfileEntity]. */
+internal fun PetProfileResponse.toProfileEntity() = PetProfileEntity(
     id = id,
     name = name,
     birthDate = birthDate,
@@ -51,6 +56,28 @@ internal fun PetProfileResponse.toInterestEntities() = interests.map { code ->
 /** Владельцы питомца из [PetCardResponse] в том порядке, в котором их отдал сервер. */
 internal fun PetCardResponse.toOwnerEntities() = owners.mapIndexed { index, owner ->
     PetOwnerEntity(petId = pet.id, userId = owner.user.id, role = owner.role, position = index)
+}
+
+/** Отметки пользователей о питомце из [PetCardResponse]. */
+internal fun PetCardResponse.toRelationsEntity() = PetRelationsEntity(
+    id = pet.id,
+    friendsCount = friendsCount,
+    notFriendsCount = notFriendsCount,
+    myRelation = myRelation,
+)
+
+/** Превью отметок из [PetCardResponse]: в каждой отметке в том порядке, в котором его отдал сервер. */
+internal fun PetCardResponse.toRelationPreviewEntities(): List<PetRelationPreviewEntity> {
+    fun List<UserSnippetResponse>?.toPreviews(relation: PetRelation) = orEmpty().mapIndexed { index, user ->
+        PetRelationPreviewEntity(petId = pet.id, userId = user.id, relation = relation.name, position = index)
+    }
+    return friendsPreview.toPreviews(PetRelation.FRIENDS) + notFriendsPreview.toPreviews(PetRelation.NOT_FRIENDS)
+}
+
+/** Все пользователи из [PetCardResponse]: владельцы и превью отметок, без повторов. */
+internal fun PetCardResponse.toUserEntities(): List<UserSnippetEntity> {
+    val users = owners.map { it.user } + friendsPreview.orEmpty() + notFriendsPreview.orEmpty()
+    return users.distinctBy { it.id }.map { it.toEntity() }
 }
 
 /** Маппинг [UserSnippetResponse] в [UserSnippetEntity]. */
@@ -82,6 +109,8 @@ internal fun PetEntity.toSummary() = PetSummary(
  */
 internal fun PetWithDetails.toDetail(): PetDetail? {
     val sex = pet.sex.toEnumOrNull<PetSex>() ?: return null
+    // Неизвестная роль не даёт прав: питомец считается чужим
+    val viewerRole = pet.viewerRole.toEnumOrNull<PetViewerRole>() ?: PetViewerRole.OTHER
     return PetDetail(
         id = pet.id,
         name = pet.name,
@@ -94,11 +123,32 @@ internal fun PetWithDetails.toDetail(): PetDetail? {
         photoUrl = pet.photoUrl,
         photoThumbnailUrl = pet.photoThumbnailUrl,
         status = pet.status.toPetStatus(),
-        // Неизвестная роль не даёт прав: питомец считается чужим
-        viewerRole = pet.viewerRole.toEnumOrNull<PetViewerRole>() ?: PetViewerRole.OTHER,
+        viewerRole = viewerRole,
         owners = owners.sortedBy { it.owner.position }.mapNotNull { it.toDomain() },
+        relations = toRelations(viewerRole),
     )
 }
+
+/**
+ * Отметки пользователей в представлении для зрителя. Неизвестные счётчики в сводке для хозяев
+ * считаются нулевыми.
+ */
+private fun PetWithDetails.toRelations(viewerRole: PetViewerRole): PetRelations = when (viewerRole) {
+    PetViewerRole.OWNER, PetViewerRole.CO_OWNER -> PetRelations.OwnerView(
+        friendsCount = pet.friendsCount ?: 0,
+        notFriendsCount = pet.notFriendsCount ?: 0,
+        friendsPreview = relationPreviewOf(PetRelation.FRIENDS),
+        notFriendsPreview = relationPreviewOf(PetRelation.NOT_FRIENDS),
+    )
+
+    // Неизвестная отметка показывается как её отсутствие
+    PetViewerRole.OTHER -> PetRelations.OtherView(myRelation = pet.myRelation?.toEnumOrNull<PetRelation>())
+}
+
+private fun PetWithDetails.relationPreviewOf(relation: PetRelation) = relationPreviews
+    .filter { it.preview.relation == relation.name }
+    .sortedBy { it.preview.position }
+    .map { it.user.toSummary() }
 
 /** Владелец с неизвестной ролью не показывается: непонятно, как его подписать. */
 private fun PetOwnerWithUser.toDomain(): PetOwner? {

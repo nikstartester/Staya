@@ -19,6 +19,7 @@ import kotlinx.parcelize.Parcelize
  * @property status Состояние питомца.
  * @property viewerRole Роль текущего пользователя по отношению к питомцу.
  * @property owners Владельцы.
+ * @property relations Отметки пользователей о питомце; состав зависит от [viewerRole].
  */
 @Parcelize
 data class PetDetail(
@@ -35,4 +36,5 @@ data class PetDetail(
     val status: PetStatus,
     val viewerRole: PetViewerRole,
     val owners: List<PetOwner>,
+    val relations: PetRelations,
 ) : Parcelable

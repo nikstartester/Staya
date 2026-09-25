@@ -6,6 +6,7 @@ import com.xando.core.database.pet.PetDao
 import com.xando.core.database.pet.PetEntity
 import com.xando.core.database.pet.PetInterestEntity
 import com.xando.core.database.pet.PetOwnerEntity
+import com.xando.core.database.pet.PetRelationPreviewEntity
 import com.xando.core.database.user.UserEntity
 
 /**
@@ -18,6 +19,7 @@ import com.xando.core.database.user.UserEntity
         PetEntity::class,
         PetInterestEntity::class,
         PetOwnerEntity::class,
+        PetRelationPreviewEntity::class,
         UserEntity::class,
     ],
     version = 1,

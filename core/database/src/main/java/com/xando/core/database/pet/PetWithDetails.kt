@@ -7,9 +7,11 @@ import com.xando.core.database.user.UserEntity
 /**
  * Питомец со всеми связанными данными: для карточки и формы редактирования.
  *
- * @property pet Профиль питомца.
+ * @property pet Питомец.
  * @property interestCodes Коды интересов.
  * @property owners Владельцы в произвольном порядке; порядок задаёт [PetOwnerEntity.position].
+ * @property relationPreviews Превью отметок в произвольном порядке; порядок внутри отметки задаёт
+ * [PetRelationPreviewEntity.position].
  */
 data class PetWithDetails(
     @Embedded val pet: PetEntity,
@@ -26,6 +28,12 @@ data class PetWithDetails(
         entityColumns = ["pet_id"],
     )
     val owners: List<PetOwnerWithUser>,
+    @Relation(
+        entity = PetRelationPreviewEntity::class,
+        parentColumns = ["id"],
+        entityColumns = ["pet_id"],
+    )
+    val relationPreviews: List<PetRelationPreviewWithUser>,
 )
 
 /**
@@ -36,6 +44,21 @@ data class PetWithDetails(
  */
 data class PetOwnerWithUser(
     @Embedded val owner: PetOwnerEntity,
+    @Relation(
+        parentColumns = ["user_id"],
+        entityColumns = ["id"],
+    )
+    val user: UserEntity,
+)
+
+/**
+ * Пользователь из превью отметок вместе с его данными.
+ *
+ * @property preview Место пользователя в превью.
+ * @property user Пользователь.
+ */
+data class PetRelationPreviewWithUser(
+    @Embedded val preview: PetRelationPreviewEntity,
     @Relation(
         parentColumns = ["user_id"],
         entityColumns = ["id"],

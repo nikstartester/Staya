@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9283e4cb871c3d6d5c28659d88935f82",
+    "identityHash": "551f0e0f6013ffa9774d67fb24175d33",
     "entities": [
       {
         "tableName": "pets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `birth_date` TEXT NOT NULL, `breed` TEXT NOT NULL, `sex` TEXT NOT NULL, `weight_grams` INTEGER NOT NULL, `description` TEXT, `status` TEXT NOT NULL, `photo_url` TEXT, `photo_thumbnail_url` TEXT, `created_at` INTEGER NOT NULL, `viewer_role` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `birth_date` TEXT NOT NULL, `breed` TEXT NOT NULL, `sex` TEXT NOT NULL, `weight_grams` INTEGER NOT NULL, `description` TEXT, `status` TEXT NOT NULL, `photo_url` TEXT, `photo_thumbnail_url` TEXT, `created_at` INTEGER NOT NULL, `viewer_role` TEXT NOT NULL, `friends_count` INTEGER, `not_friends_count` INTEGER, `my_relation` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -76,6 +76,21 @@
             "columnName": "viewer_role",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "friendsCount",
+            "columnName": "friends_count",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "notFriendsCount",
+            "columnName": "not_friends_count",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "myRelation",
+            "columnName": "my_relation",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -207,6 +222,78 @@
         ]
       },
       {
+        "tableName": "pet_relation_previews",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pet_id` TEXT NOT NULL, `user_id` TEXT NOT NULL, `relation` TEXT NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`pet_id`, `user_id`), FOREIGN KEY(`pet_id`) REFERENCES `pets`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`user_id`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "petId",
+            "columnName": "pet_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "relation",
+            "columnName": "relation",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "pet_id",
+            "user_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pet_relation_previews_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_relation_previews_user_id` ON `${TABLE_NAME}` (`user_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pets",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pet_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "users",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "user_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "users",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `first_name` TEXT NOT NULL, `last_name` TEXT NOT NULL, `login` TEXT, `photo_url` TEXT, `photo_thumbnail_url` TEXT, `description` TEXT, PRIMARY KEY(`id`))",
         "fields": [
@@ -259,7 +346,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9283e4cb871c3d6d5c28659d88935f82')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '551f0e0f6013ffa9774d67fb24175d33')"
     ]
   }
 }

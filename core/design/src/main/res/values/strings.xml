@@ -17,6 +17,18 @@
     <string name="design_pet_sex_male">Male</string>
     <string name="design_pet_sex_female">Female</string>
 
+    <!-- Age -->
+    <plurals name="design_age_years">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
+    <plurals name="design_age_months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <string name="design_age_years_and_months">%1$s and %2$s</string>
+    <string name="design_age_less_than_month">less than a month</string>
+
     <!-- Photo picker -->
     <string name="design_photo_picker_caption">Choose photo</string>
     <string name="design_photo_picker_remove_content_description">Remove photo</string>

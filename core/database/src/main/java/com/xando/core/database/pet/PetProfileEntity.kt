@@ -1,14 +1,12 @@
 package com.xando.core.database.pet
 
 import androidx.room3.ColumnInfo
-import androidx.room3.Entity
-import androidx.room3.Index
-import androidx.room3.PrimaryKey
 
 /**
- * Питомец: и свой, и чужой, открытый пользователем.
+ * Профиль питомца — часть [PetEntity] без отметок пользователей.
  *
- * Пишется частями: профиль — через [PetProfileEntity], отметки — через [PetRelationsEntity].
+ * Пишется в `pets` частичным upsert: новая строка получает `null` в полях отметок, а у существующей
+ * обновляются только поля профиля.
  *
  * @property id Идентификатор питомца на сервере.
  * @property name Кличка.
@@ -22,16 +20,9 @@ import androidx.room3.PrimaryKey
  * @property photoThumbnailUrl URL миниатюры фотографии.
  * @property createdAt Момент создания питомца на сервере, epoch millis.
  * @property viewerRole Роль текущего пользователя по отношению к питомцу — одна из [PetViewerRoles].
- * @property friendsCount Сколько пользователей отметили, что дружат; `null`, если неизвестно.
- * @property notFriendsCount Сколько пользователей отметили, что не дружат; `null`, если неизвестно.
- * @property myRelation Код отметки текущего пользователя; `null`, если отметки нет.
  */
-@Entity(
-    tableName = "pets",
-    indices = [Index("viewer_role")],
-)
-data class PetEntity(
-    @PrimaryKey val id: String,
+data class PetProfileEntity(
+    val id: String,
     val name: String,
     @ColumnInfo(name = "birth_date") val birthDate: String,
     val breed: String,
@@ -43,7 +34,4 @@ data class PetEntity(
     @ColumnInfo(name = "photo_thumbnail_url") val photoThumbnailUrl: String?,
     @ColumnInfo(name = "created_at") val createdAt: Long,
     @ColumnInfo(name = "viewer_role") val viewerRole: String,
-    @ColumnInfo(name = "friends_count") val friendsCount: Int?,
-    @ColumnInfo(name = "not_friends_count") val notFriendsCount: Int?,
-    @ColumnInfo(name = "my_relation") val myRelation: String?,
 )

@@ -8,8 +8,10 @@ import com.xando.data.pet.model.PetCardResponse
 import com.xando.data.pet.model.PetProfileResponse
 import com.xando.data.pet.model.PetsListResponse
 import com.xando.data.pet.model.SavePetRequest
+import com.xando.data.pet.model.SetRelationRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -32,6 +34,7 @@ internal class PetRemoteDataSource @Inject constructor(
     private companion object {
         const val PETS_URL = "/pets"
         const val FILE_UPLOAD_URL = "/files/upload"
+        const val RELATION_PATH = "/relation"
 
         /** Поле формы с категорией файла на сервере. */
         const val CATEGORY_FIELD = "category"
@@ -93,6 +96,43 @@ internal class PetRemoteDataSource @Inject constructor(
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }.body<PetCardResponse>()
+        }
+    }
+
+    /**
+     * Удаляет питомца [petId]. Доступно только основному владельцу.
+     *
+     * @throws com.xando.core.api_models.ApiException Если запрос не удался.
+     */
+    suspend fun deletePet(petId: String) {
+        withApiException(networkChecker) {
+            httpClient.delete("$PETS_URL/$petId")
+        }
+    }
+
+    /**
+     * Ставит отметку текущего пользователя о чужом питомце [petId], заменяя прежнюю.
+     *
+     * @param relation Код отметки.
+     * @throws com.xando.core.api_models.ApiException Если запрос не удался.
+     */
+    suspend fun setRelation(petId: String, relation: String) {
+        withApiException(networkChecker) {
+            httpClient.put("$PETS_URL/$petId$RELATION_PATH") {
+                contentType(ContentType.Application.Json)
+                setBody(SetRelationRequest(relation = relation))
+            }
+        }
+    }
+
+    /**
+     * Снимает отметку текущего пользователя о питомце [petId]. Если отметки нет, тоже успешно.
+     *
+     * @throws com.xando.core.api_models.ApiException Если запрос не удался.
+     */
+    suspend fun removeRelation(petId: String) {
+        withApiException(networkChecker) {
+            httpClient.delete("$PETS_URL/$petId$RELATION_PATH")
         }
     }
 

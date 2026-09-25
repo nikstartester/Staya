@@ -7,6 +7,7 @@ import com.xando.core.database.pet.PetDao
 import com.xando.core.models.pet.PetDetail
 import com.xando.core.models.pet.PetDraft
 import com.xando.core.models.pet.PetDraftPhoto
+import com.xando.core.models.pet.PetRelation
 import com.xando.core.models.pet.PetSummary
 import com.xando.data.pet.model.PetCardResponse
 import com.xando.data.pet.model.toRequest
@@ -49,7 +50,7 @@ class PetRepository @Inject internal constructor(
     suspend fun refreshPets() {
         val pets = remoteDataSource.getPets()
         petDao.replaceOwnPets(
-            pets = pets.map { it.toEntity() },
+            pets = pets.map { it.toProfileEntity() },
             interests = pets.flatMap { it.toInterestEntities() },
         )
     }
@@ -109,12 +110,51 @@ class PetRepository @Inject internal constructor(
         savePetCard(card)
     }
 
+    /**
+     * Удаляет питомца на сервере, затем из локальной базы. Доступно только основному владельцу.
+     *
+     * Если питомца на сервере уже нет, цель достигнута: он удаляется из локальной базы без ошибки.
+     *
+     * @param petId Идентификатор питомца.
+     * @throws com.xando.core.api_models.ApiException Если запрос не удался.
+     */
+    suspend fun deletePet(petId: String) {
+        try {
+            remoteDataSource.deletePet(petId)
+        } catch (_: NotFoundException) {
+            // Питомца уже удалили, например с другого устройства
+        }
+        petDao.deletePet(petId)
+    }
+
+    /**
+     * Ставит или снимает отметку текущего пользователя о чужом питомце: сначала на сервере, затем в
+     * локальной базе. Если питомца на сервере нет, удаляет его и из локальной базы.
+     *
+     * @param petId Идентификатор питомца.
+     * @param relation Новая отметка; `null` — снять отметку.
+     * @throws com.xando.core.api_models.ApiException Если запрос не удался, в том числе
+     * [NotFoundException], если питомца нет.
+     */
+    suspend fun setRelation(petId: String, relation: PetRelation?) {
+        try {
+            if (relation == null) remoteDataSource.removeRelation(petId)
+            else remoteDataSource.setRelation(petId, relation.name)
+        } catch (e: NotFoundException) {
+            petDao.deletePet(petId)
+            throw e
+        }
+        petDao.updateMyRelation(petId, relation?.name)
+    }
+
     private suspend fun savePetCard(card: PetCardResponse) {
         petDao.savePet(
-            pet = card.pet.toEntity(),
+            pet = card.pet.toProfileEntity(),
+            relations = card.toRelationsEntity(),
             interests = card.pet.toInterestEntities(),
-            users = card.owners.map { it.user.toEntity() },
+            users = card.toUserEntities(),
             owners = card.toOwnerEntities(),
+            relationPreviews = card.toRelationPreviewEntities(),
         )
     }
 
